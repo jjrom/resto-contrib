@@ -30,34 +30,50 @@
                     $('input:radio[name=cantpost]').attr('checked', true);
                     $('input:radio[name=cantput]').attr('checked', true);
                     $('input:radio[name=cantdelete]').attr('checked', true);
+                    $('#_alert').hide();
+                }
+                
+                this.alert = function(element){
+                    $('#_alert').text('Please set ' + element);
+                    $('#_alert').show();
                 }
 
                 this.addRight = function() {
-                    $.ajax({
-                        type: "POST",
-                        async: false,
-                        url: "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/rights' ?>",
-                        dataType: "json",
-                        data: {
-                            emailorgroup: '<?php echo $userProfile['email'] ?>',
-                            collection: $('select[name=collection]').val(),
-                            featureid: $("#featureid").val(),
-                            search: $('input[name=search]:checked').val(),
-                            visualize: $('input[name=visualize]:checked').val(),
-                            download: $('input[name=download]:checked').val(),
-                            canput: $('input[name=canput]:checked').val(),
-                            canpost: $('input[name=canpost]:checked').val(),
-                            candelete: $('input[name=candelete]:checked').val(),
-                            filters: 'null'
-                        },
-                        success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] ?>";
-                        },
-                        error: function() {
-                            alert("error");
-                        }
-                    });
+                    if ($('select[name=collection]').val() === ''){
+                        self.alert('collection');
+                    }else if ($("#featureid").val() === ''){
+                        self.alert('featureid');
+                    }else{
+                        $.ajax({
+                            type: "POST",
+                            async: false,
+                            url: "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/rights' ?>",
+                            dataType: "json",
+                            data: {
+                                emailorgroup: '<?php echo $userProfile['email'] ?>',
+                                collection: $('select[name=collection]').val(),
+                                featureid: $("#featureid").val(),
+                                search: $('input[name=search]:checked').val(),
+                                visualize: $('input[name=visualize]:checked').val(),
+                                download: $('input[name=download]:checked').val(),
+                                canput: $('input[name=canput]:checked').val(),
+                                canpost: $('input[name=canpost]:checked').val(),
+                                candelete: $('input[name=candelete]:checked').val(),
+                                filters: 'null'
+                            },
+                            success: function() {
+                                window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] ?>";
+                            },
+                            error: function() {
+                                alert("error");
+                            }
+                        });
+                    }
                 };
+                
+                $("#_alert").on('click', function() {
+                    $('#_alert').hide();
+                });
 
                 $("#_save").on('click', function() {
                     self.addRight();
@@ -133,7 +149,7 @@
 
         <br/><br/><br/>
         <div class="row" >
-
+            <a id="_alert" href="#" class="button expand alert hide"></a>
             <form>
                 <fieldset>
                     <legend><?php echo $self->context->dictionary->translate('_rights_collection_and_feature'); ?></legend>

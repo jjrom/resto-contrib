@@ -27,7 +27,7 @@
                 </li>
                 <li>
                     <div class="panel">
-                        <a href="<?php echo $self->context->baseUrl . 'administration/users/creation'; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_menu_create_user'); ?></a>
+                        <a href="<?php echo $self->context->baseUrl . 'administration/groups'; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_user_group_rights'); ?></a>
                     </div>
                 </li>
                 <li>

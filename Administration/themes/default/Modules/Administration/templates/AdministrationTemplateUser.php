@@ -6,10 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
         <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>js/lib/foundation/foundation.min.css" type="text/css" />
         <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>js/lib/jquery/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>js/resto.min.js"></script>
         <link rel="shortcut icon" href="<?php echo $self->context->baseUrl ?>favicon.ico" />
         <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/<?php echo $self->context->config['theme'] ?>/style.css" type="text/css" />
         <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/default/style_min.css" type="text/css" />
+        <!-- RESTo -->
+        <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>/js/resto.js"></script>
     </head>
     <body>
         <script type="text/javascript" >
@@ -19,6 +20,13 @@
 
                 function initialize() {
                     $('#deleteButton').hide();
+                    $('.rights').each(function(){
+                        if ($(this).attr('rightValue') === 'true'){
+                            $(this).css('background-color', 'green');
+                        }else{
+                            $(this).css('background-color', 'red');
+                        }
+                    });
                 }
 
                 this.activateUser = function(user) {
@@ -64,7 +72,7 @@
                     $.ajax({
                         type: "POST",
                         dataType: "json",
-                        url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?> + "/rights/" + collection,
+                        url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?> + "/rights/delete",
                         async: true,
                         data: {
                             emailorgroup: emailorgroup,
@@ -84,10 +92,10 @@
                     $.ajax({
                         type: "POST",
                         async: true,
-                        url: "<?php echo $self->context->baseUrl . 'administration/users' ?>",
+                        url: "<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid']; ?>",
                         dataType: "json",
                         data: {
-                            email: "<?php echo $self->user->identifier; ?>",
+                            email: "<?php echo $self->user->profile['email']; ?>",
                             groupname: group
                         },
                         success: function() {
@@ -99,6 +107,50 @@
                     });
 
                 };
+                
+                this.updateRights = function(collection, field, valueToSet, obj) {
+                    R.showMask();
+                
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/rights/update' ?>",
+                        dataType: "json",
+                        data: {
+                            emailorgroup: '<?php echo $self->user->profile['email']; ?>',
+                            collection: collection,
+                            field: field,
+                            value: valueToSet
+                        },
+                        success: function() {
+                            obj.attr('rightValue', valueToSet);
+                            initialize();
+                            R.hideMask();
+                        },
+                        error: function() {
+                            R.hideMask();
+                            alert("error");
+                        }
+                    });
+                };
+                
+                
+                
+                $(".rights").on('click', function(){
+                    if ($(this).hasClass('disabled')){
+                        
+                    }else{
+                        collection = $(this).attr('collection');
+                        field = $(this).attr('field');
+                        rightValue = $(this).attr('rightValue');
+                        if (rightValue === 'true'){
+                            rightValue = false;
+                        }else{
+                            rightValue = true;
+                        }
+                        self.updateRights(collection, field, rightValue, $(this));
+                    }
+                });
 
                 $("#deleteButton").on('click', function() {
                     self.deleteUser(<?php echo $self->user->profile['userid']; ?>);
@@ -117,6 +169,14 @@
                 });
 
                 initialize();
+                
+                R.init({
+                    language: '<?php echo $self->context->dictionary->language; ?>',
+                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
+                    restoUrl: '<?php echo $self->context->baseUrl ?>',
+                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
+                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array('rights' => $_SESSION['rights']))) ?> 
+                });
             });
         </script>
         <?php include $self->header; ?>
@@ -126,33 +186,36 @@
 
         <br/><br/><br/>
         <div class="row" >
-            <ul class="small-block-grid-1 large-block-grid-2">
+            <ul class="small-block-grid-1 large-block-grid-2" style="text-align: center">
                 <li>
-                    <div class="panel">
-                        <h1>
-                            <?php echo $self->context->dictionary->translate('_user_profil'); ?>
-                        </h1>
-                        <?php
-                        echo $self->context->dictionary->translate('_users_email') . ' : ' . $self->user->profile['email'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_users_groupname') . ' : ' . $self->user->profile['groupname'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_users_username') . ' : ' . $self->user->profile['username'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_users_lastname') . ' : ' . $self->user->profile['lastname'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_users_givenname') . ' : ' . $self->user->profile['givenname'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_users_registrationdate') . ' : ' . $self->user->profile['registrationdate'] . ' <br/>';
-                        ?>
-                    </div>
+                    
+                    <h1>
+                        <?php echo $self->user->profile['email']; ?>
+                    </h1>
+                    <p>
+                    <?php
+                    echo $self->user->profile['groupname'] . ' <br/>';
+                    echo $self->user->profile['username'] . ' <br/>';
+                    echo $self->user->profile['lastname'] . ' <br/>';
+                    echo $self->user->profile['givenname'] . ' <br/>';
+                    echo $self->user->profile['registrationdate'] . ' <br/>';
+                    ?>
+                    </p>        
                 </li>
                 <li>
-                    <div class="panel">
-                        <ul class="small-block-grid-1 large-block-grid-2">
+                    <div>
+                        <ul class="small-block-grid-1 large-block-grid-1">
                             <li>
                                 <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/history"; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_user_showfullhistory'); ?></a>
                             </li>
+                        <?php
+                        if ($self->user->profile['groupname'] === 'admin'){
+                            
+                        }else{
+                        ?>
                             <li>
                                 <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/rights"; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_user_createright'); ?></a>
                             </li>
-                        </ul>    
-                        <ul class="small-block-grid-1 large-block-grid-2">
                             <li>
                                 <?php if ($self->user->profile['activated'] == 1) { ?>
                                     <a id="deactivateButton" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_user_deactivate_user'); ?></a>
@@ -168,91 +231,74 @@
                                 <?php } ?>
                             </li>
                         </ul>
+                        <?php } ?>
                         <a id="deleteButton" class="button expand alert"><?php echo $self->context->dictionary->translate('_user_delete_user'); ?></a>
                     </div>
                 </li>
             </ul>
-            <ul class="small-block-grid-1 large-block-grid-2">
+            
+            <?php
+            $collectionsList = $self->context->dbDriver->listCollections();
 
-                <li>
-                    <div class="panel">
-                        <h1>
-                            <?php echo $self->context->dictionary->translate('_user_group_rights'); ?>
-                        </h1>
-                        <?php
-                        $rights = $self->user->getRights();
-                        echo 'search : ' . ($rights['search'] == 1 ? 'true' : 'false') . ' <br/>';
-                        echo 'download : ' . ($rights['download'] == 1 ? 'true' : 'false') . ' <br/>';
-                        echo 'visualize : ' . ($rights['visualize'] == 1 ? 'true' : 'false') . ' <br/>';
-                        echo 'post : ' . ($rights['post'] == 1 ? 'true' : 'false') . ' <br/>';
-                        echo 'put : ' . ($rights['put'] == 1 ? 'true' : 'false') . ' <br/>';
-                        echo 'delete : ' . ($rights['delete'] == 1 ? 'true' : 'false') . ' <br/>';
-                        ?>
-                    </div>
-                </li>
-                <li>
-                    <div class="panel">
-                        <h1>
-                            <?php echo $self->context->dictionary->translate('_user_signed_licenses'); ?>
-                        </h1>
-                        <?php
-                        $licenses = $self->context->dbDriver->getSignedLicenses($self->user->profile['email']);
-                        foreach ($licenses as $license) {
+            foreach ($collectionsList as $collection) {
+                $right = $self->user->getRights($collection['collection']);
+                ?>
+                <ul class="small-block-grid-1 large-block-grid-1">
+                    <div >
+                        <h2>
+                            <?php
+                            echo $collection['collection'];
+                            if (isset($self->licenses[$collection['collection']])){
+                                echo "Sign on " . $self->licenses($collection['collection']);
+                            }else{
+                                echo "<h3 style=\"color: red;\">Not signed yet</h3>";
+                            }
                             ?>
-                            <ul class="small-block-grid-1 large-block-grid-2">
-                                <li>
-                                    <?php
-                                    $date = explode(" ", $license['signdate']);
-                                    echo $license['collection'] . ', ' . $date[0];
-                                    ?>
-                                </li>
-                            </ul>
-                        <?php } ?>
+                        </h2>
+                        <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6">
+                            <?php
+                            echo '<li><a id="' . $collection['collection'] . 'search" collection="' . $collection['collection'] . '" field="search" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['search'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Search</a></li>';
+                            echo '<li><a id="' . $collection['collection'] . 'download" collection="' . $collection['collection'] . '" field="download" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
+                            echo '<li><a id="' . $collection['collection'] . 'visualize" collection="' . $collection['collection'] . '" field="visualize" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
+                            echo '<li><a id="' . $collection['collection'] . 'canpost" collection="' . $collection['collection'] . '" field="canpost" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
+                            echo '<li><a id="' . $collection['collection'] . 'canput" collection="' . $collection['collection'] . '" field="canput" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
+                            echo '<li><a id="' . $collection['collection'] . 'candelete" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
+                            ?>
+                        </ul>
                     </div>
-                </li>
-            </ul>
+                </ul>
+            <?php } ?>
+
             <ul class="small-block-grid-1 large-block-grid-1">
                 <li>
-                    <div class="panel">
-                        <h1>
-                            <?php echo $self->context->dictionary->translate('_user_private_rights'); ?>
-                        </h1>
+                    <div>
                         <ul class="small-block-grid-1 large-block-grid-4">
                             <?php
-                            $rightsList = $self->context->dbDriver->getRightsList($self->user->profile['email']);
-                            foreach ($rightsList as $right) {
+                            
+                            foreach ($self->rightsList as $right) {
+                                if ($right['featureid']){
                                 ?>
                                 <div class="panel">
-                                    <h3>
+                                    <a id="deleteRightButton" class="button right alert" onclick="deleteRight('<?php echo $self->user->profile['email']; ?>', '<?php echo (isset($right['collection']) ? $right['collection'] : ''); ?>', '<?php echo $right['featureid']; ?>');">X</a>
+                                    <h2>
                                         <?php
-                                        echo 'Collection : ' . $right['collection'] . ' <br/>';
-                                        echo 'Featureid : ' . $right['featureid'] . ' <br/>';
+                                        echo $right['collection'];
+                                        echo '  ' . $right['featureid'];
                                         ?>
-                                    </h3>
-                                    <ul class="small-block-grid-1 large-block-grid-3">
-                                        <li>
-                                            <?php
-                                            echo 'filters : ' . $right['filters'] . ' <br/>';
-                                            ?>
-                                        </li>
-                                        <li>
-                                            <?php
-                                            echo 'search : ' . ($right['search'] == 1 ? 'true' : 'false') . ' <br/>';
-                                            echo 'download : ' . ($right['download'] == 1 ? 'true' : 'false') . ' <br/>';
-                                            echo 'visualize : ' . ($right['visualize'] == 1 ? 'true' : 'false') . ' <br/>';
-                                            ?>
-                                        </li>
-                                        <li>
-                                            <?php
-                                            echo 'post : ' . ($right['post'] == 1 ? 'true' : 'false') . ' <br/>';
-                                            echo 'put : ' . ($right['put'] == 1 ? 'true' : 'false') . ' <br/>';
-                                            echo 'delete : ' . ($right['delete'] == 1 ? 'true' : 'false') . ' <br/>';
-                                            ?>
-                                        </li>
-                                    </ul>
-                                    <a id="deleteRightButton" class="button expand alert" onclick="deleteRight('<?php echo $self->user->profile['email']; ?>', '<?php echo (isset($right['collection']) ? $right['collection'] : ''); ?>', '<?php echo $right['featureid']; ?>');">Delete this right</a>
+                                        
+                                    </h2>
+                                    <ul class="small-block-grid-2 large-block-grid-6">
+                                        <?php
+                                        echo '<li>search : ' . ($right['search'] == 1 ? 'true' : 'false') . '</li>';
+                                        echo '<li>download : ' . ($right['download'] == 1 ? 'true' : 'false') . '</li>';
+                                        echo '<li>visualize : ' . ($right['visualize'] == 1 ? 'true' : 'false') . '</li>';
+                                        echo '<li>post : ' . ($right['post'] == 1 ? 'true' : 'false') . '</li>';
+                                        echo '<li>put : ' . ($right['put'] == 1 ? 'true' : 'false') . '</li>';
+                                        echo '<li>delete : ' . ($right['delete'] == 1 ? 'true' : 'false') . '</li>';
+                                        ?> 
+                                    </ul> 
                                 </div>
-                            <?php } ?>
+                                <?php }} ?>
                         </ul>
                     </div>
                 </li>
@@ -286,5 +332,4 @@
         </div>
     </body>
     <?php include $self->footer; ?>
-    <?php exit; ?>
 </html>

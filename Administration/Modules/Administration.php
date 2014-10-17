@@ -106,6 +106,7 @@ class Administration extends RestoModule {
         $this->startFile = $this->templatesRoot . '/AdministrationTemplateStart.php';
         $this->usersFile = $this->templatesRoot . '/AdministrationTemplateUsers.php';
         $this->userFile = $this->templatesRoot . '/AdministrationTemplateUser.php';
+        $this->groupsFile = $this->templatesRoot . '/AdministrationTemplateGroups.php';
         $this->historyFile = $this->templatesRoot . '/AdministrationTemplateHistory.php';
         $this->userHistoryFile = $this->templatesRoot . '/AdministrationTemplateUserHistory.php';
         $this->userCreationFile = $this->templatesRoot . '/AdministrationTemplateUserCreation.php';
@@ -169,6 +170,8 @@ class Administration extends RestoModule {
             switch ($this->segments[0]) {
                 case 'users':
                     return $this->processPostUsers();
+                case 'groups':
+                    return $this->processPostGroups();
                 default:
                     throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
             }
@@ -196,11 +199,54 @@ class Administration extends RestoModule {
             switch ($this->segments[0]) {
                 case 'users':
                     return $this->processGetUsers();
+                case 'groups':
+                    return $this->processGetGroups();
                 default:
                     throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
             }
         }
     }
+    
+    /**
+     * Process when GET on /administration/groups
+     * 
+     * @throws Exception
+     */
+    private function processGetGroups() {
+
+        /*
+         * Get user creation MMI
+         */   
+        if (isset($this->segments[1])) {
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
+        }
+        /*
+         * Users list MMI
+         */
+        else {
+            $this->file = $this->groupsFile;
+            return $this->toHTML();
+        }
+    }
+    
+    /**
+     * Process when POST on /administration/groups
+     * 
+     * @throws Exception
+     */
+    private function processPostGroups() {
+   
+        if (isset($this->segments[1])) {
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
+        }
+        /*
+         * Update rights
+         */
+        else {
+            return $this->updateRights();
+        }
+    }
+
 
     /**
      * Process when GET on /administration/users
@@ -245,9 +291,12 @@ class Administration extends RestoModule {
     private function processGetUser() {
         
         $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
-        if ($this->user->identifier === 'unregistered') {
+        if ($this->user->profile['userid'] === -1) {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
         }
+        
+        $this->licenses = $this->context->dbDriver->getSignedLicenses($this->user->profile['email']);
+        $this->rightsList = $this->context->dbDriver->getRightsList($this->user->profile['email']);
         
         /*
          * Get user informations MMI
@@ -284,11 +333,10 @@ class Administration extends RestoModule {
 
         if (isset($this->segments[1])) {
             return $this->processPostUser();
-        }
-        /*
-         * Insert user
-         */
-        else {
+        } else {
+            /*
+             * Insert user
+             */
             return $this->insertUser();
         }
     }
@@ -325,7 +373,10 @@ class Administration extends RestoModule {
             }
         }
         else {
-            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
+            /*
+             * Update user
+             */
+            return $this->updateUser();
         }
     }
 
@@ -336,19 +387,66 @@ class Administration extends RestoModule {
      * @throws Exception
      */
     private function processPostRights() {
-        
+
         if (isset($this->segments[3])) {
             /*
              * This post delete rights passed with data
              */
-            if ($this->segments[2] == 'rights') {
+            if ($this->segments[3] === 'delete') {
                 return $this->deleteRights();
-            }
-            else {
+            } else if ($this->segments[3] === 'update') {
+                return $this->updateRights();
+            } else {
                 throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
             }
         } else {
             return $this->addRights();
+        }
+    }
+
+    private function updateRights() {
+        try {
+            /*
+             * Get posted data
+             */
+            $postedData = array();
+            $postedData['emailorgroup'] = filter_input(INPUT_POST, 'emailorgroup');
+            $postedData['collection'] = filter_input(INPUT_POST, 'collection');
+            $postedData['field'] = filter_input(INPUT_POST, 'field');
+            $postedData['value'] = filter_input(INPUT_POST, 'value');
+
+            $emailorgroup = $postedData['emailorgroup'];
+            $collectionName = ($postedData['collection'] === '') ? null : $postedData['collection'];
+            
+            /*
+             * Posted rights
+             */
+            $rights = array($postedData['field'] => $postedData['value']);
+
+            $right = $this->context->dbDriver->getRights($emailorgroup, $collectionName);
+            if (!$right) {
+                /*
+                 * Store rights
+                 */
+                $this->context->dbDriver->storeRights($rights, $emailorgroup, $collectionName);
+
+                /*
+                 * Success information
+                 */
+                return json_encode(array('status' => 'success', 'message' => 'success'));
+            }else{
+                /*
+                 * Upsate rights
+                 */
+                $this->context->dbDriver->updateRights($rights, $emailorgroup, $collectionName);
+
+                /*
+                 * Success information
+                 */
+                return json_encode(array('status' => 'success', 'message' => 'success'));
+            }
+        } catch (Exception $ex) {
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Error while updating rights', 500);
         }
     }
 
@@ -373,15 +471,16 @@ class Administration extends RestoModule {
             $postedData['canput'] = filter_input(INPUT_POST, 'canput');
             $postedData['canpost'] = filter_input(INPUT_POST, 'canpost');
             $postedData['candelete'] = filter_input(INPUT_POST, 'candelete');
+            $postedData['filters'] = filter_input(INPUT_POST, 'filters');
 
             $emailorgroup = $postedData['emailorgroup'];
-            $collectionName = $postedData['collection'];
-            $featureIdentifier = $postedData['featureid'];
+            $collectionName = ($postedData['collection'] === '') ? null : $postedData['collection'];
+            $featureIdentifier = ($postedData['featureid'] === '') ? null : $postedData['featureid'];
 
             /*
              * Posted rights
              */
-            $rights = array_merge($postedData['search'], $postedData['visualize'], $postedData['download'], $postedData['canput'], $postedData['canpost'], $postedData['candelete'], $postedData['filters']);
+            $rights = array('search' => $postedData['search'], 'visualize' => $postedData['visualize'], 'download' => $postedData['download'], 'canput' => $postedData['canput'], 'canpost' => $postedData['canpost'], 'candelete' => $postedData['candelete'], 'filters' => $postedData['filters']);
 
             /*
              * Store rights
@@ -440,6 +539,26 @@ class Administration extends RestoModule {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'No data to create user', 500);
         }
     }
+    
+    /**
+     * updateUser - update new user in database
+     * 
+     * @throws Exception
+     */
+    private function updateUser() {
+        $userParam = array_merge($_POST);
+        if ($userParam) {
+            try {
+                $this->context->dbDriver->updateUserProfile($userParam);
+                return json_encode(array('status' => 'success', 'message' => 'success'));
+            } catch (Exception $e) {
+                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'User not updated', 500);
+            }
+        } else {
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'No data to update user', 500);
+        }
+    }
+
 
     /**
      * Activate user

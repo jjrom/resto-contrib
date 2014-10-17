@@ -30,45 +30,59 @@
                 }
 
                 this.activateUser = function(user) {
+                    R.showMask();
+                    
                     $.ajax({
                         type: "POST",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/activate",
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            R.hideMask();
                         },
                         error: function() {
+                            R.hideMask();
                             alert("error");
                         }
                     });
                 };
 
                 this.deactivateUser = function(user) {
+                    R.showMask();
+                
                     $.ajax({
                         type: "POST",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/deactivate",
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            R.hideMask();
                         },
                         error: function() {
+                            R.hideMask();
                             alert("error");
                         }
                     });
                 };
 
                 this.deleteUser = function(user) {
+                    R.showMask();
+                
                     $.ajax({
                         type: "DELETE",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user,
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>";
+                            R.hideMask();
                         },
                         error: function(e) {
+                            R.hideMask();
                             alert("error : " + e);
                         }
                     });
                 };
 
                 this.deleteRight = function(emailorgroup, collection, featureid) {
+                    R.showMask();
+                
                     $.ajax({
                         type: "POST",
                         dataType: "json",
@@ -81,14 +95,18 @@
                         },
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            R.hideMask();
                         },
                         error: function(e) {
+                            R.hideMask();
                             alert("error : " + e);
                         }
                     });
                 };
 
                 this.setGroup = function(group) {
+                    R.showMask();
+                
                     $.ajax({
                         type: "POST",
                         async: true,
@@ -100,8 +118,10 @@
                         },
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            R.hideMask();
                         },
                         error: function() {
+                            R.hideMask();
                             alert("error");
                         }
                     });
@@ -245,26 +265,28 @@
                 ?>
                 <ul class="small-block-grid-1 large-block-grid-1">
                     <div >
-                        <h2>
-                            <?php
-                            echo $collection['collection'];
-                            if (isset($self->licenses[$collection['collection']])){
-                                echo "Sign on " . $self->licenses($collection['collection']);
-                            }else{
-                                echo "<h3 style=\"color: red;\">Not signed yet</h3>";
-                            }
-                            ?>
-                        </h2>
-                        <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6">
-                            <?php
-                            echo '<li><a id="' . $collection['collection'] . 'search" collection="' . $collection['collection'] . '" field="search" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['search'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Search</a></li>';
-                            echo '<li><a id="' . $collection['collection'] . 'download" collection="' . $collection['collection'] . '" field="download" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
-                            echo '<li><a id="' . $collection['collection'] . 'visualize" collection="' . $collection['collection'] . '" field="visualize" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
-                            echo '<li><a id="' . $collection['collection'] . 'canpost" collection="' . $collection['collection'] . '" field="canpost" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
-                            echo '<li><a id="' . $collection['collection'] . 'canput" collection="' . $collection['collection'] . '" field="canput" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
-                            echo '<li><a id="' . $collection['collection'] . 'candelete" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
-                            ?>
-                        </ul>
+                        <fieldset>
+                            <legend><?php echo $collection['collection']; ?></legend>
+                            <h2>
+                                <?php
+                                if (isset($self->licenses[$collection['collection']])){
+                                    echo "Sign on " . $self->licenses($collection['collection']);
+                                }else{
+                                    echo "<h3 style=\"color: red;\">Not signed yet</h3>";
+                                }
+                                ?>
+                            </h2>
+                            <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6">
+                                <?php
+                                echo '<li><a id="' . $collection['collection'] . 'search" collection="' . $collection['collection'] . '" field="search" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['search'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Search</a></li>';
+                                echo '<li><a id="' . $collection['collection'] . 'download" collection="' . $collection['collection'] . '" field="download" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
+                                echo '<li><a id="' . $collection['collection'] . 'visualize" collection="' . $collection['collection'] . '" field="visualize" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
+                                echo '<li><a id="' . $collection['collection'] . 'canpost" collection="' . $collection['collection'] . '" field="canpost" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
+                                echo '<li><a id="' . $collection['collection'] . 'canput" collection="' . $collection['collection'] . '" field="canput" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
+                                echo '<li><a id="' . $collection['collection'] . 'candelete" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
+                                ?>
+                            </ul>
+                        </fieldset>
                     </div>
                 </ul>
             <?php } ?>

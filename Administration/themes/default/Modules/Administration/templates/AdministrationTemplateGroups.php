@@ -90,13 +90,20 @@ $collections = $self->context->dbDriver->listCollections();
 
         <br/><br/><br/>
         <div class="row" >
+            <p>
+                In this part of administration you can set default rights for 
+                each groups on each collections. </br>
+                In green the right is set to 
+                possible. In red the right is set to impossible. </br>
+                
+            </p>
             <ul class="small-block-grid-1 large-block-grid-1">
                 <?php
                 foreach ($collections as $collection) {
                     ?>
                     <li>
-                        <div class="panel">
-                            <h1><?php echo $collection['collection']; ?></h1>
+                        <div>
+                            <h1 style="text-align: center;"><?php echo $collection['collection']; ?></h1>
                         
                         <?php
                         $collectionsList = $self->context->dbDriver->listCollections();
@@ -106,12 +113,8 @@ $collections = $self->context->dbDriver->listCollections();
                             $right = $restoRights->getRights($collection['collection']);
                             ?>
                             <ul class="small-block-grid-1 large-block-grid-1">
-                                <div >
-                                    <h2>
-                                        <?php
-                                        echo $group['groupname'];
-                                        ?>
-                                    </h2>
+                                <fieldset>
+                                    <legend><?php echo $group['groupname']; ?></legend>
                                     <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6">
                                         <?php
                                         echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="search" class="button expand rights" ' . ($right['search'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Search</a></li>';
@@ -122,7 +125,7 @@ $collections = $self->context->dbDriver->listCollections();
                                         echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
                                         ?>
                                     </ul>
-                                </div>
+                                </fieldset>
                             </ul>
                         <?php } ?>
                         </div>

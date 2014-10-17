@@ -12,6 +12,8 @@
         <link rel="shortcut icon" href="<?php echo $self->context->baseUrl ?>favicon.ico" />
         <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/<?php echo $self->context->config['theme'] ?>/style.css" type="text/css" />
         <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/default/style_min.css" type="text/css" />
+        <!-- RESTo -->
+        <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>/js/resto.js"></script>
     </head>
     <body>
         <?php
@@ -44,6 +46,8 @@
                     }else if ($("#featureid").val() === ''){
                         self.alert('featureid');
                     }else{
+                        R.showMask();
+                        
                         $.ajax({
                             type: "POST",
                             async: false,
@@ -63,8 +67,10 @@
                             },
                             success: function() {
                                 window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] ?>";
+                                R.hideMask();
                             },
                             error: function() {
+                                R.hideMask();
                                 alert("error");
                             }
                         });
@@ -140,6 +146,14 @@
                 });
 
                 initialize();
+                
+                R.init({
+                    language: '<?php echo $self->context->dictionary->language; ?>',
+                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
+                    restoUrl: '<?php echo $self->context->baseUrl ?>',
+                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
+                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array('rights' => $_SESSION['rights']))) ?> 
+                });
             });
         </script>
         <?php include $self->header; ?>

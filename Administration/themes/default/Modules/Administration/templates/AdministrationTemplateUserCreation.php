@@ -1,17 +1,60 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head>
-        <title>RESTo framework</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>js/lib/foundation/foundation.min.css" type="text/css" />
-        <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>js/lib/jquery/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>js/resto.min.js"></script>
-        <link rel="shortcut icon" href="<?php echo $self->context->baseUrl ?>favicon.ico" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/default/style_min.css" type="text/css" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/<?php echo $self->context->config['theme'] ?>/style.css" type="text/css" />
-    </head>
+    <?php include 'head.php' ?>
     <body>
+        
+        <!-- Header -->
+        <?php include 'header.php' ?>
+        
+        <div class="row fullWidth resto-title"></div>
+
+        <br/><br/><br/>
+        <div class="row" >
+            <a id="_alert" href="#" class="button expand alert hide"></a>
+            <form>
+                <fieldset>
+                    <legend><?php echo $self->context->dictionary->translate('_user_profil'); ?></legend>
+
+                    <label><?php echo $self->context->dictionary->translate('_users_email'); ?>
+                        <input id="email" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_email'); ?>...">
+                    </label>
+                    <label><?php echo $self->context->dictionary->translate('_users_lastname'); ?>
+                        <input id="lastname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_lastname'); ?>...">
+                    </label>
+                    <label><?php echo $self->context->dictionary->translate('_users_username'); ?>
+                        <input id="username" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_username'); ?>...">
+                    </label>
+                    <label><?php echo $self->context->dictionary->translate('_users_givenname'); ?>
+                        <input id="givenname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_givenname'); ?>...">
+                    </label>
+                    <label><?php echo $self->context->dictionary->translate('_password'); ?>
+                        <input id="password" type="password" placeholder="<?php echo $self->context->dictionary->translate('_password'); ?>...">
+                    </label>
+                    <label><?php echo $self->context->dictionary->translate('_retypePassword'); ?>
+                        <input id="passwordConfirm" type="password" placeholder="<?php echo $self->context->dictionary->translate('_retypePassword'); ?>...">
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend><?php echo $self->context->dictionary->translate('_group'); ?></legend>
+                    <label><?php echo $self->context->dictionary->translate('_history_select_group_name'); ?>
+                        <select id="groupname" name="groupname">
+                            <option value="unregistered"><?php echo $self->context->dictionary->translate('_unregistered'); ?></option>
+                            <option value="default"><?php echo $self->context->dictionary->translate('_default'); ?></option>
+                            <option value="admin"><?php echo $self->context->dictionary->translate('_admin'); ?></option>
+                        </select>
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend><?php echo $self->context->dictionary->translate('_users_activated'); ?></legend>
+                    <input type="radio" name="activated" value="true" id="activated"><label for="activated"><?php echo $self->context->dictionary->translate('_users_activated'); ?></label>
+                    <input type="radio" name="deactivated" value="false" id="deactivated"><label for="deactivated"><?php echo $self->context->dictionary->translate('_users_deactivated'); ?></label>
+                </fieldset>
+            </form> 
+            <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_save_user'); ?></a>
+        </div>
+        <!-- Footer -->
+        <?php include 'footer.php' ?>
+        
         <script type="text/javascript" >
             $(document).ready(function() {
 
@@ -89,56 +132,5 @@
             initialize();
         });
         </script>
-        <?php include $self->header; ?>
-        <div class="row fullWidth resto-title">
-
-        </div>
-
-        <br/><br/><br/>
-        <div class="row" >
-            <a id="_alert" href="#" class="button expand alert hide"></a>
-            <form>
-                <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_user_profil'); ?></legend>
-
-                    <label><?php echo $self->context->dictionary->translate('_users_email'); ?>
-                        <input id="email" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_email'); ?>...">
-                    </label>
-                    <label><?php echo $self->context->dictionary->translate('_users_lastname'); ?>
-                        <input id="lastname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_lastname'); ?>...">
-                    </label>
-                    <label><?php echo $self->context->dictionary->translate('_users_username'); ?>
-                        <input id="username" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_username'); ?>...">
-                    </label>
-                    <label><?php echo $self->context->dictionary->translate('_users_givenname'); ?>
-                        <input id="givenname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_givenname'); ?>...">
-                    </label>
-                    <label><?php echo $self->context->dictionary->translate('_password'); ?>
-                        <input id="password" type="password" placeholder="<?php echo $self->context->dictionary->translate('_password'); ?>...">
-                    </label>
-                    <label><?php echo $self->context->dictionary->translate('_retypePassword'); ?>
-                        <input id="passwordConfirm" type="password" placeholder="<?php echo $self->context->dictionary->translate('_retypePassword'); ?>...">
-                    </label>
-                </fieldset>
-                <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_group'); ?></legend>
-                    <label><?php echo $self->context->dictionary->translate('_history_select_group_name'); ?>
-                        <select id="groupname" name="groupname">
-                            <option value="unregistered"><?php echo $self->context->dictionary->translate('_unregistered'); ?></option>
-                            <option value="default"><?php echo $self->context->dictionary->translate('_default'); ?></option>
-                            <option value="admin"><?php echo $self->context->dictionary->translate('_admin'); ?></option>
-                        </select>
-                    </label>
-                </fieldset>
-                <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_users_activated'); ?></legend>
-                    <input type="radio" name="activated" value="true" id="activated"><label for="activated"><?php echo $self->context->dictionary->translate('_users_activated'); ?></label>
-                    <input type="radio" name="deactivated" value="false" id="deactivated"><label for="deactivated"><?php echo $self->context->dictionary->translate('_users_deactivated'); ?></label>
-                </fieldset>
-            </form> 
-            <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_save_user'); ?></a>
-        </div>
     </body>
-    <?php include $self->footer; ?>
-    <?php exit; ?>
 </html>

@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head>
-        <title>RESTo framework</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-        <link rel="shortcut icon" href="<?php echo $self->context->baseUrl ?>favicon.ico" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>js/lib/foundation/foundation.min.css" type="text/css" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/<?php echo $self->context->config['theme'] ?>/style.css" type="text/css" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/default/style_min.css" type="text/css" />
-    </head>
+    <?php include 'head.php' ?>
     <body>
-        <?php include $self->header; ?>
+         <!-- Header -->
+        <?php include 'header.php' ?>
+         
         <div class="row fullWidth resto-title">
 
         </div>
@@ -37,7 +31,7 @@
                 </li>
             </ul>
         </div>
-        <?php include $self->footer; ?>
-        <?php exit; ?>
+        <!-- Footer -->
+        <?php include 'footer.php' ?>
     </body>
 </html>

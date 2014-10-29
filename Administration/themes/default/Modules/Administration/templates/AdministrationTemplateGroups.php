@@ -1,23 +1,61 @@
-<?php
-$groups = $self->context->dbDriver->listGroups();
-$collections = $self->context->dbDriver->listCollections();
-?>
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head>
-        <title>RESTo framework</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>js/lib/foundation/foundation.min.css" type="text/css" />
-        <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>js/lib/jquery/jquery-1.11.1.min.js"></script>
-        <link rel="shortcut icon" href="<?php echo $self->context->baseUrl ?>favicon.ico" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/default/style_min.css" type="text/css" />
-        <link rel="stylesheet" href="<?php echo $self->context->baseUrl ?>themes/<?php echo $self->context->config['theme'] ?>/style.css" type="text/css" />
-        <!-- RESTo -->
-        <script type="text/javascript" src="<?php echo $self->context->baseUrl ?>/js/resto.js"></script>
-    </head>
+    <?php include 'head.php' ?>
     <body>
+        
+        <!-- Header -->
+        <?php include 'header.php' ?>
+        
+        <div class="row fullWidth resto-title">
+
+        </div>
+
+        <br/><br/><br/>
+        <div class="row" >
+            <p>
+                In this part of administration you can set default rights for 
+                each groups on each collections. </br>
+                In green the right is set to 
+                possible. In red the right is set to impossible. </br>
+                
+            </p>
+            <ul class="small-block-grid-1 large-block-grid-1">
+                <?php
+                foreach ($self->collections as $collection) {
+                    ?>
+                    <li>
+                        <div>
+                            <h1 style="text-align: center;"><?php echo $collection['collection']; ?></h1>
+                        
+                        <?php
+                        foreach ($self->groups as $group) {
+                            $restoRights = new RestoRights($group['groupname'], $group['groupname'], $self->context->dbDriver);
+                            $right = $restoRights->getRights($collection['collection']);
+                            ?>
+                            <ul class="small-block-grid-1 large-block-grid-1">
+                                <fieldset>
+                                    <legend><?php echo $group['groupname']; ?></legend>
+                                    <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6">
+                                        <?php
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="search" class="button expand rights" ' . ($right['search'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Search</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="download" class="button expand rights" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="visualize" class="button expand rights" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="canpost" class="button expand rights" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="canput" class="button expand rights" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
+                                        ?>
+                                    </ul>
+                                </fieldset>
+                            </ul>
+                        <?php } ?>
+                        </div>
+                    </li>
+                <?php } ?>
+            </ul>
+        </div>
+        <!-- Footer -->
+        <?php include 'footer.php' ?>
+        
         <script type="text/javascript" >
             $(document).ready(function() {
 
@@ -83,57 +121,5 @@ $collections = $self->context->dbDriver->listCollections();
                 });
             });
         </script>
-        <?php include $self->header; ?>
-        <div class="row fullWidth resto-title">
-
-        </div>
-
-        <br/><br/><br/>
-        <div class="row" >
-            <p>
-                In this part of administration you can set default rights for 
-                each groups on each collections. </br>
-                In green the right is set to 
-                possible. In red the right is set to impossible. </br>
-                
-            </p>
-            <ul class="small-block-grid-1 large-block-grid-1">
-                <?php
-                foreach ($collections as $collection) {
-                    ?>
-                    <li>
-                        <div>
-                            <h1 style="text-align: center;"><?php echo $collection['collection']; ?></h1>
-                        
-                        <?php
-                        $collectionsList = $self->context->dbDriver->listCollections();
-
-                        foreach ($groups as $group) {
-                            $restoRights = new RestoRights($group['groupname'], $group['groupname'], $self->context->dbDriver);
-                            $right = $restoRights->getRights($collection['collection']);
-                            ?>
-                            <ul class="small-block-grid-1 large-block-grid-1">
-                                <fieldset>
-                                    <legend><?php echo $group['groupname']; ?></legend>
-                                    <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6">
-                                        <?php
-                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="search" class="button expand rights" ' . ($right['search'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Search</a></li>';
-                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="download" class="button expand rights" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
-                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="visualize" class="button expand rights" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
-                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="canpost" class="button expand rights" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
-                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="canput" class="button expand rights" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
-                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
-                                        ?>
-                                    </ul>
-                                </fieldset>
-                            </ul>
-                        <?php } ?>
-                        </div>
-                    </li>
-                <?php } ?>
-            </ul>
-        </div>
-        <?php include $self->footer; ?>
-        <?php exit; ?>
     </body>
 </html>

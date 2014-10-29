@@ -102,7 +102,12 @@ class Administration extends RestoModule {
         
         $this->templatesRoot = isset($options['templatesRoot']) ? $options['templatesRoot'] : '/Modules/Administration/templates';
         
+        // Set context
         $this->context = $context;
+        
+        /*
+         * Templates
+         */
         $this->startFile = $this->templatesRoot . '/AdministrationTemplateStart.php';
         $this->usersFile = $this->templatesRoot . '/AdministrationTemplateUsers.php';
         $this->userFile = $this->templatesRoot . '/AdministrationTemplateUser.php';
@@ -124,12 +129,16 @@ class Administration extends RestoModule {
     public function run($segments) {
         
         if ($this->context->user->profile['groupname'] !== 'admin'){
+            /*
+             * Only administrators can access to administration
+             */
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Only available for administrator', 500);
         } 
-        if ($this->context->method === 'GET' && $this->context->outputFormat !== 'html') {
-            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
-        }
+        
         if ($this->context->method === 'POST' && $this->context->outputFormat !== 'json') {
+            /*
+             * Only JSON can be posted
+             */
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
         }
         
@@ -189,8 +198,7 @@ class Administration extends RestoModule {
          * Display start page on /administration
          */
         if (!isset($this->segments[0])) {
-            $this->file = $this->startFile;
-            return $this->toHTML();
+            return $this->to($this->startFile);
         }
         /*
          * Switch on url segments
@@ -201,6 +209,8 @@ class Administration extends RestoModule {
                     return $this->processGetUsers();
                 case 'groups':
                     return $this->processGetGroups();
+                case 'stats':
+                    return $this->processStatistics();
                 default:
                     throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
             }
@@ -224,8 +234,9 @@ class Administration extends RestoModule {
          * Users list MMI
          */
         else {
-            $this->file = $this->groupsFile;
-            return $this->toHTML();
+            $this->groups = $this->context->dbDriver->listGroups();
+            $this->collections = $this->context->dbDriver->listCollections();
+            return $this->to($this->groupsFile, $this->groups);
         }
     }
     
@@ -260,26 +271,80 @@ class Administration extends RestoModule {
          */   
         if (isset($this->segments[1])) {
             if ($this->segments[1] == 'creation') {
-                $this->file = $this->userCreationFile;
-                return $this->toHTML();
-            }
-            /*
-             * Get user history MMI
-             */
-            else if ($this->segments[1] == 'history') {
-                $this->file = $this->historyFile;
-                return $this->toHTML();
-            }
-            else {
+                return $this->to($this->userCreationFile);
+            } else if ($this->segments[1] == 'history') {
+                /*
+                * Get user history MMI
+                */
+                
+                $this->startIndex = 0;
+                $this->numberOfResults = 50;
+                $this->keyword = null;
+                if (filter_input(INPUT_GET, 'startIndex')) {
+                    $this->startIndex = filter_input(INPUT_GET, 'startIndex');
+                }
+                if (filter_input(INPUT_GET, 'numberOfResults')) {
+                    $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
+                }
+                
+                $collection = null;
+                $service = null;
+                $orderBy = null;
+                $ascordesc = null;
+                if (filter_input(INPUT_GET, 'collection')) {
+                    $collection = filter_input(INPUT_GET, 'collection');
+                }
+                if (filter_input(INPUT_GET, 'service')) {
+                    $service = filter_input(INPUT_GET, 'service');
+                }
+                if (filter_input(INPUT_GET, 'orderBy')) {
+                    $orderBy = filter_input(INPUT_GET, 'orderBy');
+                }
+                if (filter_input(INPUT_GET, 'ascordesc')) {
+                    $ascordesc = filter_input(INPUT_GET, 'ascordesc');
+                }
+                if (filter_input(INPUT_GET, 'limit')) {
+                    $limit = filter_input(INPUT_GET, 'limit');
+                }
+
+                $options = array(
+                    'orderBy' => $orderBy,
+                    'ascOrDesc' => $ascordesc,
+                    'collectionName' => $collection,
+                    'service' => $service,
+                    'startIndex' => $this->startIndex,
+                    'numberOfResults' => $this->numberOfResults
+                );
+                $this->historyList = $this->context->dbDriver->getHistory(null, $options);
+                $this->collectionsList = $this->context->dbDriver->listCollections();
+     
+                return $this->to($this->historyFile, $this->historyList);
+            } else {
                 return $this->processGetUser();
             }
-        }
-        /*
-         * Users list MMI
-         */
-        else {
-            $this->file = $this->usersFile;
-            return $this->toHTML();
+        } else {
+            /*
+            * Users list MMI
+            */
+            $this->min = 0;
+            $this->number = 50;
+            $this->keyword = null;
+            if (filter_input(INPUT_GET, 'min')) {
+                $this->min = filter_input(INPUT_GET, 'min');
+            }
+            if (filter_input(INPUT_GET, 'number')) {
+                $this->number = filter_input(INPUT_GET, 'number');
+            }
+            if (filter_input(INPUT_GET, 'keyword')) {
+                $this->keyword = filter_input(INPUT_GET, 'keyword');
+                $this->global_search_val = filter_input(INPUT_GET, 'keyword');
+            } else {
+                $this->keyword = null;
+                $this->global_search_val = $this->context->dictionary->translate('_menu_globalsearch');
+            }
+            $this->usersProfiles = $this->context->dbDriver->getUsersProfiles($this->keyword, $this->min, $this->number);
+            
+            return $this->to($this->usersFile, $this->usersProfiles);
         }
     }
 
@@ -289,37 +354,87 @@ class Administration extends RestoModule {
      * @throws Exception
      */
     private function processGetUser() {
-        
+
         $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
         if ($this->user->profile['userid'] === -1) {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
         }
-        
+
         $this->licenses = $this->context->dbDriver->getSignedLicenses($this->user->profile['email']);
         $this->rightsList = $this->context->dbDriver->getRightsList($this->user->profile['email']);
         
-        /*
-         * Get user informations MMI
-         */
         if (!isset($this->segments[2])) {
-            $this->file = $this->userFile;
-            return $this->toHTML();
-        }
-        /*
-         * Get user history MMI
-         */
-        else if ($this->segments[2] == 'history') {
-            $this->file = $this->userHistoryFile;
-            return $this->toHTML();
-        }
-        /*
-         * Get user rights creation
-         */
-        else if ($this->segments[2] == 'rights') {
-            $this->file = $this->userRightCreation;
-            return $this->toHTML();
-        }
-        else {
+            /*
+            * Get user informations MMI
+            */
+            $options = array(
+                'numberOfResults' => 4
+            );
+            $this->historyList = $this->context->dbDriver->getHistory($this->user->profile['userid'], $options);
+            $this->collectionsList = $this->context->dbDriver->listCollections();
+
+            return $this->to($this->userFile, $this->user->profile);
+        } else if ($this->segments[2] == 'history') {
+            /*
+             * Get user history MMI
+             */
+            $this->collectionsList = $this->context->dbDriver->listCollections();
+            $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
+            $this->userProfile = $this->user->profile;
+            if (!isset($this->userProfile['email'])) {
+                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Wrong way', 404);
+            }
+            $this->startIndex = 0;
+            $this->numberOfResults = 50;
+            if (filter_input(INPUT_GET, 'startIndex')) {
+                $this->startIndex = filter_input(INPUT_GET, 'startIndex');
+            }
+            if (filter_input(INPUT_GET, 'numberOfResults')) {
+                $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
+            }
+            
+            $collection = null;
+            $service = null;
+            $orderBy = null;
+            $ascordesc = null;
+            if (filter_input(INPUT_GET, 'collection')) {
+                $collection = filter_input(INPUT_GET, 'collection');
+            }
+            if (filter_input(INPUT_GET, 'service')) {
+                $service = filter_input(INPUT_GET, 'service');
+            }
+            if (filter_input(INPUT_GET, 'orderBy')) {
+                $orderBy = filter_input(INPUT_GET, 'orderBy');
+            }
+            if (filter_input(INPUT_GET, 'ascordesc')) {
+                $ascordesc = filter_input(INPUT_GET, 'ascordesc');
+            }
+            if (filter_input(INPUT_GET, 'limit')) {
+                $limit = filter_input(INPUT_GET, 'limit');
+            }
+
+            $options = array(
+                'orderBy' => $orderBy,
+                'ascOrDesc' => $ascordesc,
+                'collectionName' => $collection,
+                'service' => $service,
+                'startIndex' => $this->startIndex,
+                'numberOfResults' => $this->numberOfResults
+            );
+
+            $this->historyList = $this->context->dbDriver->getHistory($this->segments[1], $options);
+            
+            return $this->to($this->userHistoryFile, $this->historyList);
+        } else if ($this->segments[2] == 'rights') {
+            /*
+             * Get user rights creation MMI
+             */
+            $this->collectionsList = $this->context->dbDriver->listCollections();
+            $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
+            $this->userProfile = $this->user->profile;
+            
+            return $this->to($this->userRightCreation);
+        } else {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
         }
     }
@@ -587,11 +702,121 @@ class Administration extends RestoModule {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Error while deactivating user', 500);
         }
     }
+    
+    /**
+     * Process statistics
+     * 
+     * @return type
+     * @throws Exception
+     */
+    private function processStatistics(){
+        switch ($this->segments[1]) {
+            case 'collections':
+                return $this->to(null, $this->statisticsService());
+            case 'users':
+                if (!isset($this->segments[2])){
+                    return $this->to(null, $this->statisticsUsers());
+                }else if (isset($this->segments[2]) && !isset($this->segments[3])){
+                    return $this->to(null, $this->statisticsService($this->segments[2]));
+                }else{
+                    throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /**
+     * Statistics over users
+     * 
+     * @return type
+     */
+    private function statisticsUsers(){
+        /**
+         * nb users
+         * nb download
+         * nb visualize
+         * nb 
+         */
+        $statistics = array();
+        $statistics['users'] = $this->context->dbDriver->countUsers();
+        $statistics['download'] = $this->context->dbDriver->countService('download');
+        $statistics['search'] = $this->context->dbDriver->countService('search');
+        $statistics['visualize'] = $this->context->dbDriver->countService('resource');
+        $statistics['insert'] = $this->context->dbDriver->countService('insert');
+        $statistics['create'] = $this->context->dbDriver->countService('create');
+        $statistics['update'] = $this->context->dbDriver->countService('update');
+        $statistics['remove'] = $this->context->dbDriver->countService('remove');
+        return $statistics;
+    }
+    
+    /**
+     * statisticsService - services stats on collections
+     * 
+     * @param int $userid
+     * @return type
+     */
+    private function statisticsService($userid = null){
+        /*
+         * Statistics for each collections
+         */
+        $statistics = array();
+        $collections = $this->context->dbDriver->listCollections();
+        foreach ($collections as $collection) {
+            $collection_statistics = array();
+            $collection_statistics['download'] = $this->context->dbDriver->countService('download', $collection['collection'], $userid);
+            $collection_statistics['search'] = $this->context->dbDriver->countService('search', $collection['collection'], $userid);
+            $collection_statistics['visualize'] = $this->context->dbDriver->countService('resource', $collection['collection'], $userid);
+            $collection_statistics['insert'] = $this->context->dbDriver->countService('insert', $collection['collection'], $userid);
+            $collection_statistics['create'] = $this->context->dbDriver->countService('create', $collection['collection'], $userid);
+            $collection_statistics['update'] = $this->context->dbDriver->countService('update', $collection['collection'], $userid);
+            $collection_statistics['remove'] = $this->context->dbDriver->countService('remove', $collection['collection'], $userid);
+            $statistics[$collection['collection']] = $collection_statistics;
+        }
+        return $statistics;
+    }
 
     /**
      * toHTML
      */
     public function toHTML() {
         return RestoUtil::get_include_contents(realpath(dirname(__FILE__)) . '/../../../themes/' . $this->context->config['theme'] . $this->file, $this);
+    }
+    
+     /**
+     * Output collection description as a JSON stream
+     * 
+     * @param boolean $pretty : true to return pretty print
+     */
+    public function toJSON($pretty = false){
+        return RestoUtil::json_format($this->data, $pretty);
+    }
+    
+    /**
+     * to - return method depending on return type
+     * 
+     * @param String $file
+     * @param array $data
+     * @return method
+     * @throws Exception
+     */
+    private function to($file, $data = null){
+        if ($this->context->method === 'GET' && $this->context->outputFormat === 'json' && isset($data)) {
+            $pretty = false;
+            if (filter_input(INPUT_GET, '_pretty')) {
+                $pretty = filter_input(INPUT_GET, '_pretty');
+            }
+            $this->data = $data;
+            return $this->toJSON($pretty);
+        }else if($this->context->method === 'GET' && $this->context->outputFormat === 'html'){
+            if (!isset($file)){
+                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
+            }
+            $this->file = $file;
+            return $this->toHTML();
+        }else{
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
+        }
     }
 }

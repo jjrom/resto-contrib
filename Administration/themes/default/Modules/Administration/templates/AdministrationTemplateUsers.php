@@ -14,15 +14,19 @@
                 foreach ($self->usersProfiles as $userProfile) {
                     ?>
                     <li>
+                        <?php if($userProfile['groupname'] !== 'admin'){?>
                         <div class="panel">
+                        <?php }else{ ?>
+                        <div class="panel" style="background-color: #BDBDBD">
+                        <?php } ?>
                             <h1><a href="<?php echo $self->context->baseUrl . 'administration/users/' . $userProfile['userid'] ?>"> <?php echo $userProfile['email']; ?></a></h1>
                             <?php
-                            echo $self->context->dictionary->translate('_users_groupname') . ' : ' . $userProfile['groupname'] . ' <br/>';
-                            echo $self->context->dictionary->translate('_users_username') . ' : ' . $userProfile['username'] . ' <br/>';
-                            echo $self->context->dictionary->translate('_users_lastname') . ' : ' . $userProfile['lastname'] . ' <br/>';
-                            echo $self->context->dictionary->translate('_users_givenname') . ' : ' . $userProfile['givenname'] . ' <br/>';
-                            echo $self->context->dictionary->translate('_users_registrationdate') . ' : ' . $userProfile['registrationdate'] . ' <br/>';
-                            echo $self->context->dictionary->translate('_users_activated') . ' : ' . ($userProfile['activated'] == 1 ? 'true' : 'false') . ' <br/>';
+                            echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $userProfile['groupname'] . ' <br/>';
+                            echo $self->context->dictionary->translate('_a_username') . ' : ' . $userProfile['username'] . ' <br/>';
+                            echo $self->context->dictionary->translate('_a_lastname') . ' : ' . $userProfile['lastname'] . ' <br/>';
+                            echo $self->context->dictionary->translate('_a_givenname') . ' : ' . $userProfile['givenname'] . ' <br/>';
+                            echo $self->context->dictionary->translate('_a_registrationdate') . ' : ' . $userProfile['registrationdate'] . ' <br/>';
+                            echo $self->context->dictionary->translate('_a_activated') . ' : ' . ($userProfile['activated'] == 1 ? 'true' : 'false') . ' <br/>';
                             ?>
                         </div>
                     </li>
@@ -52,15 +56,15 @@
 
                 global_search_val = "<?php echo $self->global_search_val; ?>";
                 //$("#global_search").attr("placeholder", global_search_val);
-                $("#global_search").attr("text", global_search_val);
-                $("#global_search").show();
+                $("#search").attr("text", global_search_val);
+                $("#search").show();
                         
                 function initialize() {
                     $('input:radio[name=deactivated]').attr('checked', true);
                 }
 
-                $("#global_search").change(function() {
-                    url = "<?php echo $self->context->baseUrl . 'administration/users'; ?>" + "?keyword=" + $("#global_search").val();
+                $("#search").change(function() {
+                    url = "<?php echo $self->context->baseUrl . 'administration/users'; ?>" + "?keyword=" + $("#search").val();
                     window.location = url;
                 });
 

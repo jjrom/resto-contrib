@@ -1,3 +1,7 @@
+<?php
+    $_noSearchBar = true;
+    $_noMap = true;
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
@@ -5,75 +9,47 @@
         
         <!-- Header -->
         <?php include 'header.php' ?>
-       
+        
         <div class="row fullWidth resto-title">
 
         </div>
 
-        <br/>
-        <br/>
-        <br/>
+        <br/><br/><br/>
         <div class="row" >
-            <h1><?php echo $self->context->dictionary->translate('_history'); ?></h1>
-            <br/>
-            <div class="row">
-                <div class="large-12 columns">
-                    <label><?php echo $self->context->dictionary->translate('_history_choose_service'); ?>
-                        <select id="serviceSelector" name="serviceSelector">
-                            <option value=""></option>
-                            <option value="download"><?php echo $self->context->dictionary->translate('_download'); ?></option>
-                            <option value="search"><?php echo $self->context->dictionary->translate('_search'); ?></option>
-                            <option value="resource"><?php echo $self->context->dictionary->translate('_resource'); ?></option>
-                            <option value="insert"><?php echo $self->context->dictionary->translate('_insert'); ?></option>
-                            <option value="create"><?php echo $self->context->dictionary->translate('_create'); ?></option>
-                            <option value="update"><?php echo $self->context->dictionary->translate('_update'); ?></option>
-                            <option value="remove"><?php echo $self->context->dictionary->translate('_remove'); ?></option>
-                        </select>
-                    </label>
-                </div>
-                <div class="large-12 columns">
-                    <label><?php echo $self->context->dictionary->translate('_history_choose_collection'); ?>
-                        <select id="collectionSelector" name="collectionSelector">
-                            <option value=""></option>
-                            <?php
-                            
-                            foreach ($self->collectionsList as $collectionItem) {
-                                ?>
-                                <option value="<?php echo $collectionItem['collection']; ?>"><?php echo $collectionItem['collection']; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                    </label>
-                </div>
-            </div>
-            <br/>
             <ul class="small-block-grid-1 large-block-grid-1">
-                <?php 
-                foreach ($self->historyList as $history) {
+                <?php
+                foreach ($self->collections as $collection) {
                     ?>
                     <li>
-                        <div class="panel">
-                            <?php
-                            echo $history['userid'] . '<br/>';
-                            echo $history['method'] . ' ' . $history['service'] . ' ' . $history['collection'] . ' ' . $history['querytime'] . '<br/>';
-                            echo $history['query'] . '<br/>';
-                            echo $history['url'] . ' ' . $history['ip'];
+                        <div>
+                            <h1 style="text-align: center;"><?php echo $collection['collection']; ?></h1>
+                        
+                        <?php
+                        //foreach ($self->groups as $group) {
+                        $group['groupname'] = 'default';
+                            $restoRights = new RestoRights($group['groupname'], $group['groupname'], $self->context->dbDriver);
+                            $right = $restoRights->getRights($collection['collection']);
                             ?>
+                            <ul class="small-block-grid-1 large-block-grid-1">
+                                <fieldset>
+                                    <legend><?php echo $group['groupname']; ?></legend>
+                                    <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-6">
+                                        <?php
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="search" class="button expand rights" ' . ($right['search'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Search</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="download" class="button expand rights" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="visualize" class="button expand rights" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="canpost" class="button expand rights" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="canput" class="button expand rights" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
+                                        echo '<li><a groupname="' . $group['groupname'] . '" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
+                                        ?>
+                                    </ul>
+                                </fieldset>
+                            </ul>
+                        <?php //} ?>
                         </div>
                     </li>
                 <?php } ?>
             </ul>
-            <div style="text-align: center">
-                <?php
-                if ($self->startIndex != 0) {
-                    echo '<a id="previous" href="#" class="button">' . $self->context->dictionary->translate('_previousPage') . '</a>';
-                }
-                if (sizeof($self->historyList) >= $self->numberOfResults) {
-                    echo '<a id="next" href="#" style="margin-left: 5px;" class="button">' . $self->context->dictionary->translate('_nextPage') . '</a>';
-                }
-                ?>
-            </div>
         </div>
         <!-- Footer -->
         <?php include 'footer.php' ?>
@@ -82,40 +58,65 @@
             $(document).ready(function() {
 
                 var self = this;
-                $min = <?php echo $self->startIndex; ?>;
-                $number = <?php echo $self->numberOfResults; ?>;
-                $keyword = "<?php echo $self->keyword; ?>";
-
 
                 function initialize() {
-                    $('select[name=serviceSelector]').val('<?php echo (filter_input(INPUT_GET, 'service') ? filter_input(INPUT_GET, 'service') : ""); ?>');
-                    $('select[name=collectionSelector]').val('<?php echo (filter_input(INPUT_GET, 'collection') ? filter_input(INPUT_GET, 'collection') : ""); ?>');
+                    $('.rights').each(function(){
+                        if ($(this).attr('rightValue') === 'true'){
+                            $(this).css('background-color', 'green');
+                        }else{
+                            $(this).css('background-color', 'red');
+                        }
+                    });
                 }
-
-                $("#serviceSelector").on('change', function() {
-                    window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
-                });
-
-                $("#collectionSelector").on('change', function() {
-                    window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
-                });
-
-                $("#next").on('click', function() {
-                    $min = $min + $number;
-                    url = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val() + "&startIndex=" + $min + "&numberOfResults=" + $number;
-                    window.location = url;
-                });
-
-                $("#previous").on('click', function() {
-                    $min = $min - $number;
-                    if ($min < 0) {
-                        $min = 0;
+                
+                this.updateRights = function(groupname, collection, field, valueToSet, obj) {
+                    R.showMask();
+                
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "<?php echo $self->context->baseUrl;?>administration/collections",
+                        dataType: "json",
+                        data: {
+                            emailorgroup: groupname,
+                            collection: collection,
+                            field: field,
+                            value: valueToSet
+                        },
+                        success: function() {
+                            obj.attr('rightValue', valueToSet);
+                            initialize();
+                            R.hideMask();
+                        },
+                        error: function(e) {
+                            R.hideMask();
+                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                        }
+                    });
+                };
+                
+                $(".rights").on('click', function(){
+                    groupname = $(this).attr('groupname');
+                    collection = $(this).attr('collection');
+                    field = $(this).attr('field');
+                    rightValue = $(this).attr('rightValue');
+                    if (rightValue === 'true'){
+                        rightValue = false;
+                    }else{
+                        rightValue = true;
                     }
-                    url = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val() + "&startIndex=" + $min + "&numberOfResults=" + $number;
-                    window.location = url;
+                    self.updateRights(groupname, collection, field, rightValue, $(this));
                 });
 
                 initialize();
+                
+                R.init({
+                    language: '<?php echo $self->context->dictionary->language; ?>',
+                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
+                    restoUrl: '<?php echo $self->context->baseUrl ?>',
+                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
+                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
+                });
             });
         </script>
     </body>

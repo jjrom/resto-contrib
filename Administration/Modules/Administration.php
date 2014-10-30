@@ -89,6 +89,98 @@ class Administration extends RestoModule {
      * segments
      */
     public $segments;
+    
+    /*
+     * Translations array
+     *  array(
+     *      'en' => array(
+     *          'key' => 'translation',
+     *          ...
+     *      ),
+     *      'fr' => array(
+     *          ...
+     *      )
+     *      ...
+     *  )
+     */
+    protected $translations = array(
+        'en' => array(
+            '_a_activate_user' => 'Activate user',
+            '_a_activated' => 'Activated',
+            '_a_deactivated' => 'Deactivated',
+            '_a_choose_service' => 'Choose service',
+            '_a_choose_collection' => 'Choose collection',
+            '_a_choose_service' => 'Choose service',
+            '_a_createrights' => 'Create rights',
+            '_a_create' => 'Create',
+            '_a_collection_and_feature' => 'Collections and Features',
+            '_a_delete_user' => 'Delete user',
+            '_a_deactivate_user' => 'Deactivate user',
+            '_a_download' => 'Download',
+            '_a_email' => 'Email',
+            '_a_history' => 'History',
+            '_a_insert' => 'Insert',
+            '_a_lastname' => 'Last name',
+            '_a_last_history' => 'Last history',
+            '_a_givenname' => 'Given name',
+            '_a_groupname' => 'Groupname',
+            '_a_profile' => 'Profile',
+            '_a_remove' => 'Remove',
+            '_a_registrationdate' => 'Registration date',
+            '_a_select_group_name' => 'Select group name',
+            '_a_search' => 'Search',
+            '_a_service' => 'Service',
+            '_a_showfullhistory' => 'Show full history',
+            '_a_start' => 'Welcome to the administration.',
+            '_a_set_default_as_group' => 'Set DEFAULT as group',
+            '_a_set_admin_as_group' => 'Set ADMIN as group',
+            '_a_update' => 'Update',
+            '_a_user_creation' => 'Users creation',
+            '_a_username' => 'Username',
+            '_a_collections_management' => 'Collections management',
+            '_a_users_management' => 'Users management',
+            '_a_userid' => 'Userid',
+            '_a_visualize' => 'Visualize'
+        ),
+        'fr' => array(
+            '_a_activate_user' => 'Activer utilisateur',
+            '_a_activated' => 'Activ&eacute;',
+            '_a_deactivated' => 'D&eacute;sactiv&eacute;',
+            '_a_choose_service' => 'Choisir service',
+            '_a_choose_collection' => 'Choisir collection',
+            '_a_choose_service' => 'Choisir service',
+            '_a_createrights' => 'Cr&eacute;er un nouveau droit',
+            '_a_create' => 'Cr&eacute;er',
+            '_a_collection_and_feature' => 'Collections et Features',
+            '_a_delete_user' => 'Supprimer utilisateur',
+            '_a_deactivate_user' => 'D&eacute;sactiver utilisateur',
+            '_a_download' => 'T&eacute;l&eacute;charger',
+            '_a_email' => 'Email',
+            '_a_history' => 'Historique',
+            '_a_insert' => 'Ins&eacute;rer',
+            '_a_lastname' => 'Nom',
+            '_a_last_history' => 'Historique r&eacute;cent',
+            '_a_givenname' => 'Pr&eacute;nom',
+            '_a_groupname' => 'Nom du groupe',
+            '_a_profile' => 'Profile',
+            '_a_remove' => 'Supprimer',
+            '_a_registrationdate' => 'Date d\'enregistrement',
+            '_a_select_group_name' => 'S&eacute;l&eacute;ctionner le groupe',
+            '_a_search' => 'Rechercher',
+            '_a_service' => 'Service',
+            '_a_showfullhistory' => 'Afficher l\'historique complet',
+            '_a_start' => 'Bienvenue dans le module d\'administration.',
+            '_a_set_default_as_group' => 'Changer pour le groupe DEFAULT',
+            '_a_set_admin_as_group' => 'Changer pour le groupe ADMIN',
+            '_a_update' => 'Mise a jour',
+            '_a_user_creation' => 'Cr&eacute;ation d\'utilisateurs',
+            '_a_username' => 'Pseudo',
+            '_a_collections_management' => 'Administration des collections',
+            '_a_users_management' => 'Administration des utilisateurs',
+            '_a_userid' => 'Userid',
+            '_a_visualize' => 'Visualisation'
+        )
+    );
 
     /**
      * Constructor
@@ -104,6 +196,11 @@ class Administration extends RestoModule {
         
         // Set context
         $this->context = $context;
+        if (isset($this->context)) {
+            if (isset($this->translations) && isset($this->translations[$this->context->dictionary->language])) {
+                $this->context->dictionary->addTranslations($this->translations[$this->context->dictionary->language]);
+            }
+        }
         
         /*
          * Templates
@@ -111,7 +208,7 @@ class Administration extends RestoModule {
         $this->startFile = $this->templatesRoot . '/AdministrationTemplateStart.php';
         $this->usersFile = $this->templatesRoot . '/AdministrationTemplateUsers.php';
         $this->userFile = $this->templatesRoot . '/AdministrationTemplateUser.php';
-        $this->groupsFile = $this->templatesRoot . '/AdministrationTemplateGroups.php';
+        $this->groupsFile = $this->templatesRoot . '/AdministrationTemplateCollections.php';
         $this->historyFile = $this->templatesRoot . '/AdministrationTemplateHistory.php';
         $this->userHistoryFile = $this->templatesRoot . '/AdministrationTemplateUserHistory.php';
         $this->userCreationFile = $this->templatesRoot . '/AdministrationTemplateUserCreation.php';
@@ -179,8 +276,8 @@ class Administration extends RestoModule {
             switch ($this->segments[0]) {
                 case 'users':
                     return $this->processPostUsers();
-                case 'groups':
-                    return $this->processPostGroups();
+                case 'collections':
+                    return $this->processPostCollections();
                 default:
                     throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
             }
@@ -207,8 +304,8 @@ class Administration extends RestoModule {
             switch ($this->segments[0]) {
                 case 'users':
                     return $this->processGetUsers();
-                case 'groups':
-                    return $this->processGetGroups();
+                case 'collections':
+                    return $this->processGetCollections();
                 case 'stats':
                     return $this->processStatistics();
                 default:
@@ -218,11 +315,11 @@ class Administration extends RestoModule {
     }
     
     /**
-     * Process when GET on /administration/groups
+     * Process when GET on /administration/collections
      * 
      * @throws Exception
      */
-    private function processGetGroups() {
+    private function processGetCollections() {
 
         /*
          * Get user creation MMI
@@ -241,11 +338,11 @@ class Administration extends RestoModule {
     }
     
     /**
-     * Process when POST on /administration/groups
+     * Process when POST on /administration/collections
      * 
      * @throws Exception
      */
-    private function processPostGroups() {
+    private function processPostCollections() {
    
         if (isset($this->segments[1])) {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
@@ -560,8 +657,8 @@ class Administration extends RestoModule {
                  */
                 return json_encode(array('status' => 'success', 'message' => 'success'));
             }
-        } catch (Exception $ex) {
-            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Error while updating rights', 500);
+        } catch (Exception $e) {
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . $e->getMessage(), 500);
         }
     }
 
@@ -608,7 +705,7 @@ class Administration extends RestoModule {
             return json_encode(array('status' => 'success', 'message' => 'success'));
             
         } catch (Exception $e) {
-            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Error while creating rights', 500);
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . $e->getMessage(), 500);
         }
     }
 
@@ -631,8 +728,8 @@ class Administration extends RestoModule {
             else {
                 throw new Exception();
             }
-        } catch (Exception $ex) {
-            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Error while deleting rights', 500);
+        } catch (Exception $e) {
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . $e->getMessage(), 500);
         }
     }
 
@@ -648,7 +745,7 @@ class Administration extends RestoModule {
                 $this->context->dbDriver->storeUserProfile($userParam);
                 return json_encode(array('status' => 'success', 'message' => 'success'));
             } catch (Exception $e) {
-                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'User not created', 500);
+                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . $e->getMessage(), 500);
             }
         } else {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'No data to create user', 500);
@@ -667,7 +764,7 @@ class Administration extends RestoModule {
                 $this->context->dbDriver->updateUserProfile($userParam);
                 return json_encode(array('status' => 'success', 'message' => 'success'));
             } catch (Exception $e) {
-                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'User not updated', 500);
+                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . $e->getMessage(), 500);
             }
         } else {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'No data to update user', 500);

@@ -1,3 +1,7 @@
+<?php
+    $_noSearchBar = true;
+    $_noMap = true;
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
@@ -12,8 +16,8 @@
             <a id="_alert" href="#" class="button expand alert hide"></a>
             <form>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_rights_collection_and_feature'); ?></legend>
-                    <label><?php echo $self->context->dictionary->translate('_history_choose_collection'); ?>
+                    <legend><?php echo $self->context->dictionary->translate('_a_collection_and_feature'); ?></legend>
+                    <label><?php echo $self->context->dictionary->translate('_a_choose_collection'); ?>
                         <select id="collection" name="collection">
                             <option value=""></option>
                             <?php
@@ -118,7 +122,7 @@
                             },
                             error: function() {
                                 R.hideMask();
-                                alert("error");
+                                alert('error : ' + e['responseJSON']['ErrorMessage']);
                             }
                         });
                     }
@@ -199,7 +203,7 @@
                     translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
                     restoUrl: '<?php echo $self->context->baseUrl ?>',
                     ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
-                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array('rights' => $_SESSION['rights']))) ?> 
+                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
                 });
             });
         </script>

@@ -1,3 +1,7 @@
+<?php
+    $_noSearchBar = true;
+    $_noMap = true;
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
@@ -13,18 +17,18 @@
             <a id="_alert" href="#" class="button expand alert hide"></a>
             <form>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_user_profil'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_profil'); ?></legend>
 
-                    <label><?php echo $self->context->dictionary->translate('_users_email'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_email'); ?>
                         <input id="email" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_email'); ?>...">
                     </label>
-                    <label><?php echo $self->context->dictionary->translate('_users_lastname'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_lastname'); ?>
                         <input id="lastname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_lastname'); ?>...">
                     </label>
-                    <label><?php echo $self->context->dictionary->translate('_users_username'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_username'); ?>
                         <input id="username" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_username'); ?>...">
                     </label>
-                    <label><?php echo $self->context->dictionary->translate('_users_givenname'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_givenname'); ?>
                         <input id="givenname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_givenname'); ?>...">
                     </label>
                     <label><?php echo $self->context->dictionary->translate('_password'); ?>
@@ -36,7 +40,7 @@
                 </fieldset>
                 <fieldset>
                     <legend><?php echo $self->context->dictionary->translate('_group'); ?></legend>
-                    <label><?php echo $self->context->dictionary->translate('_history_select_group_name'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_select_group_name'); ?>
                         <select id="groupname" name="groupname">
                             <option value="unregistered"><?php echo $self->context->dictionary->translate('_unregistered'); ?></option>
                             <option value="default"><?php echo $self->context->dictionary->translate('_default'); ?></option>
@@ -45,9 +49,9 @@
                     </label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_users_activated'); ?></legend>
-                    <input type="radio" name="activated" value="true" id="activated"><label for="activated"><?php echo $self->context->dictionary->translate('_users_activated'); ?></label>
-                    <input type="radio" name="deactivated" value="false" id="deactivated"><label for="deactivated"><?php echo $self->context->dictionary->translate('_users_deactivated'); ?></label>
+                    <legend><?php echo $self->context->dictionary->translate('_a_activated'); ?></legend>
+                    <input type="radio" name="activated" value="true" id="activated"><label for="activated"><?php echo $self->context->dictionary->translate('_a_activated'); ?></label>
+                    <input type="radio" name="deactivated" value="false" id="deactivated"><label for="deactivated"><?php echo $self->context->dictionary->translate('_a_deactivated'); ?></label>
                 </fieldset>
             </form> 
             <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_save_user'); ?></a>
@@ -98,8 +102,8 @@
                             lastname: $('#lastname').val(),
                             activated: $('input[name=activated]:checked').val()
                         },
-                        error: function() {
-                            alert('error');
+                        error: function(e) {
+                            alert('error : ' + e['responseJSON']['ErrorMessage']);
                         },
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>";

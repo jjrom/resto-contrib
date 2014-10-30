@@ -1,3 +1,7 @@
+<?php
+    $_noSearchBar = true;
+    $_noMap = true;
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
@@ -10,11 +14,11 @@
 
         <br/><br/><br/>
         <div class="row" >
-            <h1><?php echo $self->context->dictionary->translate('_history'); ?></h1>
+            <h1><?php echo $self->context->dictionary->translate('_a_history'); ?></h1>
             <br/>
             <div class="row">
                 <div class="large-12 columns">
-                    <label><?php echo $self->context->dictionary->translate('_history_choose_service'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_choose_service'); ?>
                         <select id="serviceSelector" name="serviceSelector">
                             <option value=""></option>
                             <option value="download"><?php echo $self->context->dictionary->translate('_download'); ?></option>
@@ -28,7 +32,7 @@
                     </label>
                 </div>
                 <div class="large-12 columns">
-                    <label><?php echo $self->context->dictionary->translate('_history_choose_collection'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_choose_collection'); ?>
                         <select id="collectionSelector" name="collectionSelector">
                             <option value=""></option>
                             <?php

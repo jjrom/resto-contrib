@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
-    <body>
+    <body style="overflow-x: hidden;">
         <!-- Header -->
         <?php include 'header.php' ?>
         
@@ -29,44 +29,44 @@
                             ?>
                         </select>
                     </label>
-                    <label><?php echo $self->context->dictionary->translate('_feature_id'); ?>
+                    <label><?php echo $self->context->dictionary->translate('_a_feature_id'); ?>
                         <input id="featureid" type="text" placeholder="featureid..." value="">
                     </label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_search'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_search'); ?></legend>
                     <input type="radio" name="search" value="true" id="search"><label for="search"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="nosearch" value="false" id="nosearch"><label for="nosearch"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_visualize'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_visualize'); ?></legend>
                     <input type="radio" name="visualize" value="true" id="visualize"><label for="visualize"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="novisualize" value="false" id="novisualize"><label for="novisualize"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_download'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_download'); ?></legend>
                     <input type="radio" name="download" value="true" id="download"><label for="download"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="nodownload" value="false" id="nodownload"><label for="nodownload"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
                 <fieldset>
-                    <legend<?php echo $self->context->dictionary->translate('_can_post'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_can_post'); ?></legend>
                     <input type="radio" name="canpost" value="true" id="canpost"><label for="canpost"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="cantpost" value="false" id="cantpost"><label for="cantpost"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_can_put'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_can_put'); ?></legend>
                     <input type="radio" name="canput" value="true" id="canput"><label for="canput"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="cantput" value="false" id="cantput"><label for="cantput"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_can_delete'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_can_delete'); ?></legend>
                     <input type="radio" name="candelete" value="true" id="candelete"><label for="candelete"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="cantdelete" value="false" id="cantdelete"><label for="cantdelete"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
 
             </form>
 
-            <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_save_right'); ?></a>
+            <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_a_save_right'); ?></a>
         </div>
         <!-- Footer -->
         <?php include 'footer.php' ?>

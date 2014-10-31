@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
-    <body>
+    <body style="overflow-x: hidden;">
         
         <!-- Header -->
         <?php include 'header.php' ?>
@@ -17,19 +17,19 @@
             <a id="_alert" href="#" class="button expand alert hide"></a>
             <form>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_a_profil'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_profile'); ?></legend>
 
                     <label><?php echo $self->context->dictionary->translate('_a_email'); ?>
-                        <input id="email" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_email'); ?>...">
+                        <input id="email" type="text" placeholder="<?php echo $self->context->dictionary->translate('_a_email'); ?>...">
                     </label>
                     <label><?php echo $self->context->dictionary->translate('_a_lastname'); ?>
-                        <input id="lastname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_lastname'); ?>...">
+                        <input id="lastname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_a_lastname'); ?>...">
                     </label>
                     <label><?php echo $self->context->dictionary->translate('_a_username'); ?>
-                        <input id="username" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_username'); ?>...">
+                        <input id="username" type="text" placeholder="<?php echo $self->context->dictionary->translate('_a_username'); ?>...">
                     </label>
                     <label><?php echo $self->context->dictionary->translate('_a_givenname'); ?>
-                        <input id="givenname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_users_givenname'); ?>...">
+                        <input id="givenname" type="text" placeholder="<?php echo $self->context->dictionary->translate('_a_givenname'); ?>...">
                     </label>
                     <label><?php echo $self->context->dictionary->translate('_password'); ?>
                         <input id="password" type="password" placeholder="<?php echo $self->context->dictionary->translate('_password'); ?>...">
@@ -39,12 +39,12 @@
                     </label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_group'); ?></legend>
+                    <legend><?php echo $self->context->dictionary->translate('_a_groupname'); ?></legend>
                     <label><?php echo $self->context->dictionary->translate('_a_select_group_name'); ?>
                         <select id="groupname" name="groupname">
-                            <option value="unregistered"><?php echo $self->context->dictionary->translate('_unregistered'); ?></option>
-                            <option value="default"><?php echo $self->context->dictionary->translate('_default'); ?></option>
-                            <option value="admin"><?php echo $self->context->dictionary->translate('_admin'); ?></option>
+                            <option value="unregistered"><?php echo $self->context->dictionary->translate('_a_unregistered'); ?></option>
+                            <option value="default"><?php echo $self->context->dictionary->translate('_a_default'); ?></option>
+                            <option value="admin"><?php echo $self->context->dictionary->translate('_a_admin'); ?></option>
                         </select>
                     </label>
                 </fieldset>
@@ -54,7 +54,7 @@
                     <input type="radio" name="deactivated" value="false" id="deactivated"><label for="deactivated"><?php echo $self->context->dictionary->translate('_a_deactivated'); ?></label>
                 </fieldset>
             </form> 
-            <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_save_user'); ?></a>
+            <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_a_save_user'); ?></a>
         </div>
         <!-- Footer -->
         <?php include 'footer.php' ?>
@@ -134,6 +134,14 @@
             });
 
             initialize();
+            
+            R.init({
+                language: '<?php echo $self->context->dictionary->language; ?>',
+                translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
+                restoUrl: '<?php echo $self->context->baseUrl ?>',
+                ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
+                userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
+            });
         });
         </script>
     </body>

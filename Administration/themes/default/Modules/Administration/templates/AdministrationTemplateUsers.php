@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
-    <body>
+    <body style="overflow-x: hidden;">
         
         <!-- Header -->
         <?php include 'header.php' ?>
@@ -9,7 +9,7 @@
 
         <br/><br/><br/>
         <div class="row" >
-            <ul class="small-block-grid-1 large-block-grid-2">
+            <ul class="small-block-grid-1 large-block-grid-2" style="padding-top: 15px">
                 <?php
                 foreach ($self->usersProfiles as $userProfile) {
                     ?>
@@ -84,6 +84,14 @@
                 });
 
                 initialize();
+                
+                R.init({
+                    language: '<?php echo $self->context->dictionary->language; ?>',
+                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
+                    restoUrl: '<?php echo $self->context->baseUrl ?>',
+                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
+                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
+                });
             });
         </script>
     </body>

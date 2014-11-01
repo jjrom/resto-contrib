@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <?php include 'head.php' ?>
-    <body>
+    <body style="overflow-x: hidden;">
         
         <!-- Header -->
         <?php include 'header.php' ?>
@@ -137,7 +137,7 @@
                 <li>
                     <div class="panel">
                         <h1>
-                            <?php echo $self->context->dictionary->translate('_a_last_history'); ?>
+                            <?php echo $self->context->dictionary->translate('_a_last_download'); ?>
                         </h1>
                         <?php
                         foreach ($self->historyList as $history) {

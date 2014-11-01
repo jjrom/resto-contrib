@@ -107,7 +107,11 @@ class Administration extends RestoModule {
         'en' => array(
             '_a_activate_user' => 'Activate user',
             '_a_activated' => 'Activated',
+            '_a_admin' => 'Administrator',
             '_a_deactivated' => 'Deactivated',
+            '_a_can_post' => 'Can Post',
+            '_a_can_put' => 'Can Put',
+            '_a_can_delete' => 'Can Delete',
             '_a_choose_service' => 'Choose service',
             '_a_choose_collection' => 'Choose collection',
             '_a_choose_service' => 'Choose service',
@@ -115,18 +119,23 @@ class Administration extends RestoModule {
             '_a_create' => 'Create',
             '_a_collection_and_feature' => 'Collections and Features',
             '_a_delete_user' => 'Delete user',
+            '_a_default' => 'Default',
             '_a_deactivate_user' => 'Deactivate user',
             '_a_download' => 'Download',
             '_a_email' => 'Email',
+            '_a_feature_id' => 'Feature id',
             '_a_history' => 'History',
             '_a_insert' => 'Insert',
             '_a_lastname' => 'Last name',
+            '_a_last_download' => 'Last downloads',
             '_a_last_history' => 'Last history',
             '_a_givenname' => 'Given name',
             '_a_groupname' => 'Groupname',
             '_a_profile' => 'Profile',
             '_a_remove' => 'Remove',
             '_a_registrationdate' => 'Registration date',
+            '_a_save_right' => 'Save right',
+            '_a_save_user' => 'Save user',
             '_a_select_group_name' => 'Select group name',
             '_a_search' => 'Search',
             '_a_service' => 'Service',
@@ -135,17 +144,24 @@ class Administration extends RestoModule {
             '_a_set_default_as_group' => 'Set DEFAULT as group',
             '_a_set_admin_as_group' => 'Set ADMIN as group',
             '_a_update' => 'Update',
+            '_a_unregistered' => 'Unregistered',
             '_a_user_creation' => 'Users creation',
             '_a_username' => 'Username',
             '_a_collections_management' => 'Collections management',
             '_a_users_management' => 'Users management',
             '_a_userid' => 'Userid',
-            '_a_visualize' => 'Visualize'
+            '_a_visualize' => 'Visualize',
+            '_true' => 'True',
+            '_false' => 'False'
         ),
         'fr' => array(
             '_a_activate_user' => 'Activer utilisateur',
             '_a_activated' => 'Activ&eacute;',
+            '_a_admin' => 'Administrateur',
             '_a_deactivated' => 'D&eacute;sactiv&eacute;',
+            '_a_can_post' => 'Peut Post',
+            '_a_can_put' => 'Peut Put',
+            '_a_can_delete' => 'Peut Delete',
             '_a_choose_service' => 'Choisir service',
             '_a_choose_collection' => 'Choisir collection',
             '_a_choose_service' => 'Choisir service',
@@ -153,11 +169,14 @@ class Administration extends RestoModule {
             '_a_create' => 'Cr&eacute;er',
             '_a_collection_and_feature' => 'Collections et Features',
             '_a_delete_user' => 'Supprimer utilisateur',
+            '_a_default' => 'D&eacute;faut',
             '_a_deactivate_user' => 'D&eacute;sactiver utilisateur',
             '_a_download' => 'T&eacute;l&eacute;charger',
             '_a_email' => 'Email',
+            '_a_feature_id' => 'Feature id',
             '_a_history' => 'Historique',
             '_a_insert' => 'Ins&eacute;rer',
+            '_a_last_download' => 'Derniers t&eacute;l&eacute;chargements',
             '_a_lastname' => 'Nom',
             '_a_last_history' => 'Historique r&eacute;cent',
             '_a_givenname' => 'Pr&eacute;nom',
@@ -165,6 +184,8 @@ class Administration extends RestoModule {
             '_a_profile' => 'Profile',
             '_a_remove' => 'Supprimer',
             '_a_registrationdate' => 'Date d\'enregistrement',
+            '_a_save_right' => 'Sauvegarder droits',
+            '_a_save_user' => 'Sauvegarder utilisateur',
             '_a_select_group_name' => 'S&eacute;l&eacute;ctionner le groupe',
             '_a_search' => 'Rechercher',
             '_a_service' => 'Service',
@@ -175,10 +196,13 @@ class Administration extends RestoModule {
             '_a_update' => 'Mise a jour',
             '_a_user_creation' => 'Cr&eacute;ation d\'utilisateurs',
             '_a_username' => 'Pseudo',
+            '_a_unregistered' => 'Non enregistr&eacute;',
             '_a_collections_management' => 'Administration des collections',
             '_a_users_management' => 'Administration des utilisateurs',
             '_a_userid' => 'Userid',
-            '_a_visualize' => 'Visualisation'
+            '_a_visualize' => 'Visualisation',
+            '_true' => 'Oui',
+            '_false' => 'Non'
         )
     );
 
@@ -465,7 +489,8 @@ class Administration extends RestoModule {
             * Get user informations MMI
             */
             $options = array(
-                'numberOfResults' => 4
+                'numberOfResults' => 4,
+                'service' => 'download'
             );
             $this->historyList = $this->context->dbDriver->getHistory($this->user->profile['userid'], $options);
             $this->collectionsList = $this->context->dbDriver->listCollections();

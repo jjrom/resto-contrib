@@ -1,6 +1,7 @@
 <?php
 $_noSearchBar = true;
 $_noMap = true;
+$_noBreadcrumb = true;
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -8,13 +9,10 @@ $_noMap = true;
     <body style="overflow-x: hidden;">
         <!-- Header -->
         <?php include 'header.php' ?>
+        
+        <!-- Breadcrumb -->
+        <?php include 'breadcrumb.php' ?>
 
-        <div class="row fullWidth resto-title">
-
-        </div>
-        <br/>
-        <br/>
-        <br/>
         <div class="row" style="text-align: center; padding-top: 25px">
             <ul class="small-block-grid-1 large-block-grid-2" >
                 <li>
@@ -48,22 +46,29 @@ $_noMap = true;
                     </ul>
                 </li>
             </ul>
+            <ul class="small-block-grid-1 large-block-grid-3" >
+                <li>
+                    <div class='panel'>
+                        <h1><?php echo $self->context->dictionary->translate('_a_users'); ?></h1>
+                        <h1><?php echo $self->stats['nb_users']['count'];?></h1>
+                    </div>
+                </li>
+                <li>
+                    <div class='panel'>
+                        <h1><?php echo $self->context->dictionary->translate('_a_downloads'); ?></h1>
+                        <h1><?php echo $self->stats['nb_downloads']['count'];?></h1>
+                    </div>
+                </li>
+                <li>
+                    <div class='panel'>
+                        <h1><?php echo $self->context->dictionary->translate('_a_searchs'); ?></h1>
+                        <h1><?php echo $self->stats['nb_search']['count'];?></h1>
+                    </div>
+                </li>
+            </ul>
 
         </div>
         <!-- Footer -->
         <?php include 'footer.php' ?>
-        
-        <script type="text/javascript" >
-            $(document).ready(function() {
-                
-                 R.init({
-                    language: '<?php echo $self->context->dictionary->language; ?>',
-                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
-                    restoUrl: '<?php echo $self->context->baseUrl ?>',
-                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
-                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
-                });
-            });
-        </script>
     </body>
 </html>

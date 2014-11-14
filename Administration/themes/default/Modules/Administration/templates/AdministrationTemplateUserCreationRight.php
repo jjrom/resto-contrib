@@ -9,26 +9,17 @@
         <!-- Header -->
         <?php include 'header.php' ?>
         
-        <div class="row fullWidth resto-title"></div>
-
-        <br/><br/><br/>
-        <div class="row" >
-            <a id="_alert" href="#" class="button expand alert hide"></a>
+        <!-- Breadcrumb -->
+        <?php include 'breadcrumb.php' ?>
+        
+        <div class="row maincontent" >
+            
             <form>
+                <h3 style="text-align: center;">
+                    <?php echo $self->context->dictionary->translate('_a_text_createrights'); ?> <?php echo $self->collectionRight; ?> <?php echo $self->context->dictionary->translate('_for'); ?> <?php echo $self->userProfile['email'] ?>
+                </h3>
                 <fieldset>
                     <legend><?php echo $self->context->dictionary->translate('_a_collection_and_feature'); ?></legend>
-                    <label><?php echo $self->context->dictionary->translate('_a_choose_collection'); ?>
-                        <select id="collection" name="collection">
-                            <option value=""></option>
-                            <?php
-                            foreach ($self->collectionsList as $collectionItem) {
-                                ?>
-                                <option value="<?php echo $collectionItem['collection']; ?>"><?php echo $collectionItem['collection']; ?></option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                    </label>
                     <label><?php echo $self->context->dictionary->translate('_a_feature_id'); ?>
                         <input id="featureid" type="text" placeholder="featureid..." value="">
                     </label>
@@ -83,21 +74,13 @@
                     $('input:radio[name=cantpost]').attr('checked', true);
                     $('input:radio[name=cantput]').attr('checked', true);
                     $('input:radio[name=cantdelete]').attr('checked', true);
-                    $('#_alert').hide();
-                }
-                
-                this.alert = function(element){
-                    $('#_alert').text('Please set ' + element);
-                    $('#_alert').show();
                 }
 
                 this.addRight = function() {
-                    if ($('select[name=collection]').val() === ''){
-                        self.alert('collection');
-                    }else if ($("#featureid").val() === ''){
-                        self.alert('featureid');
+                    if ($("#featureid").val() === ''){
+                       Resto.Util.alert($('.maincontent'), 'Please set featureid');
                     }else{
-                        R.showMask();
+                        Resto.Util.showMask();
                         
                         $.ajax({
                             type: "POST",
@@ -106,7 +89,7 @@
                             dataType: "json",
                             data: {
                                 emailorgroup: '<?php echo $self->userProfile['email'] ?>',
-                                collection: $('select[name=collection]').val(),
+                                collection: '<?php echo $self->collectionRight; ?>',
                                 featureid: $("#featureid").val(),
                                 search: $('input[name=search]:checked').val(),
                                 visualize: $('input[name=visualize]:checked').val(),
@@ -118,20 +101,15 @@
                             },
                             success: function() {
                                 window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] ?>";
-                                R.hideMask();
                             },
-                            error: function() {
-                                R.hideMask();
-                                alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            error: function(e) {
+                                Resto.Util.hideMask();
+                                Resto.Util.alert($('.maincontent'),'error : ' + e['responseJSON']['ErrorMessage']);
                             }
                         });
                     }
                 };
                 
-                $("#_alert").on('click', function() {
-                    $('#_alert').hide();
-                });
-
                 $("#_save").on('click', function() {
                     self.addRight();
                 });
@@ -197,14 +175,6 @@
                 });
 
                 initialize();
-                
-                R.init({
-                    language: '<?php echo $self->context->dictionary->language; ?>',
-                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
-                    restoUrl: '<?php echo $self->context->baseUrl ?>',
-                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
-                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
-                });
             });
         </script>
     </body>

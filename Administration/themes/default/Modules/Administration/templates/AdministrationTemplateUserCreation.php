@@ -42,8 +42,7 @@
                     <legend><?php echo $self->context->dictionary->translate('_a_groupname'); ?></legend>
                     <label><?php echo $self->context->dictionary->translate('_a_select_group_name'); ?>
                         <select id="groupname" name="groupname">
-                            <option value="unregistered"><?php echo $self->context->dictionary->translate('_a_unregistered'); ?></option>
-                            <option value="default"><?php echo $self->context->dictionary->translate('_a_default'); ?></option>
+                            <option value="default" selected="true"><?php echo $self->context->dictionary->translate('_a_default'); ?></option>
                             <option value="admin"><?php echo $self->context->dictionary->translate('_a_admin'); ?></option>
                         </select>
                     </label>

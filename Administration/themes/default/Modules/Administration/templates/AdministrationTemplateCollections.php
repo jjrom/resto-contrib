@@ -10,11 +10,9 @@
         <!-- Header -->
         <?php include 'header.php' ?>
         
-        <div class="row fullWidth resto-title">
-
-        </div>
-
-        <br/><br/><br/>
+        <!-- Breadcrumb -->
+        <?php include 'breadcrumb.php' ?>
+        
         <div class="row" >
             <ul class="small-block-grid-1 large-block-grid-1">
                 <?php
@@ -70,7 +68,7 @@
                 }
                 
                 this.updateRights = function(groupname, collection, field, valueToSet, obj) {
-                    R.showMask();
+                    Resto.Util.showMask();
                 
                     $.ajax({
                         type: "POST",
@@ -86,10 +84,10 @@
                         success: function() {
                             obj.attr('rightValue', valueToSet);
                             initialize();
-                            R.hideMask();
+                            Resto.Util.hideMask();
                         },
                         error: function(e) {
-                            R.hideMask();
+                            Resto.Util.hideMask();
                             alert('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
@@ -110,13 +108,6 @@
 
                 initialize();
                 
-                R.init({
-                    language: '<?php echo $self->context->dictionary->language; ?>',
-                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
-                    restoUrl: '<?php echo $self->context->baseUrl ?>',
-                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
-                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
-                });
             });
         </script>
     </body>

@@ -5,21 +5,23 @@
         
         <!-- Header -->
         <?php include 'header.php' ?>
-        <div class="row fullWidth resto-title"></div>
-
-        <br/><br/><br/>
+        
+        <!-- Breadcrumb -->
+        <?php include 'breadcrumb.php' ?>
+        
         <div class="row" >
             <ul class="small-block-grid-1 large-block-grid-2" style="padding-top: 15px">
                 <?php
                 foreach ($self->usersProfiles as $userProfile) {
                     ?>
                     <li>
-                        <?php if($userProfile['groupname'] !== 'admin'){?>
-                        <div class="panel">
-                        <?php }else{ ?>
+                        <?php if($userProfile['groupname'] === 'admin'){?>
                         <div class="panel" style="background-color: #BDBDBD">
-                        <?php } ?>
+                            <h1><?php echo $userProfile['email']; ?></h1>
+                        <?php }else{ ?>
+                        <div class="panel">
                             <h1><a href="<?php echo $self->context->baseUrl . 'administration/users/' . $userProfile['userid'] ?>"> <?php echo $userProfile['email']; ?></a></h1>
+                        <?php } ?>
                             <?php
                             echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $userProfile['groupname'] . ' <br/>';
                             echo $self->context->dictionary->translate('_a_username') . ' : ' . $userProfile['username'] . ' <br/>';

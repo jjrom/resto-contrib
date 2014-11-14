@@ -10,22 +10,19 @@
         <!-- Header -->
         <?php include 'header.php' ?>
         
-        <div class="row fullWidth resto-title">
-
-        </div>
-
-        <br/><br/><br/>
+        <!-- Breadcrumb -->
+        <?php include 'breadcrumb.php' ?>
+        
         <div class="row" >
             <ul class="small-block-grid-1 large-block-grid-2" >
                 <li>
                     <fieldset>
                         <legend><?php echo $self->context->dictionary->translate('_a_profile'); ?></legend>
                         <h1>
-                            <?php echo $self->user->profile['email']; ?>
+                            <?php echo $self->user->profile['userid']; ?> - <?php echo $self->user->profile['email']; ?>
                         </h1>
                         <p>
                         <?php
-                        echo ($self->user->profile['activated'] == 1 ? 'ACTIVATED' : 'DEACTIVATED') . ' <br/>';
                         echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $self->user->profile['groupname'] . ' <br/>';
                         echo $self->context->dictionary->translate('_a_username') . ' : ' . $self->user->profile['username'] . ' <br/>';
                         echo $self->context->dictionary->translate('_a_lastname') . ' : ' . $self->user->profile['lastname'] . ' <br/>';
@@ -39,23 +36,18 @@
                     <div style="padding-top: 25px">
                         <ul class="small-block-grid-1 large-block-grid-1">
                             <li>
-                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/history"; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_showfullhistory'); ?></a>
-                            </li>
-                        <?php
-                        if ($self->user->profile['groupname'] === 'admin'){
-                            
-                        }else{
-                        ?>
-                            <li>
-                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/rights"; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_createrights'); ?></a>
-                            </li>
-                            <li>
                                 <?php if ($self->user->profile['activated'] == 1) { ?>
-                                    <a id="deactivateButton" href="#" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_deactivate_user'); ?></a>
+                                    <a id="deactivateButton" href="#" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_activated'); ?></a>
                                 <?php } else { ?>
-                                    <a id="activateButton" href="#" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_activate_user'); ?></a>
+                                    <a id="activateButton" href="#" class="button expand [tiny small large]" style="background-color: red"><?php echo $self->context->dictionary->translate('_a_deactivated'); ?></a>
                                 <?php } ?>
                             </li>
+                            <li>
+                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/history"; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_showfullhistory'); ?></a>
+                            </li>
+                       
+                            
+                            
                             <li>
                                 <?php if ($self->user->profile['groupname'] === 'admin') { ?>
                                     <a id="setGroupDefault" href="#" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_set_default_as_group'); ?></a>
@@ -64,75 +56,79 @@
                                 <?php } ?>
                             </li>
                         </ul>
-                        <?php } ?>
+                        
                         <a id="deleteButton" class="button expand alert [tiny small large] hide"><?php echo $self->context->dictionary->translate('_a_delete_user'); ?></a>
                     </div>
                 </li>
             </ul>
             
             <?php
-            foreach ($self->collectionsList as $collection) {
-                $right = $self->user->getRights($collection['collection']);
+            foreach ($self->rightsList as $collection => $right) {
+                if ($collection === '*'){
+                    
+                }else{
             ?>
                 <ul class="small-block-grid-1 large-block-grid-1">
                     <div >
                         <fieldset>
-                            <legend><?php echo $collection['collection']; ?></legend>
+                            <legend><?php echo $collection; ?></legend>
                             <h2>
                                 <?php
                                 if (isset($self->licenses[$collection['collection']])){
-                                    echo "Sign on " . $self->licenses($collection['collection']);
+                                    echo $self->context->dictionary->translate('_a_signedon') . $self->licenses($collection['collection']);
                                 }else{
-                                    echo "<h3 style=\"color: red;\">Not signed yet</h3>";
+                                    echo "<h3 style=\"color: red;\">". $self->context->dictionary->translate('_a_notsignedyet') ."</h3>";
                                 }
                                 ?>
                             </h2>
                             <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-5">
                                 <?php
-                                echo '<li><a id="' . $collection['collection'] . 'download" collection="' . $collection['collection'] . '" field="download" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
-                                echo '<li><a id="' . $collection['collection'] . 'visualize" collection="' . $collection['collection'] . '" field="visualize" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
-                                echo '<li><a id="' . $collection['collection'] . 'canpost" collection="' . $collection['collection'] . '" field="canpost" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
-                                echo '<li><a id="' . $collection['collection'] . 'canput" collection="' . $collection['collection'] . '" field="canput" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
-                                echo '<li><a id="' . $collection['collection'] . 'candelete" collection="' . $collection['collection'] . '" field="candelete" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
+                                echo '<li><a id="' . $collection . 'download" collection="' . $collection . '" field="download" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
+                                echo '<li><a id="' . $collection . 'visualize" collection="' . $collection . '" field="visualize" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
+                                echo '<li><a id="' . $collection . 'canpost" collection="' . $collection . '" field="canpost" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
+                                echo '<li><a id="' . $collection . 'canput" collection="' . $collection . '" field="canput" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
+                                echo '<li><a id="' . $collection . 'candelete" collection="' . $collection . '" field="candelete" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
                                 ?>
                             </ul>
+                            <ul class="small-block-grid-1 large-block-grid-1">
+                                <li>
+                                    <div>
+                                        <ul class="small-block-grid-1 large-block-grid-4">
+                                            <?php
+                                            if (isset($right['features'])){
+                                                foreach ($right['features'] as $feature => $featureRight) {
+                                                ?>
+                                                <div class="panel">
+                                                    <a id="<?php echo $feature; ?>" class="button right alert rightDeleteButton" collection="<?php echo $collection; ?>" featureid="<?php echo $feature; ?>">X</a>
+                                                    <h2>
+                                                        <?php
+                                                        echo $feature;
+                                                        ?>
+
+                                                    </h2>
+                                                    <ul class="small-block-grid-2 large-block-grid-5">
+                                                        <?php
+                                                        echo '<li>download : ' . ($featureRight['download'] == 1 ? 'true' : 'false') . '</li>';
+                                                        echo '<li>visualize : ' . ($featureRight['visualize'] == 1 ? 'true' : 'false') . '</li>';
+                                                        echo '<li>post : ' . ($featureRight['post'] == 1 ? 'true' : 'false') . '</li>';
+                                                        echo '<li>put : ' . ($featureRight['put'] == 1 ? 'true' : 'false') . '</li>';
+                                                        echo '<li>delete : ' . ($featureRight['delete'] == 1 ? 'true' : 'false') . '</li>';
+                                                        ?> 
+                                                    </ul> 
+                                                </div>
+                                            <?php }} ?>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                            <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/rights?collection=" . $collection; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_createrights'); ?></a>
+                            
                         </fieldset>
                     </div>
                 </ul>
-            <?php } ?>
+            <?php }} ?>
 
-            <ul class="small-block-grid-1 large-block-grid-1">
-                <li>
-                    <div>
-                        <ul class="small-block-grid-1 large-block-grid-4">
-                            <?php
-                            foreach ($self->rightsList as $right) {
-                                if ($right['featureid']){
-                                ?>
-                                <div class="panel">
-                                    <a id="deleteRightButton" class="button right alert" onclick="deleteRight('<?php echo $self->user->profile['email']; ?>', '<?php echo (isset($right['collection']) ? $right['collection'] : ''); ?>', '<?php echo $right['featureid']; ?>');">X</a>
-                                    <h2>
-                                        <?php
-                                        echo $right['collection'];
-                                        echo '  ' . $right['featureid'];
-                                        ?>
-                                        
-                                    </h2>
-                                    <ul class="small-block-grid-2 large-block-grid-5">
-                                        <?php
-                                        echo '<li>download : ' . ($right['download'] == 1 ? 'true' : 'false') . '</li>';
-                                        echo '<li>visualize : ' . ($right['visualize'] == 1 ? 'true' : 'false') . '</li>';
-                                        echo '<li>post : ' . ($right['post'] == 1 ? 'true' : 'false') . '</li>';
-                                        echo '<li>put : ' . ($right['put'] == 1 ? 'true' : 'false') . '</li>';
-                                        echo '<li>delete : ' . ($right['delete'] == 1 ? 'true' : 'false') . '</li>';
-                                        ?> 
-                                    </ul> 
-                                </div>
-                                <?php }} ?>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
+            
             <ul class="small-block-grid-1 large-block-grid-1">
                 <li>
                     <div class="panel">
@@ -174,58 +170,55 @@
                 }
 
                 this.activateUser = function(user) {
-                    R.showMask();
+                    Resto.Util.showMask();
                     
                     $.ajax({
                         type: "POST",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/activate",
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
-                            R.hideMask();
                         },
                         error: function(e) {
-                            R.hideMask();
+                            Resto.Util.hideMask();
                             alert('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
 
                 this.deactivateUser = function(user) {
-                    R.showMask();
+                    Resto.Util.showMask();
                 
                     $.ajax({
                         type: "POST",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/deactivate",
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
-                            R.hideMask();
                         },
                         error: function(e) {
-                            R.hideMask();
+                            Resto.Util.hideMask();
                             alert('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
 
                 this.deleteUser = function(user) {
-                    R.showMask();
+                    Resto.Util.showMask();
                 
                     $.ajax({
                         type: "DELETE",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user,
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>";
-                            R.hideMask();
                         },
                         error: function(e) {
-                            R.hideMask();
+                            Resto.Util.hideMask();
                             alert('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
-
-                this.deleteRight = function(emailorgroup, collection, featureid) {
-                    R.showMask();
+                
+                this.deleteRight = function(collection, featureid) {
+                    Resto.Util.showMask();
                 
                     $.ajax({
                         type: "POST",
@@ -233,23 +226,22 @@
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?> + "/rights/delete",
                         async: true,
                         data: {
-                            emailorgroup: emailorgroup,
+                            emailorgroup: '<?php echo $self->user->profile['email']; ?>',
                             collection: collection,
                             featureid: featureid
                         },
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
-                            R.hideMask();
                         },
                         error: function(e) {
-                            R.hideMask();
+                            Resto.Util.hideMask();
                             alert('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
 
                 this.setGroup = function(group) {
-                    R.showMask();
+                    Resto.Util.showMask();
                 
                     $.ajax({
                         type: "POST",
@@ -262,10 +254,9 @@
                         },
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
-                            R.hideMask();
                         },
                         error: function(e) {
-                            R.hideMask();
+                            Resto.Util.hideMask();
                             alert('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
@@ -273,7 +264,7 @@
                 };
                 
                 this.updateRights = function(collection, field, valueToSet, obj) {
-                    R.showMask();
+                    Resto.Util.showMask();
                 
                     $.ajax({
                         type: "POST",
@@ -289,10 +280,10 @@
                         success: function() {
                             obj.attr('rightValue', valueToSet);
                             initialize();
-                            R.hideMask();
+                            Resto.Util.hideMask();
                         },
                         error: function(e) {
-                            R.hideMask();
+                            Resto.Util.hideMask();
                             alert('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
@@ -331,16 +322,21 @@
                 $("#setGroupDefault").on('click', function() {
                     self.setGroup('default');
                 });
+                
+                $('.rightDeleteButton').each(function(){
+                    var count = 0;
+                    $(this).click(function(){
+                        count ++;
+                        if (count === 1){
+                            $(this).text('<?php echo $self->context->dictionary->translate('_a_areyousure'); ?>');
+                        }else if (count === 2){
+                            self.deleteRight($(this).attr('collection'), $(this).attr('featureid'));
+                        }
+                    });
+                });
 
                 initialize();
                 
-                R.init({
-                    language: '<?php echo $self->context->dictionary->language; ?>',
-                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
-                    restoUrl: '<?php echo $self->context->baseUrl ?>',
-                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
-                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
-                });
             });
         </script>
     </body>

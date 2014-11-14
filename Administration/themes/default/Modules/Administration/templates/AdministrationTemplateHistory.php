@@ -1,6 +1,10 @@
 <?php
     $_noSearchBar = true;
     $_noMap = true;
+    $color_download = '#BBD2E1';
+    $color_insert = '#FEF86C';
+    $color_create = '#3AF24B';
+    $color_remove = '#FA5858';
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -9,14 +13,10 @@
         
         <!-- Header -->
         <?php include 'header.php' ?>
+        
+        <!-- Breadcrumb -->
+        <?php include 'breadcrumb.php' ?>
        
-        <div class="row fullWidth resto-title">
-
-        </div>
-
-        <br/>
-        <br/>
-        <br/>
         <div class="row" >
             <h1><?php echo $self->context->dictionary->translate('_a_history'); ?></h1>
             <br/>
@@ -52,33 +52,44 @@
                 </div>
             </div>
             <br/>
-            <ul class="small-block-grid-1 large-block-grid-1">
+            <ul class="small-block-grid-1 large-block-grid-2 data_container">
                 <?php 
                 foreach ($self->historyList as $history) {
                     ?>
                     <li>
+                        <?php if ($history['service'] === 'download'){ ?>
+                        <div class="panel" style="background-color: <?php echo $color_download; ?>">
+                        <?php } else if ($history['service'] === 'insert'){ ?>
+                        <div class="panel" style="background-color: <?php echo $color_insert; ?>">
+                        <?php } else if ($history['service'] === 'create'){ ?>
+                        <div class="panel" style="background-color: <?php echo $color_create; ?>">
+                        <?php } else if ($history['service'] === 'remove'){ ?>
+                        <div class="panel" style="background-color: <?php echo $color_remove; ?>">
+                        <?php } else {?>
                         <div class="panel">
-                            <?php
-                            echo $self->context->dictionary->translate('_a_userid') . ' : ' . $history['userid'] . '<br/>';
-                            echo $self->context->dictionary->translate('_a_service') . ' : ' . $history['service'] . '<br/>';
-                            echo $history['method'] . ' ' . $history['collection'] . ' ' . $history['querytime'] . '<br/>';
-                            echo $history['query'] . '<br/>';
-                            echo $history['url'] . ' ' . $history['ip'];
-                            ?>
+                        <?php } ?>
+                            <h2><a href="<?php 
+                                if ($history['collection'] === '*'){
+                                    $title = 'All';
+                                    $url = $self->context->baseUrl . '/collections/';
+                                }else{
+                                    $title = $history['collection'];
+                                    $url = $self->context->baseUrl . '/collections/' .  $history['collection'];
+                                }
+                                echo $url;?>"><?php echo $title; ?></a></h2>
+                            <p>
+                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $history['userid']; ?>"><?php echo $self->context->dictionary->translate('_a_userid') . ' : ' . $history['userid']; ?></a><br/>
+                                <?php
+                                echo $self->context->dictionary->translate('_a_service') . ' : ' . $history['service'] . '<br/>';
+                                echo $history['querytime'];
+                                ?>
+                            </p>
+                            <a href="<?php echo $history['url']; ?>"><?php echo $history['url']; ?></a>
+                            
                         </div>
                     </li>
                 <?php } ?>
             </ul>
-            <div style="text-align: center">
-                <?php
-                if ($self->startIndex != 0) {
-                    echo '<a id="previous" href="#" class="button">' . $self->context->dictionary->translate('_previousPage') . '</a>';
-                }
-                if (sizeof($self->historyList) >= $self->numberOfResults) {
-                    echo '<a id="next" href="#" style="margin-left: 5px;" class="button">' . $self->context->dictionary->translate('_nextPage') . '</a>';
-                }
-                ?>
-            </div>
         </div>
         <!-- Footer -->
         <?php include 'footer.php' ?>
@@ -86,15 +97,15 @@
         <script type="text/javascript" >
             $(document).ready(function() {
 
-                var self = this;
-                $min = <?php echo $self->startIndex; ?>;
-                $number = <?php echo $self->numberOfResults; ?>;
-                $keyword = "<?php echo $self->keyword; ?>";
-
+                service_selector = "<?php echo $self->service; ?>";
+                collection_selector = "<?php echo $self->collection; ?>";
+                min = <?php echo $self->startIndex; ?>;
+                number = <?php echo $self->numberOfResults; ?>;
+                keyword = "<?php echo $self->keyword; ?>";
 
                 function initialize() {
-                    $('select[name=serviceSelector]').val('<?php echo (filter_input(INPUT_GET, 'service') ? filter_input(INPUT_GET, 'service') : ""); ?>');
-                    $('select[name=collectionSelector]').val('<?php echo (filter_input(INPUT_GET, 'collection') ? filter_input(INPUT_GET, 'collection') : ""); ?>');
+                    $('select[name=serviceSelector]').val('<?php echo ($self->service ? $self->service : ""); ?>');
+                    $('select[name=collectionSelector]').val('<?php echo ($self->collection ? $self->collection : ""); ?>');
                 }
 
                 $("#serviceSelector").on('change', function() {
@@ -104,31 +115,58 @@
                 $("#collectionSelector").on('change', function() {
                     window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
                 });
-
-                $("#next").on('click', function() {
-                    $min = $min + $number;
-                    url = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val() + "&startIndex=" + $min + "&numberOfResults=" + $number;
-                    window.location = url;
-                });
-
-                $("#previous").on('click', function() {
-                    $min = $min - $number;
-                    if ($min < 0) {
-                        $min = 0;
-                    }
-                    url = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val() + "&startIndex=" + $min + "&numberOfResults=" + $number;
-                    window.location = url;
-                });
-
+                
+                function addToList(data){
+                    alert('service=' + $('select[name=serviceSelector]').val());
+                    $.each(data, function(key, value){
+                        color = '';
+                        if (value['collection'] === '*'){
+                            collection = 'All';
+                        }else{
+                            collection = value['collection'];
+                        }
+                        if (value['service'] === 'download'){
+                            color = 'style="background-color: <?php echo $color_download; ?>"';
+                        }else if (value['service'] === 'insert'){
+                            color = 'style="background-color: <?php echo $color_insert; ?>"';
+                        }else if (value['service'] === 'create'){
+                            color = 'style="background-color: <?php echo $color_create; ?>"';
+                        }else if (value['service'] === 'remove'){
+                            color = 'style="background-color: <?php echo $color_remove; ?>"';
+                        }
+                        content = '<li><div class="panel" '
+                                + color
+                                + '><h2><a href="<?php echo $self->context->baseUrl . 'collections/'?>' 
+                                + value['collection']
+                                + '">'
+                                + collection
+                                + '</a></h2>' 
+                                + '<p>'
+                                + '<a href="<?php echo $self->context->baseUrl . 'administration/users/'; ?>' + value['userid'] + '">'
+                                + '<?php echo $self->context->dictionary->translate('_a_userid') . ' : '; ?>' + value['userid'] + '</a><br/>'
+                                + '<?php echo $self->context->dictionary->translate('_a_service') . ' : ';?>' + value['service'] + '<br/>'
+                                + value['querytime']
+                                + '</p>'
+                                + '<a href="' + value['url'] + '">' + value['url'] + '</a>'
+                                + '</div></li>';
+                        $(".data_container").append(content);
+                    });
+                    
+                }
+                
+                url = "<?php echo $self->context->baseUrl . 'administration/users/history' ?>";
+                dataType = "json";
+                data = {
+                        service: service_selector,
+                        collection: collection_selector,
+                        startIndex: min + number,
+                        numberOfResults: number
+                };
+                
+                Resto.Util.infiniteScroll(url, dataType, data, addToList, number);
+                
                 initialize();
                 
-                 R.init({
-                    language: '<?php echo $self->context->dictionary->language; ?>',
-                    translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
-                    restoUrl: '<?php echo $self->context->baseUrl ?>',
-                    ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
-                    userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
-                });
             });
         </script>
     </body>

@@ -105,9 +105,11 @@ class Administration extends RestoModule {
      */
     protected $translations = array(
         'en' => array(
+            '_administration' => 'Administration',
             '_a_activate_user' => 'Activate user',
             '_a_activated' => 'Activated',
             '_a_admin' => 'Administrator',
+            '_a_areyousure' => 'Are you sure ?',
             '_a_deactivated' => 'Deactivated',
             '_a_can_post' => 'Can Post',
             '_a_can_put' => 'Can Put',
@@ -122,6 +124,8 @@ class Administration extends RestoModule {
             '_a_default' => 'Default',
             '_a_deactivate_user' => 'Deactivate user',
             '_a_download' => 'Download',
+            '_a_downloads' => 'Downloads',
+            '_a_download_nb' => 'Number of Downloads',
             '_a_email' => 'Email',
             '_a_feature_id' => 'Feature id',
             '_a_history' => 'History',
@@ -131,33 +135,42 @@ class Administration extends RestoModule {
             '_a_last_history' => 'Last history',
             '_a_givenname' => 'Given name',
             '_a_groupname' => 'Groupname',
+            '_a_notsignedyet' => 'Not signed yet',
+            '_a_password_confirmation' => 'Confirm password',
             '_a_profile' => 'Profile',
             '_a_remove' => 'Remove',
             '_a_registrationdate' => 'Registration date',
             '_a_save_right' => 'Save right',
             '_a_save_user' => 'Save user',
+            '_a_signedon' => 'Signed on',
             '_a_select_group_name' => 'Select group name',
             '_a_search' => 'Search',
+            '_a_searchs' => 'Searchs',
             '_a_service' => 'Service',
-            '_a_showfullhistory' => 'Show full history',
+            '_a_showfullhistory' => 'Show history',
             '_a_start' => 'Welcome to the administration.',
             '_a_set_default_as_group' => 'Set DEFAULT as group',
-            '_a_set_admin_as_group' => 'Set ADMIN as group',
+            '_a_set_admin_as_group' => 'Set this user administrator',
             '_a_update' => 'Update',
             '_a_unregistered' => 'Unregistered',
             '_a_user_creation' => 'Users creation',
             '_a_username' => 'Username',
+            '_a_users' => 'Users',
             '_a_collections_management' => 'Collections management',
             '_a_users_management' => 'Users management',
             '_a_userid' => 'Userid',
             '_a_visualize' => 'Visualize',
             '_true' => 'True',
-            '_false' => 'False'
+            '_false' => 'False',
+            '_for' => 'for',
+            '_a_text_createrights' => 'Specify rights on a specific product of collection'
         ),
         'fr' => array(
+            '_administration' => 'Administration',
             '_a_activate_user' => 'Activer utilisateur',
             '_a_activated' => 'Activ&eacute;',
             '_a_admin' => 'Administrateur',
+            '_a_areyousure' => 'Supprimer ?',
             '_a_deactivated' => 'D&eacute;sactiv&eacute;',
             '_a_can_post' => 'Peut Post',
             '_a_can_put' => 'Peut Put',
@@ -172,6 +185,8 @@ class Administration extends RestoModule {
             '_a_default' => 'D&eacute;faut',
             '_a_deactivate_user' => 'D&eacute;sactiver utilisateur',
             '_a_download' => 'T&eacute;l&eacute;charger',
+            '_a_downloads' => 'T&eacute;l&eacute;chargements',
+            '_a_download_nb' => 'Nombre de T&eacute;l&eacute;chargements',
             '_a_email' => 'Email',
             '_a_feature_id' => 'Feature id',
             '_a_history' => 'Historique',
@@ -181,18 +196,22 @@ class Administration extends RestoModule {
             '_a_last_history' => 'Historique r&eacute;cent',
             '_a_givenname' => 'Pr&eacute;nom',
             '_a_groupname' => 'Nom du groupe',
+            '_a_notsignedyet' => 'Pas encore signée',
+            '_a_password_confirmation' => 'Confirmer mot de passe',
             '_a_profile' => 'Profile',
             '_a_remove' => 'Supprimer',
             '_a_registrationdate' => 'Date d\'enregistrement',
             '_a_save_right' => 'Sauvegarder droits',
             '_a_save_user' => 'Sauvegarder utilisateur',
+            '_a_signedon' => 'Signée le',
             '_a_select_group_name' => 'S&eacute;l&eacute;ctionner le groupe',
             '_a_search' => 'Rechercher',
+            '_a_searchs' => 'Recherches',
             '_a_service' => 'Service',
-            '_a_showfullhistory' => 'Afficher l\'historique complet',
+            '_a_showfullhistory' => 'Afficher l\'historique',
             '_a_start' => 'Bienvenue dans le module d\'administration.',
             '_a_set_default_as_group' => 'Changer pour le groupe DEFAULT',
-            '_a_set_admin_as_group' => 'Changer pour le groupe ADMIN',
+            '_a_set_admin_as_group' => 'Faire de cet utilisateur un administrateur',
             '_a_update' => 'Mise a jour',
             '_a_user_creation' => 'Cr&eacute;ation d\'utilisateurs',
             '_a_username' => 'Pseudo',
@@ -200,9 +219,12 @@ class Administration extends RestoModule {
             '_a_collections_management' => 'Administration des collections',
             '_a_users_management' => 'Administration des utilisateurs',
             '_a_userid' => 'Userid',
+            '_a_users' => 'Utilisateurs',
             '_a_visualize' => 'Visualisation',
             '_true' => 'Oui',
-            '_false' => 'Non'
+            '_false' => 'Non',
+            '_for' => 'pour',
+            '_a_text_createrights' => 'Préciser les droits sur un produit particulier de la collection'
         )
     );
 
@@ -229,6 +251,7 @@ class Administration extends RestoModule {
         /*
          * Templates
          */
+        $this->errorFile = $this->templatesRoot . '/500.php';
         $this->startFile = $this->templatesRoot . '/AdministrationTemplateStart.php';
         $this->usersFile = $this->templatesRoot . '/AdministrationTemplateUsers.php';
         $this->userFile = $this->templatesRoot . '/AdministrationTemplateUser.php';
@@ -253,7 +276,8 @@ class Administration extends RestoModule {
             /*
              * Only administrators can access to administration
              */
-            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Only available for administrator', 500);
+            //throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Only available for administrator', 500);
+            return $this->to($this->errorFile);
         } 
         
         if ($this->context->method === 'POST' && $this->context->outputFormat !== 'json') {
@@ -319,6 +343,10 @@ class Administration extends RestoModule {
          * Display start page on /administration
          */
         if (!isset($this->segments[0])) {
+            $this->stats = array();
+            $this->stats['nb_users'] = $this->context->dbDriver->countUsers();
+            $this->stats['nb_downloads'] = $this->context->dbDriver->countService('download');
+            $this->stats['nb_search'] = $this->context->dbDriver->countService('search');
             return $this->to($this->startFile);
         }
         /*
@@ -399,24 +427,23 @@ class Administration extends RestoModule {
                 */
                 
                 $this->startIndex = 0;
-                $this->numberOfResults = 50;
+                $this->numberOfResults = 12;
                 $this->keyword = null;
+                $this->collection = null;
+                $this->service = null;
+                $orderBy = null;
+                $ascordesc = null;
                 if (filter_input(INPUT_GET, 'startIndex')) {
                     $this->startIndex = filter_input(INPUT_GET, 'startIndex');
                 }
                 if (filter_input(INPUT_GET, 'numberOfResults')) {
                     $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
                 }
-                
-                $collection = null;
-                $service = null;
-                $orderBy = null;
-                $ascordesc = null;
                 if (filter_input(INPUT_GET, 'collection')) {
-                    $collection = filter_input(INPUT_GET, 'collection');
+                    $this->collection = filter_input(INPUT_GET, 'collection');
                 }
                 if (filter_input(INPUT_GET, 'service')) {
-                    $service = filter_input(INPUT_GET, 'service');
+                    $this->service = filter_input(INPUT_GET, 'service');
                 }
                 if (filter_input(INPUT_GET, 'orderBy')) {
                     $orderBy = filter_input(INPUT_GET, 'orderBy');
@@ -424,15 +451,12 @@ class Administration extends RestoModule {
                 if (filter_input(INPUT_GET, 'ascordesc')) {
                     $ascordesc = filter_input(INPUT_GET, 'ascordesc');
                 }
-                if (filter_input(INPUT_GET, 'limit')) {
-                    $limit = filter_input(INPUT_GET, 'limit');
-                }
 
                 $options = array(
                     'orderBy' => $orderBy,
                     'ascOrDesc' => $ascordesc,
-                    'collectionName' => $collection,
-                    'service' => $service,
+                    'collectionName' => $this->collection,
+                    'service' => $this->service,
                     'startIndex' => $this->startIndex,
                     'numberOfResults' => $this->numberOfResults
                 );
@@ -482,7 +506,43 @@ class Administration extends RestoModule {
         }
 
         $this->licenses = $this->context->dbDriver->getSignedLicenses($this->user->profile['email']);
-        $this->rightsList = $this->context->dbDriver->getRightsList($this->user->profile['email']);
+        $this->collectionsList = $this->context->dbDriver->listCollections();
+        
+        /*
+         * Get dedicated rights for current user
+         */
+        $this->rightsList = $this->context->dbDriver->getFullRights($this->user->profile['email']);
+        
+        /*
+         * Check rights on each collections for the user
+         */
+        foreach ($this->collectionsList as $collection){
+            $collectionRights = $this->user->getRights($collection['collection']);
+            
+            /*
+             * All rights by collections has to be set
+             */
+            if (array_key_exists($collection['collection'], $this->rightsList)){
+                /*
+                 * If a right is not set for the user, take the right of the
+                 * user's group
+                 */
+                foreach ($collectionRights as $key => $value) {
+                    if (!array_key_exists($key, $this->rightsList[$collection['collection']])){
+                        $this->rightsList[$collection['collection']][$key] = $value;
+                    }
+                    if (!isset($this->rightsList[$collection['collection']][$key])){
+                        $this->rightsList[$collection['collection']][$key] = $value;
+                    }
+                }
+            }else{
+                /*
+                 * If none rights are set for this user on this collection, take
+                 * rights of the user's group
+                 */
+                $this->rightsList[$collection['collection']] = $collectionRights;
+            }
+        }
         
         if (!isset($this->segments[2])) {
             /*
@@ -493,21 +553,20 @@ class Administration extends RestoModule {
                 'service' => 'download'
             );
             $this->historyList = $this->context->dbDriver->getHistory($this->user->profile['userid'], $options);
-            $this->collectionsList = $this->context->dbDriver->listCollections();
+            
 
             return $this->to($this->userFile, $this->user->profile);
         } else if ($this->segments[2] == 'history') {
             /*
              * Get user history MMI
              */
-            $this->collectionsList = $this->context->dbDriver->listCollections();
             $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
             $this->userProfile = $this->user->profile;
             if (!isset($this->userProfile['email'])) {
                 throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Wrong way', 404);
             }
             $this->startIndex = 0;
-            $this->numberOfResults = 50;
+            $this->numberOfResults = 12;
             if (filter_input(INPUT_GET, 'startIndex')) {
                 $this->startIndex = filter_input(INPUT_GET, 'startIndex');
             }
@@ -515,15 +574,15 @@ class Administration extends RestoModule {
                 $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
             }
             
-            $collection = null;
-            $service = null;
+            $this->collection = null;
+            $this->service = null;
             $orderBy = null;
             $ascordesc = null;
             if (filter_input(INPUT_GET, 'collection')) {
-                $collection = filter_input(INPUT_GET, 'collection');
+                $this->collection = filter_input(INPUT_GET, 'collection');
             }
             if (filter_input(INPUT_GET, 'service')) {
-                $service = filter_input(INPUT_GET, 'service');
+                $this->service = filter_input(INPUT_GET, 'service');
             }
             if (filter_input(INPUT_GET, 'orderBy')) {
                 $orderBy = filter_input(INPUT_GET, 'orderBy');
@@ -538,8 +597,8 @@ class Administration extends RestoModule {
             $options = array(
                 'orderBy' => $orderBy,
                 'ascOrDesc' => $ascordesc,
-                'collectionName' => $collection,
-                'service' => $service,
+                'collectionName' => $this->collection,
+                'service' => $this->service,
                 'startIndex' => $this->startIndex,
                 'numberOfResults' => $this->numberOfResults
             );
@@ -548,10 +607,17 @@ class Administration extends RestoModule {
             
             return $this->to($this->userHistoryFile, $this->historyList);
         } else if ($this->segments[2] == 'rights') {
+            
+            if (filter_input(INPUT_GET, 'collection')) {
+                $collection = filter_input(INPUT_GET, 'collection');
+            }else{
+                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
+            }
+            
             /*
              * Get user rights creation MMI
              */
-            $this->collectionsList = $this->context->dbDriver->listCollections();
+            $this->collectionRight = $collection;
             $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
             $this->userProfile = $this->user->profile;
             
@@ -708,7 +774,11 @@ class Administration extends RestoModule {
             $postedData['canput'] = filter_input(INPUT_POST, 'canput');
             $postedData['canpost'] = filter_input(INPUT_POST, 'canpost');
             $postedData['candelete'] = filter_input(INPUT_POST, 'candelete');
-            $postedData['filters'] = filter_input(INPUT_POST, 'filters');
+            $postedData['filters'] = filter_input(INPUT_POST, 'filters') === 'null' ? null : filter_input(INPUT_POST, 'filters');
+            
+            if(!$this->context->dbDriver->featureExists($postedData['featureid'])){
+                throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Feature does not exists', 500);
+            }
 
             $emailorgroup = $postedData['emailorgroup'];
             $collectionName = ($postedData['collection'] === '') ? null : $postedData['collection'];
@@ -718,7 +788,7 @@ class Administration extends RestoModule {
              * Posted rights
              */
             $rights = array('search' => $postedData['search'], 'visualize' => $postedData['visualize'], 'download' => $postedData['download'], 'canput' => $postedData['canput'], 'canpost' => $postedData['canpost'], 'candelete' => $postedData['candelete'], 'filters' => $postedData['filters']);
-
+            
             /*
              * Store rights
              */

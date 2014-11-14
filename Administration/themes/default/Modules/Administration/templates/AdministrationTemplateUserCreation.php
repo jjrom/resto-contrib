@@ -10,9 +10,9 @@
         <!-- Header -->
         <?php include 'header.php' ?>
         
-        <div class="row fullWidth resto-title"></div>
-
-        <br/><br/><br/>
+        <!-- Breadcrumb -->
+        <?php include 'breadcrumb.php' ?>
+        
         <div class="row" >
             <a id="_alert" href="#" class="button expand alert hide"></a>
             <form>
@@ -34,8 +34,8 @@
                     <label><?php echo $self->context->dictionary->translate('_password'); ?>
                         <input id="password" type="password" placeholder="<?php echo $self->context->dictionary->translate('_password'); ?>...">
                     </label>
-                    <label><?php echo $self->context->dictionary->translate('_retypePassword'); ?>
-                        <input id="passwordConfirm" type="password" placeholder="<?php echo $self->context->dictionary->translate('_retypePassword'); ?>...">
+                    <label><?php echo $self->context->dictionary->translate('_a_password_confirmation'); ?>
+                        <input id="passwordConfirm" type="password" placeholder="<?php echo $self->context->dictionary->translate('_a_password_confirmation'); ?>...">
                     </label>
                 </fieldset>
                 <fieldset>
@@ -61,33 +61,28 @@
         
         <script type="text/javascript" >
             $(document).ready(function() {
-
+                
                 var self = this;
 
                 function initialize() {
                     $('input:radio[name=deactivated]').attr('checked', true);
-                    $('#_alert').hide();
-                }
-                
-                this.alert = function(element){
-                    $('#_alert').text('Please set ' + element);
-                    $('#_alert').show();
                 }
                 
                 this.addUser = function() {
                     if ($("#email").val() === ''){
-                        self.alert('email');
+                        Resto.Util.alert($('.maincontent'), 'Please set email');
                     }else if ($("#password").val() === ''){
-                        self.alert('password');
+                        Resto.Util.alert($('.maincontent'), 'Please set password');
                     }else if ($("#username").val() === ''){
-                        self.alert('username');
+                        Resto.Util.alert($('.maincontent'), 'Please set username');
                     }else if ($("#givenname").val() === ''){
-                        self.alert('givenname');
+                        Resto.Util.alert($('.maincontent'), 'Please set givenname');
                     }else if ($("#lastname").val() === ''){
-                        self.alert('lastname');
+                        Resto.Util.alert($('.maincontent'), 'Please set lastname');
                     }else if ($("#password").val() !== $("#passwordConfirm").val()){
-                        self.alert('two password fields equals...');
+                        Resto.Util.alert($('.maincontent'), 'Passwords are different');
                     }else{
+                        Resto.Util.showMask();
                         $.ajax({
                         type: "POST",
                         async: false,
@@ -103,24 +98,18 @@
                             activated: $('input[name=activated]:checked').val()
                         },
                         error: function(e) {
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.hideMask();
+                            Resto.Util.alert($('.maincontent'), 'error : ' + e['responseJSON']['ErrorMessage']);
                         },
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>";
                         }
                     });
                 }
-
-
             };
-
+            
             $("#_save").on('click', function() {
-                $('#_alert').hide();
                 self.addUser();
-            });
-
-            $("#_alert").on('click', function() {
-                $('#_alert').hide();
             });
 
             $("#activated").on('click', function() {
@@ -133,15 +122,7 @@
                 $('input:radio[name=deactivated]').attr('checked', true);
             });
 
-            initialize();
-            
-            R.init({
-                language: '<?php echo $self->context->dictionary->language; ?>',
-                translation:<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
-                restoUrl: '<?php echo $self->context->baseUrl ?>',
-                ssoServices:<?php echo json_encode($self->context->config['ssoServices']) ?>,
-                userProfile:<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array())) ?> 
-            });
+            initialize(); 
         });
         </script>
     </body>

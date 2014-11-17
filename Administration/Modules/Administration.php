@@ -429,7 +429,7 @@ class Administration extends RestoModule {
                 $this->startIndex = 0;
                 $this->numberOfResults = 12;
                 $this->keyword = null;
-                $this->collection = null;
+                $this->collectionFilter = null;
                 $this->service = null;
                 $orderBy = null;
                 $ascordesc = null;
@@ -440,7 +440,7 @@ class Administration extends RestoModule {
                     $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
                 }
                 if (filter_input(INPUT_GET, 'collection')) {
-                    $this->collection = filter_input(INPUT_GET, 'collection');
+                    $this->collectionFilter = filter_input(INPUT_GET, 'collection');
                 }
                 if (filter_input(INPUT_GET, 'service')) {
                     $this->service = filter_input(INPUT_GET, 'service');
@@ -455,7 +455,7 @@ class Administration extends RestoModule {
                 $options = array(
                     'orderBy' => $orderBy,
                     'ascOrDesc' => $ascordesc,
-                    'collectionName' => $this->collection,
+                    'collectionName' => $this->collectionFilter,
                     'service' => $this->service,
                     'startIndex' => $this->startIndex,
                     'numberOfResults' => $this->numberOfResults
@@ -574,12 +574,12 @@ class Administration extends RestoModule {
                 $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
             }
             
-            $this->collection = null;
+            $this->collectionFilter = null;
             $this->service = null;
             $orderBy = null;
             $ascordesc = null;
             if (filter_input(INPUT_GET, 'collection')) {
-                $this->collection = filter_input(INPUT_GET, 'collection');
+                $this->collectionFilter = filter_input(INPUT_GET, 'collection');
             }
             if (filter_input(INPUT_GET, 'service')) {
                 $this->service = filter_input(INPUT_GET, 'service');
@@ -597,7 +597,7 @@ class Administration extends RestoModule {
             $options = array(
                 'orderBy' => $orderBy,
                 'ascOrDesc' => $ascordesc,
-                'collectionName' => $this->collection,
+                'collectionName' => $this->collectionFilter,
                 'service' => $this->service,
                 'startIndex' => $this->startIndex,
                 'numberOfResults' => $this->numberOfResults

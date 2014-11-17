@@ -98,7 +98,7 @@
             $(document).ready(function() {
 
                 service_selector = "<?php echo $self->service; ?>";
-                collection_selector = "<?php echo $self->collection; ?>";
+                collection_selector = "<?php echo $self->collectionFilter; ?>";
                 min = <?php echo $self->startIndex; ?>;
                 number = <?php echo $self->numberOfResults; ?>;
                 $ajaxReady = true;
@@ -110,12 +110,30 @@
                 }
 
                 $("#serviceSelector").on('change', function() {
-                    window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
+                    Resto.Util.showMask();
+                    selector();
+                    Resto.Util.hiedeMask();
                 });
 
                 $("#collectionSelector").on('change', function() {
-                    window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
+                    Resto.Util.showMask();
+                    selector();
+                    Resto.Util.hiedeMask();
                 });
+                
+                function selector(){
+                    collectionSelector = $('select[name=collectionSelector]').val();
+                    serviceSelector = $('select[name=serviceSelector]').val();
+                    if (!serviceSelector && !collectionSelector){
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history' ?>" ;
+                    }else if (serviceSelector && !collectionSelector){
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val();
+                    }else if (!serviceSelector && collectionSelector){
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?' ?>" + "collection=" + $('select[name=collectionSelector]').val();
+                    }else{
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
+                    }
+                }
                 
                 function addToList(data){
                     

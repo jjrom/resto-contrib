@@ -14,9 +14,16 @@ We suppose that $RESTO2_TARGET is the RESTo v2 installation directory
 Configuration
 -------------
 
-Edit $RESTO2_TARGET/include/resto.ini and add the following within [modules] section
+Edit $RESTO2_TARGET/include/config.php and add the following within 'modules' section
 
-        ; Administration
-        Administration.activate = true
-        Administration.route = administration
-        Administration.options.templatesRoot = /Modules/Administration/templates/
+        /*
+         * Administration
+         */
+         'Administration' => array(
+                'activate' => true,
+                'route' => 'administration',
+                'options' => array(
+                    'templatesRoot' => '/Modules/Administration/templates/'
+                )
+         )
+

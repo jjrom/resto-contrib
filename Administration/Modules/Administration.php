@@ -234,11 +234,14 @@ class Administration extends RestoModule {
      * @param RestoContext $context
      * @param array $options : array of module parameters
      */
-    public function __construct($context, $options = array()) {
+    public function __construct($context, $user, $options = array()) {
         
         parent::__construct($context, $options);
         
         $this->templatesRoot = isset($options['templatesRoot']) ? $options['templatesRoot'] : '/Modules/Administration/templates';
+        
+        // Set user
+        $this->user = $user;
         
         // Set context
         $this->context = $context;
@@ -272,12 +275,11 @@ class Administration extends RestoModule {
      */
     public function run($segments) {
         
-        if ($this->context->user->profile['groupname'] !== 'admin'){
+        if ($this->user->profile['groupname'] !== 'admin'){
             /*
              * Only administrators can access to administration
              */
-            //throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Only available for administrator', 500);
-            return $this->to($this->errorFile);
+            throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Only available for administrator', 404);
         } 
         
         if ($this->context->method === 'POST' && $this->context->outputFormat !== 'json') {
@@ -500,24 +502,24 @@ class Administration extends RestoModule {
      */
     private function processGetUser() {
 
-        $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
-        if ($this->user->profile['userid'] === -1) {
+        $this->_user = new RestoUser($this->segments[1], null, $this->context, false);
+        if ($this->_user->profile['userid'] === -1) {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
         }
 
-        $this->licenses = $this->context->dbDriver->getSignedLicenses($this->user->profile['email']);
+        $this->licenses = $this->context->dbDriver->getSignedLicenses($this->_user->profile['email']);
         $this->collectionsList = $this->context->dbDriver->listCollections();
         
         /*
          * Get dedicated rights for current user
          */
-        $this->rightsList = $this->context->dbDriver->getFullRights($this->user->profile['email']);
+        $this->rightsList = $this->context->dbDriver->getFullRights($this->_user->profile['email']);
         
         /*
          * Check rights on each collections for the user
          */
         foreach ($this->collectionsList as $collection){
-            $collectionRights = $this->user->getRights($collection['collection']);
+            $collectionRights = $this->_user->getRights($collection['collection']);
             
             /*
              * All rights by collections has to be set
@@ -552,16 +554,16 @@ class Administration extends RestoModule {
                 'numberOfResults' => 4,
                 'service' => 'download'
             );
-            $this->historyList = $this->context->dbDriver->getHistory($this->user->profile['userid'], $options);
+            $this->historyList = $this->context->dbDriver->getHistory($this->_user->profile['userid'], $options);
             
 
-            return $this->to($this->userFile, $this->user->profile);
+            return $this->to($this->userFile, $this->_user->profile);
         } else if ($this->segments[2] == 'history') {
             /*
              * Get user history MMI
              */
-            $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
-            $this->userProfile = $this->user->profile;
+            $this->_user = new RestoUser($this->segments[1], null, $this->context, false);
+            $this->userProfile = $this->_user->profile;
             if (!isset($this->userProfile['email'])) {
                 throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Wrong way', 404);
             }
@@ -618,8 +620,8 @@ class Administration extends RestoModule {
              * Get user rights creation MMI
              */
             $this->collectionRight = $collection;
-            $this->user = new RestoUser($this->segments[1], null, $this->context->dbDriver, false);
-            $this->userProfile = $this->user->profile;
+            $this->_user = new RestoUser($this->segments[1], null, $this->context, false);
+            $this->userProfile = $this->_user->profile;
             
             return $this->to($this->userRightCreation);
         } else {

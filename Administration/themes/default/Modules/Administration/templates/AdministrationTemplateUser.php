@@ -4,11 +4,11 @@
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <?php include 'head.php' ?>
+    <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'head.php' ?>
     <body style="overflow-x: hidden;">
         
         <!-- Header -->
-        <?php include 'header.php' ?>
+        <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'header.php' ?>
         
         <!-- Breadcrumb -->
         <?php include 'breadcrumb.php' ?>
@@ -19,15 +19,15 @@
                     <fieldset>
                         <legend><?php echo $self->context->dictionary->translate('_a_profile'); ?></legend>
                         <h1>
-                            <?php echo $self->user->profile['userid']; ?> - <?php echo $self->user->profile['email']; ?>
+                            <?php echo $self->_user->profile['userid']; ?> - <?php echo $self->_user->profile['email']; ?>
                         </h1>
                         <p>
                         <?php
-                        echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $self->user->profile['groupname'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_a_username') . ' : ' . $self->user->profile['username'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_a_lastname') . ' : ' . $self->user->profile['lastname'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_a_givenname') . ' : ' . $self->user->profile['givenname'] . ' <br/>';
-                        echo $self->context->dictionary->translate('_a_registrationdate') . ' : ' . $self->user->profile['registrationdate'] . ' <br/>';
+                        echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $self->_user->profile['groupname'] . ' <br/>';
+                        echo $self->context->dictionary->translate('_a_username') . ' : ' . $self->_user->profile['username'] . ' <br/>';
+                        echo $self->context->dictionary->translate('_a_lastname') . ' : ' . $self->_user->profile['lastname'] . ' <br/>';
+                        echo $self->context->dictionary->translate('_a_givenname') . ' : ' . $self->_user->profile['givenname'] . ' <br/>';
+                        echo $self->context->dictionary->translate('_a_registrationdate') . ' : ' . $self->_user->profile['registrationdate'] . ' <br/>';
                         ?>
                         </p>      
                     </fieldset>
@@ -36,20 +36,20 @@
                     <div style="padding-top: 25px">
                         <ul class="small-block-grid-1 large-block-grid-1">
                             <li>
-                                <?php if ($self->user->profile['activated'] == 1) { ?>
+                                <?php if ($self->_user->profile['activated'] == 1) { ?>
                                     <a id="deactivateButton" href="#" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_activated'); ?></a>
                                 <?php } else { ?>
                                     <a id="activateButton" href="#" class="button expand [tiny small large]" style="background-color: red"><?php echo $self->context->dictionary->translate('_a_deactivated'); ?></a>
                                 <?php } ?>
                             </li>
                             <li>
-                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/history"; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_showfullhistory'); ?></a>
+                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->_user->profile['userid'] . "/history"; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_showfullhistory'); ?></a>
                             </li>
                        
                             
                             
                             <li>
-                                <?php if ($self->user->profile['groupname'] === 'admin') { ?>
+                                <?php if ($self->_user->profile['groupname'] === 'admin') { ?>
                                     <a id="setGroupDefault" href="#" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_set_default_as_group'); ?></a>
                                 <?php } else { ?>
                                     <a id="setGroupAdmin" href="#" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_set_admin_as_group'); ?></a>
@@ -83,11 +83,11 @@
                             </h2>
                             <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-5">
                                 <?php
-                                echo '<li><a id="' . $collection . 'download" collection="' . $collection . '" field="download" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
-                                echo '<li><a id="' . $collection . 'visualize" collection="' . $collection . '" field="visualize" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
-                                echo '<li><a id="' . $collection . 'canpost" collection="' . $collection . '" field="canpost" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
-                                echo '<li><a id="' . $collection . 'canput" collection="' . $collection . '" field="canput" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
-                                echo '<li><a id="' . $collection . 'candelete" collection="' . $collection . '" field="candelete" class="button expand rights' . (($self->user->profile['groupname'] === 'admin' || $self->user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
+                                echo '<li><a id="' . $collection . 'download" collection="' . $collection . '" field="download" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
+                                echo '<li><a id="' . $collection . 'visualize" collection="' . $collection . '" field="visualize" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
+                                echo '<li><a id="' . $collection . 'canpost" collection="' . $collection . '" field="canpost" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
+                                echo '<li><a id="' . $collection . 'canput" collection="' . $collection . '" field="canput" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
+                                echo '<li><a id="' . $collection . 'candelete" collection="' . $collection . '" field="candelete" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
                                 ?>
                             </ul>
                             <ul class="small-block-grid-1 large-block-grid-1">
@@ -121,7 +121,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid'] . "/rights?collection=" . $collection; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_createrights'); ?></a>
+                            <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->_user->profile['userid'] . "/rights?collection=" . $collection; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_createrights'); ?></a>
                             
                         </fieldset>
                     </div>
@@ -151,7 +151,7 @@
             </ul>
         </div>
         <!-- Footer -->
-        <?php include 'footer.php' ?>
+        <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'footer.php' ?>
         
         <script type="text/javascript" >
             $(document).ready(function() {
@@ -176,7 +176,7 @@
                         type: "POST",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/activate",
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -192,7 +192,7 @@
                         type: "POST",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/deactivate",
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -223,15 +223,15 @@
                     $.ajax({
                         type: "POST",
                         dataType: "json",
-                        url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?> + "/rights/delete",
+                        url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?> + "/rights/delete",
                         async: true,
                         data: {
-                            emailorgroup: '<?php echo $self->user->profile['email']; ?>',
+                            emailorgroup: '<?php echo $self->_user->profile['email']; ?>',
                             collection: collection,
                             featureid: featureid
                         },
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -246,14 +246,14 @@
                     $.ajax({
                         type: "POST",
                         async: true,
-                        url: "<?php echo $self->context->baseUrl . 'administration/users/' . $self->user->profile['userid']; ?>",
+                        url: "<?php echo $self->context->baseUrl . 'administration/users/' . $self->_user->profile['userid']; ?>",
                         dataType: "json",
                         data: {
-                            email: "<?php echo $self->user->profile['email']; ?>",
+                            email: "<?php echo $self->_user->profile['email']; ?>",
                             groupname: group
                         },
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -272,7 +272,7 @@
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/rights/update' ?>",
                         dataType: "json",
                         data: {
-                            emailorgroup: '<?php echo $self->user->profile['email']; ?>',
+                            emailorgroup: '<?php echo $self->_user->profile['email']; ?>',
                             collection: collection,
                             field: field,
                             value: valueToSet
@@ -308,13 +308,13 @@
                 });
 
                 $("#deleteButton").on('click', function() {
-                    self.deleteUser(<?php echo $self->user->profile['userid']; ?>);
+                    self.deleteUser(<?php echo $self->_user->profile['userid']; ?>);
                 });
                 $("#activateButton").on('click', function() {
-                    self.activateUser(<?php echo $self->user->profile['userid']; ?>);
+                    self.activateUser(<?php echo $self->_user->profile['userid']; ?>);
                 });
                 $("#deactivateButton").on('click', function() {
-                    self.deactivateUser(<?php echo $self->user->profile['userid']; ?>);
+                    self.deactivateUser(<?php echo $self->_user->profile['userid']; ?>);
                 });
                 $("#setGroupAdmin").on('click', function() {
                     self.setGroup('admin');
@@ -336,6 +336,16 @@
                 });
 
                 initialize();
+                
+                $(document).ready(function() {
+                    Resto.init({
+                        "translation":<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
+                        "language":'<?php echo $self->context->dictionary->language; ?>',
+                        "restoUrl":'<?php echo $self->context->baseUrl ?>',
+                        "ssoServices":<?php echo json_encode($self->context->config['ssoServices']) ?>,
+                        "userProfile":<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array('rights' => isset($_SESSION['rights']) ? $_SESSION['rights'] : array()))) ?>
+                    });
+                });
                 
             });
         </script>

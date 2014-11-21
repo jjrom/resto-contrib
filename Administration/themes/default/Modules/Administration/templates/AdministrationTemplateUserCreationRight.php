@@ -4,10 +4,10 @@
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <?php include 'head.php' ?>
+    <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'head.php' ?>
     <body style="overflow-x: hidden;">
         <!-- Header -->
-        <?php include 'header.php' ?>
+        <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'header.php' ?>
         
         <!-- Breadcrumb -->
         <?php include 'breadcrumb.php' ?>
@@ -60,7 +60,7 @@
             <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_a_save_right'); ?></a>
         </div>
         <!-- Footer -->
-        <?php include 'footer.php' ?>
+        <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'footer.php' ?>
 
         <script type="text/javascript" >
             $(document).ready(function() {
@@ -175,6 +175,16 @@
                 });
 
                 initialize();
+                
+                $(document).ready(function() {
+                    Resto.init({
+                        "translation":<?php echo json_encode($self->context->dictionary->getTranslation()) ?>,
+                        "language":'<?php echo $self->context->dictionary->language; ?>',
+                        "restoUrl":'<?php echo $self->context->baseUrl ?>',
+                        "ssoServices":<?php echo json_encode($self->context->config['ssoServices']) ?>,
+                        "userProfile":<?php echo json_encode(!isset($_SESSION['profile']) ? array('userid' => -1) : array_merge($_SESSION['profile'], array('rights' => isset($_SESSION['rights']) ? $_SESSION['rights'] : array()))) ?>
+                    });
+                });
             });
         </script>
     </body>

@@ -69,17 +69,17 @@
                 
                 this.addUser = function() {
                     if ($("#email").val() === ''){
-                        Resto.Util.alert($('.maincontent'), 'Please set email');
+                        Resto.Util.dialog('Please set email');
                     }else if ($("#password").val() === ''){
-                        Resto.Util.alert($('.maincontent'), 'Please set password');
+                        Resto.Util.dialog('Please set password');
                     }else if ($("#username").val() === ''){
-                        Resto.Util.alert($('.maincontent'), 'Please set username');
+                        Resto.Util.dialog('Please set username');
                     }else if ($("#givenname").val() === ''){
-                        Resto.Util.alert($('.maincontent'), 'Please set givenname');
+                        Resto.Util.dialog('Please set givenname');
                     }else if ($("#lastname").val() === ''){
-                        Resto.Util.alert($('.maincontent'), 'Please set lastname');
+                        Resto.Util.dialog('Please set lastname');
                     }else if ($("#password").val() !== $("#passwordConfirm").val()){
-                        Resto.Util.alert($('.maincontent'), 'Passwords are different');
+                        Resto.Util.dialog('Passwords are different');
                     }else{
                         Resto.Util.showMask();
                         $.ajax({
@@ -98,7 +98,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            Resto.Util.alert($('.maincontent'), 'error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         },
                         success: function() {
                             window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>";

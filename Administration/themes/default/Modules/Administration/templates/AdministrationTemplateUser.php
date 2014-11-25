@@ -14,15 +14,16 @@
         <?php include 'breadcrumb.php' ?>
         
         <div class="row" >
-            <ul class="small-block-grid-1 large-block-grid-2" >
+            <ul class="small-block-grid-1 large-block-grid-2">
                 <li>
                     <fieldset>
                         <legend><?php echo $self->context->dictionary->translate('_a_profile'); ?></legend>
-                        <h1>
-                            <?php echo $self->_user->profile['userid']; ?> - <?php echo $self->_user->profile['email']; ?>
-                        </h1>
+                        <h3>
+                            <?php echo $self->_user->profile['userid'] . ' - ' . $self->_user->profile['username'] . ' ' . $self->_user->profile['lastname'] ?>
+                        </h3>
                         <p>
                         <?php
+                        echo $self->_user->profile['email'] . ' <br/>';
                         echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $self->_user->profile['groupname'] . ' <br/>';
                         echo $self->context->dictionary->translate('_a_username') . ' : ' . $self->_user->profile['username'] . ' <br/>';
                         echo $self->context->dictionary->translate('_a_lastname') . ' : ' . $self->_user->profile['lastname'] . ' <br/>';
@@ -180,7 +181,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
@@ -196,7 +197,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
@@ -212,7 +213,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
@@ -235,7 +236,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };
@@ -257,7 +258,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
 
@@ -284,7 +285,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };

@@ -17,13 +17,12 @@
                     <li>
                         <?php if($userProfile['groupname'] === 'admin'){?>
                         <div class="panel" style="background-color: #EDEDED; padding-left: 0.3em; word-wrap:break-word;">
-                            <h2><?php echo $userProfile['username'] . ' ' . $userProfile['lastname']; ?></h2>
+                            <h2><?php echo $userProfile['email']; ?></h2>
                         <?php }else{ ?>
-                        <div class="panel" style="padding-left: 0.3em; word-wrap:break-word;">
-                            <h2><a href="<?php echo $self->context->baseUrl . 'administration/users/' . $userProfile['userid'] ?>"> <?php echo $userProfile['username'] . ' ' . $userProfile['lastname']; ?></a></h2>
+                            <div class="panel" style="padding-left: 0.3em; word-wrap:break-word;">
+                            <h2><a href="<?php echo $self->context->baseUrl . 'administration/users/' . $userProfile['userid'] ?>"> <?php echo $userProfile['email']; ?></a></h2>
                         <?php } ?>
                             <?php
-                            echo $userProfile['email'] . ' <br/>';
                             echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $userProfile['groupname'] . ' <br/>';
                             echo $self->context->dictionary->translate('_a_username') . ' : ' . $userProfile['username'] . ' <br/>';
                             echo $self->context->dictionary->translate('_a_lastname') . ' : ' . $userProfile['lastname'] . ' <br/>';

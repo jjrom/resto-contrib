@@ -1,10 +1,11 @@
 <?php
     $_noSearchBar = true;
     $_noMap = true;
-    $color_download = '#BBD2E1';
-    $color_insert = '#FEF86C';
-    $color_create = '#3AF24B';
-    $color_remove = '#FA5858';
+    $color_remove = '#FFCCCC';
+    $color_update = '#D4D4F0';
+    $color_create = '#EAEAF8';
+    $color_insert = '#F1F1FA';
+    $color_download = '#FAFAFF';
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -18,7 +19,7 @@
         <?php include 'breadcrumb.php' ?>
        
         <div class="row" >
-            <h1><?php echo $self->context->dictionary->translate('_a_history'); ?></h1>
+            <h1><?php echo $self->segments[1] . ' - ' . $self->context->dictionary->translate('_a_history'); ?></h1>
             <br/>
             <div class="row">
                 <div class="large-12 columns">
@@ -58,15 +59,17 @@
                     ?>
                     <li>
                         <?php if ($history['service'] === 'download'){ ?>
-                        <div class="panel" style="background-color: <?php echo $color_download; ?>">
+                        <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_download; ?>">
                         <?php } else if ($history['service'] === 'insert'){ ?>
-                        <div class="panel" style="background-color: <?php echo $color_insert; ?>">
+                        <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_insert; ?>">
                         <?php } else if ($history['service'] === 'create'){ ?>
-                        <div class="panel" style="background-color: <?php echo $color_create; ?>">
+                        <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_create; ?>">
                         <?php } else if ($history['service'] === 'remove'){ ?>
-                        <div class="panel" style="background-color: <?php echo $color_remove; ?>">
+                        <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_remove; ?>">
+                        <?php } else if ($history['service'] === 'update'){ ?>
+                        <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_update; ?>">
                         <?php } else {?>
-                        <div class="panel">
+                        <div class="panel" style="padding-left: 0.3em;">
                         <?php } ?>
                             <h2><a href="<?php 
                                 if ($history['collection'] === '*'){
@@ -125,13 +128,13 @@
                     collectionSelector = $('select[name=collectionSelector]').val();
                     serviceSelector = $('select[name=serviceSelector]').val();
                     if (!serviceSelector && !collectionSelector){
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history' ?>" ;
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' ?>" ;
                     }else if (serviceSelector && !collectionSelector){
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val();
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?service=' ?>" + $('select[name=serviceSelector]').val();
                     }else if (!serviceSelector && collectionSelector){
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?' ?>" + "collection=" + $('select[name=collectionSelector]').val();
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?' ?>" + "collection=" + $('select[name=collectionSelector]').val();
                     }else{
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
                     }
                 }
                 
@@ -144,13 +147,15 @@
                             collection = value['collection'];
                         }
                         if (value['service'] === 'download'){
-                            color = 'style="background-color: <?php echo $color_download; ?>"';
+                            color = 'style="padding-left: 0.3em; background-color: <?php echo $color_download; ?>"';
                         }else if (value['service'] === 'insert'){
-                            color = 'style="background-color: <?php echo $color_insert; ?>"';
+                            color = 'style="padding-left: 0.3em; background-color: <?php echo $color_insert; ?>"';
                         }else if (value['service'] === 'create'){
-                            color = 'style="background-color: <?php echo $color_create; ?>"';
+                            color = 'style="padding-left: 0.3em; background-color: <?php echo $color_create; ?>"';
                         }else if (value['service'] === 'remove'){
-                            color = 'style="background-color: <?php echo $color_remove; ?>"';
+                            color = 'style="padding-left: 0.3em; background-color: <?php echo $color_remove; ?>"';
+                        }else if (value['service'] === 'update'){
+                            color = 'style="padding-left: 0.3em; background-color: <?php echo $color_update; ?>"';
                         }
                         
                         content = '<li><div class="panel" '

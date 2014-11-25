@@ -88,7 +88,7 @@
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
-                            alert('error : ' + e['responseJSON']['ErrorMessage']);
+                            Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         }
                     });
                 };

@@ -78,7 +78,7 @@
 
                 this.addRight = function() {
                     if ($("#featureid").val() === ''){
-                       Resto.Util.alert($('.maincontent'), 'Please set featureid');
+                       Resto.Util.dialog('Please set featureid');
                     }else{
                         Resto.Util.showMask();
                         
@@ -104,7 +104,7 @@
                             },
                             error: function(e) {
                                 Resto.Util.hideMask();
-                                Resto.Util.alert($('.maincontent'),'error : ' + e['responseJSON']['ErrorMessage']);
+                                Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                             }
                         });
                     }

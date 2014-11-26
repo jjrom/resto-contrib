@@ -75,8 +75,12 @@
                             <legend><?php echo $collection; ?></legend>
                             <h2>
                                 <?php
-                                if (isset($self->licenses[$collection['collection']])){
-                                    echo $self->context->dictionary->translate('_a_signedon') . $self->licenses($collection['collection']);
+                                if (isset($self->licenses[$collection])){
+                                    if ($self->licenses[$collection] === 'NoLicense'){
+                                        
+                                    }else{
+                                        echo $self->context->dictionary->translate('_a_signedon') . $self->licenses($collection);
+                                    }
                                 }else{
                                     echo "<h3 style=\"color: red;\">". $self->context->dictionary->translate('_a_notsignedyet') ."</h3>";
                                 }

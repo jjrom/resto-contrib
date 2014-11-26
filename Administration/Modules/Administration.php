@@ -507,9 +507,8 @@ class Administration extends RestoModule {
             throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
         }
 
-        $this->licenses = $this->context->dbDriver->getSignedLicenses($this->_user->profile['email']);
-        $this->collectionsList = $this->context->dbDriver->listCollections();
-        
+        $this->signedLicenses = $this->context->dbDriver->getSignedLicenses($this->_user->profile['email']);
+        $this->licenses = array();
         /*
          * Get dedicated rights for current user
          */
@@ -518,6 +517,7 @@ class Administration extends RestoModule {
         /*
          * Check rights on each collections for the user
          */
+        $this->collectionsList = $this->context->dbDriver->listCollections();
         foreach ($this->collectionsList as $collection){
             $collectionRights = $this->_user->getRights($collection['collection']);
             
@@ -543,6 +543,19 @@ class Administration extends RestoModule {
                  * rights of the user's group
                  */
                 $this->rightsList[$collection['collection']] = $collectionRights;
+            }
+            
+            /*
+             * If a license has a license, check if user has signed 
+             * else no license has to be signed
+             */
+            $collectionObject = new RestoCollection($collection['collection'], $this->context, $this->user);
+            if ($collectionObject->getLicense()){
+                if(isset($this->signedLicenses[$collection['collection']])){
+                    $this->licenses[$collection['collection']] = $this->signedLicenses[$collection['collection']];
+                }
+            }else{
+                $this->licenses[$collection['collection']] = 'NoLicense';
             }
         }
         

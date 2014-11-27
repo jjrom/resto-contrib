@@ -140,6 +140,10 @@
                 
                 function addToList(data){
                     
+                    var color = 'style="padding-left: 0.3em;"';
+                    var collection = '';
+                    var content = '';
+                    
                     $.each(data, function(key, value){
                         if (value['collection'] === '*'){
                             collection = 'All';
@@ -178,9 +182,9 @@
                     
                 }
                 
-                url = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' ?>";
-                dataType = "json";
-                data = {
+                var url = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' ?>";
+                var dataType = "json";
+                var data = {
                         service: service_selector,
                         collection: collection_selector,
                         startIndex: min + number,

@@ -79,7 +79,7 @@
                                     if ($self->licenses[$collection] === 'NoLicense'){
                                         
                                     }else{
-                                        echo $self->context->dictionary->translate('_a_signedon') . $self->licenses($collection);
+                                        echo "<h3>". $self->context->dictionary->translate('_a_signedon') . ' ' . $self->licenses[$collection] ."</h3>";
                                     }
                                 }else{
                                     echo "<h3 style=\"color: red;\">". $self->context->dictionary->translate('_a_notsignedyet') ."</h3>";

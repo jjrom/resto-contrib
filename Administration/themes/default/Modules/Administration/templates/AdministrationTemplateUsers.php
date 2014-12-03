@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $self->context->dictionary->language ?>">
     <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'head.php' ?>
     <body style="overflow-x: hidden;">
         
@@ -20,7 +20,7 @@
                             <h2><?php echo $userProfile['email']; ?></h2>
                         <?php }else{ ?>
                             <div class="panel" style="padding-left: 0.3em; word-wrap:break-word;">
-                            <h2><a href="<?php echo $self->context->baseUrl . 'administration/users/' . $userProfile['userid'] ?>"> <?php echo $userProfile['email']; ?></a></h2>
+                            <h2><a href="<?php echo $self->context->baseUrl . 'administration/users/' . $userProfile['userid'] . '?lang=' . $self->context->dictionary->language ?>"> <?php echo $userProfile['email']; ?></a></h2>
                         <?php } ?>
                             <?php
                             echo $self->context->dictionary->translate('_a_groupname') . ' : ' . $userProfile['groupname'] . ' <br/>';
@@ -57,7 +57,6 @@
                 $keyword = "<?php echo $self->keyword; ?>";
 
                 global_search_val = "<?php echo $self->global_search_val; ?>";
-                //$("#global_search").attr("placeholder", global_search_val);
                 $("#search").attr("text", global_search_val);
                 $("#search").show();
                         
@@ -73,7 +72,7 @@
 
                 $("#next").on('click', function() {
                     $min = $min + $number;
-                    url = "<?php echo $self->context->baseUrl . 'administration/users'; ?>" + "?min=" + $min + "&number=" + $number + "&keyword=" + $keyword;
+                    url = "<?php echo $self->context->baseUrl . 'administration/users' . '?lang=' . $self->context->dictionary->language; ?>" + "&min=" + $min + "&number=" + $number + "&keyword=" + $keyword;
                     window.location = url;
                 });
 
@@ -82,7 +81,7 @@
                     if ($min < 0) {
                         $min = 0;
                     }
-                    url = "<?php echo $self->context->baseUrl . 'administration/users'; ?>" + "?min=" + $min + "&number=" + $number + "&keyword=" + $keyword;
+                    url = "<?php echo $self->context->baseUrl . 'administration/users' . '?lang=' . $self->context->dictionary->language; ?>" + "&min=" + $min + "&number=" + $number + "&keyword=" + $keyword;
                     window.location = url;
                 });
 

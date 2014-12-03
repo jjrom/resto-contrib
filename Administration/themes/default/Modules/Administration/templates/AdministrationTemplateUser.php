@@ -3,7 +3,7 @@
     $_noMap = true;
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $self->context->dictionary->language ?>">
     <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'head.php' ?>
     <body style="overflow-x: hidden;">
         
@@ -44,7 +44,7 @@
                                 <?php } ?>
                             </li>
                             <li>
-                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->_user->profile['userid'] . "/history"; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_showfullhistory'); ?></a>
+                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->_user->profile['userid'] . "/history" . '?lang=' . $self->context->dictionary->language; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_showfullhistory'); ?></a>
                             </li>
                        
                             
@@ -58,6 +58,8 @@
                             </li>
                         </ul>
                         
+                        <a id="_show_advanced_rights" class="button expand tiny"><?php echo $self->context->dictionary->translate('_a_show_advanced_rights'); ?></a>
+                        <a id="_hide_advanced_rights" class="button expand tiny"><?php echo $self->context->dictionary->translate('_a_hide_advanced_rights'); ?></a>
                         <a id="deleteButton" class="button expand alert [tiny small large] hide"><?php echo $self->context->dictionary->translate('_a_delete_user'); ?></a>
                     </div>
                 </li>
@@ -86,13 +88,13 @@
                                 }
                                 ?>
                             </h2>
-                            <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-5">
+                            <ul class="small-block-grid-2 medium-block-grid-2 large-block-grid-2">
                                 <?php
                                 echo '<li><a id="' . $collection . 'download" collection="' . $collection . '" field="download" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['download'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Download</a></li>';
                                 echo '<li><a id="' . $collection . 'visualize" collection="' . $collection . '" field="visualize" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['visualize'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Visualize</a></li>';
-                                echo '<li><a id="' . $collection . 'canpost" collection="' . $collection . '" field="canpost" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
-                                echo '<li><a id="' . $collection . 'canput" collection="' . $collection . '" field="canput" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
-                                echo '<li><a id="' . $collection . 'candelete" collection="' . $collection . '" field="candelete" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
+                                echo '<li class="advanced-right"><a id="' . $collection . 'canpost" collection="' . $collection . '" field="canpost" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['post'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Post</a></li>';
+                                echo '<li class="advanced-right"><a id="' . $collection . 'canput" collection="' . $collection . '" field="canput" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['put'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Put</a></li>';
+                                echo '<li class="advanced-right"><a id="' . $collection . 'candelete" collection="' . $collection . '" field="candelete" class="button expand rights' . (($self->_user->profile['groupname'] === 'admin' || $self->_user->profile['activated'] != 1) ? ' disabled': '' ) . '" ' . ($right['delete'] == 1 ? 'rightValue="true" style="background-color: green;"' : 'rightValue="false" style="background-color: red;"') . '>Delete</a></li>';
                                 ?>
                             </ul>
                             <ul class="small-block-grid-1 large-block-grid-1">
@@ -115,9 +117,9 @@
                                                         <?php
                                                         echo '<li>download : ' . ($featureRight['download'] == 1 ? 'true' : 'false') . '</li>';
                                                         echo '<li>visualize : ' . ($featureRight['visualize'] == 1 ? 'true' : 'false') . '</li>';
-                                                        echo '<li>post : ' . ($featureRight['post'] == 1 ? 'true' : 'false') . '</li>';
-                                                        echo '<li>put : ' . ($featureRight['put'] == 1 ? 'true' : 'false') . '</li>';
-                                                        echo '<li>delete : ' . ($featureRight['delete'] == 1 ? 'true' : 'false') . '</li>';
+                                                        echo '<li class="advanced-right">post : ' . ($featureRight['post'] == 1 ? 'true' : 'false') . '</li>';
+                                                        echo '<li class="advanced-right">put : ' . ($featureRight['put'] == 1 ? 'true' : 'false') . '</li>';
+                                                        echo '<li class="advanced-right">delete : ' . ($featureRight['delete'] == 1 ? 'true' : 'false') . '</li>';
                                                         ?> 
                                                     </ul> 
                                                 </div>
@@ -126,7 +128,7 @@
                                     </div>
                                 </li>
                             </ul>
-                            <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->_user->profile['userid'] . "/rights?collection=" . $collection; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_createrights'); ?></a>
+                            <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $self->_user->profile['userid'] . "/rights?collection=" . $collection . '&lang=' . $self->context->dictionary->language; ?>" class="button expand [tiny small large]"><?php echo $self->context->dictionary->translate('_a_createrights'); ?></a>
                             
                         </fieldset>
                     </div>
@@ -140,17 +142,46 @@
                         <h1>
                             <?php echo $self->context->dictionary->translate('_a_last_download'); ?>
                         </h1>
+                        <ul class="small-block-grid-1 large-block-grid-2 data_container">
                         <?php
                         foreach ($self->historyList as $history) {
                             ?>
-                            <ul class="small-block-grid-1 large-block-grid-2">
-                                <li>
-                                    <?php
-                                    echo $history['method'] . ' ' . $history['service'] . ' ' . $history['collection'] . ' ' . $history['resourceid'] . ' ' . $history['query'] . ' ' . $history['querytime'] . ' ' . $history['url'] . ' ' . $history['ip'];
-                                    ?>
-                                </li>
-                            </ul>
+                            <li>
+                                <?php if ($history['service'] === 'download'){ ?>
+                                <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_download; ?>">
+                                <?php } else if ($history['service'] === 'insert'){ ?>
+                                <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_insert; ?>">
+                                <?php } else if ($history['service'] === 'create'){ ?>
+                                <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_create; ?>">
+                                <?php } else if ($history['service'] === 'remove'){ ?>
+                                <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_remove; ?>">
+                                <?php } else if ($history['service'] === 'update'){ ?>
+                                <div class="panel" style="padding-left: 0.3em; background-color: <?php echo $color_update; ?>">
+                                <?php } else {?>
+                                <div class="panel" style="padding-left: 0.3em;">
+                                <?php } ?>
+                                    <h2><a href="<?php 
+                                        if ($history['collection'] === '*'){
+                                            $title = 'All';
+                                            $url = $self->context->baseUrl . '/api/collections/' . 'search.html?lang=' . $self->context->dictionary->language;
+                                        }else{
+                                            $title = $history['collection'];
+                                            $url = $self->context->baseUrl . '/api/collections/' .  $history['collection'] . '/search.html?lang=' . $self->context->dictionary->language;
+                                        }
+                                        echo $url;?>"><?php echo $title; ?></a></h2>
+                                    <p>
+                                        <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $history['userid'] . '?lang=' . $self->context->dictionary->language; ?>"><?php echo $self->context->dictionary->translate('_a_userid') . ' : ' . $history['userid']; ?></a><br/>
+                                        <?php
+                                        echo $self->context->dictionary->translate('_a_service') . ' : ' . $history['service'] . '<br/>';
+                                        echo $history['querytime'];
+                                        ?>
+                                    </p>
+                                    <a href="<?php echo $history['url']; ?>"><?php echo $history['url']; ?></a>
+
+                                </div>
+                            </li>
                         <?php } ?>
+                        </ul>
                     </div>
                 </li>
             </ul>
@@ -172,6 +203,8 @@
                             $(this).css('background-color', 'red');
                         }
                     });
+                    $('.advanced-right').hide();
+                    $('#_hide_advanced_rights').hide();
                 }
 
                 this.activateUser = function(user) {
@@ -179,9 +212,9 @@
                     
                     $.ajax({
                         type: "POST",
-                        url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/activate",
+                        url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/activate" ,
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?> + "<?php echo '?lang=' . $self->context->dictionary->language; ?>";
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -197,7 +230,7 @@
                         type: "POST",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user + "/deactivate",
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?> + "<?php echo '?lang=' . $self->context->dictionary->language; ?>";
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -213,7 +246,7 @@
                         type: "DELETE",
                         url: "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + user,
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>";
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . '?lang=' . $self->context->dictionary->language ?>";
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -236,7 +269,7 @@
                             featureid: featureid
                         },
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?> + "<?php echo '?lang=' . $self->context->dictionary->language; ?>";
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -258,7 +291,7 @@
                             groupname: group
                         },
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?>;
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>" + <?php echo $self->_user->profile['userid']; ?> + "<?php echo '?lang=' . $self->context->dictionary->language; ?>";
                         },
                         error: function(e) {
                             Resto.Util.hideMask();
@@ -338,6 +371,18 @@
                             self.deleteRight($(this).attr('collection'), $(this).attr('featureid'));
                         }
                     });
+                });
+                
+                $("#_hide_advanced_rights").on('click', function() {
+                    $('#_show_advanced_rights').show();
+                    $('#_hide_advanced_rights').hide();
+                    $('.advanced-right').hide();
+                });
+                
+                $("#_show_advanced_rights").on('click', function() {
+                    $('#_hide_advanced_rights').show();
+                    $('#_show_advanced_rights').hide();
+                    $('.advanced-right').show();
                 });
 
                 initialize();

@@ -4,7 +4,7 @@ $_noMap = true;
 $_noBreadcrumb = true;
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $self->context->dictionary->language ?>">
     <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . 'head.php' ?>
     <body style="overflow-x: hidden;">
         <!-- Header -->
@@ -25,22 +25,22 @@ $_noBreadcrumb = true;
                     <ul class="small-block-grid-1 large-block-grid-1">
                         <li>
 
-                            <a href="<?php echo $self->context->baseUrl . 'administration/users/'; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_users_management'); ?></a>
+                            <a href="<?php echo $self->context->baseUrl . 'administration/users?lang=' . $self->context->dictionary->language; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_users_management'); ?></a>
 
                         </li>
                         <li>
 
-                            <a href="<?php echo $self->context->baseUrl . 'administration/collections'; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_collections_management'); ?></a>
+                            <a href="<?php echo $self->context->baseUrl . 'administration/collections?lang=' . $self->context->dictionary->language; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_collections_management'); ?></a>
 
                         </li>
                         <li>
 
-                            <a href="<?php echo $self->context->baseUrl . 'administration/users/creation'; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_user_creation'); ?></a>
+                            <a href="<?php echo $self->context->baseUrl . 'administration/users/creation?lang=' . $self->context->dictionary->language; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_user_creation'); ?></a>
 
                         </li>
                         <li>
 
-                            <a href="<?php echo $self->context->baseUrl . 'administration/users/history'; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_history'); ?></a>
+                            <a href="<?php echo $self->context->baseUrl . 'administration/users/history?lang=' . $self->context->dictionary->language; ?>" class="button expand"><?php echo $self->context->dictionary->translate('_a_history'); ?></a>
 
                         </li>
                     </ul>

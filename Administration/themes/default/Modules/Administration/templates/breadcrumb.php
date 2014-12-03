@@ -4,10 +4,10 @@
     <span <?php if(!isset($_noSearchBar)){ ?>class="show-for-medium-up"<?php } ?> style="margin-left: 20px; margin-top: 13px; float: left; color: black;">
         <?php
         $i = 0;
-        $url = $self->context->baseUrl . 'administration';
-        echo '<a href="' . $url . '">administration</a>';
+        $url = $self->context->baseUrl . 'administration' ;
+        echo '<a href="' . $url . '?lang=' . $self->context->dictionary->language . '">administration</a>';
         while ($i < sizeof($self->segments)) {
-            $url = $url . '/' . $self->segments[$i];
+            $url = $url . '/' . $self->segments[$i] . '?lang=' . $self->context->dictionary->language;
             echo ' > <a href="' . $url . '">' . $self->segments[$i] . '</a>';
             ++$i;
         }

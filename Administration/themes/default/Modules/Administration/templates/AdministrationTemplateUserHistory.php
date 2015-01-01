@@ -74,14 +74,14 @@
                             <h2><a href="<?php 
                                 if ($history['collection'] === '*'){
                                     $title = 'All';
-                                    $url = $self->context->baseUrl . '/collections/';
+                                    $url = $self->context->baseUrl . '/api/collections/' . 'search.html?lang=' . $self->context->dictionary->language;
                                 }else{
                                     $title = $history['collection'];
-                                    $url = $self->context->baseUrl . '/collections/' .  $history['collection'];
+                                    $url = $self->context->baseUrl . '/api/collections/' .  $history['collection'] . '/search.html?lang=' . $self->context->dictionary->language;
                                 }
                                 echo $url;?>"><?php echo $title; ?></a></h2>
                             <p>
-                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $history['userid']; ?>"><?php echo $self->context->dictionary->translate('_a_userid') . ' : ' . $history['userid']; ?></a><br/>
+                                <a href="<?php echo $self->context->baseUrl . 'administration/users/' . $history['userid'] . '?lang=' . $self->context->dictionary->language; ?>"><?php echo $self->context->dictionary->translate('_a_userid') . ' : ' . $history['userid']; ?></a><br/>
                                 <?php
                                 echo $self->context->dictionary->translate('_a_service') . ' : ' . $history['service'] . '<br/>';
                                 echo $history['querytime'];
@@ -131,13 +131,13 @@
                     collectionSelector = $('select[name=collectionSelector]').val();
                     serviceSelector = $('select[name=serviceSelector]').val();
                     if (!serviceSelector && !collectionSelector){
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' ?>" ;
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' .'?lang=' . $self->context->dictionary->language; ?>" ;
                     }else if (serviceSelector && !collectionSelector){
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?service=' ?>" + $('select[name=serviceSelector]').val();
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' . '?lang=' . $self->context->dictionary->language. '&service=' ?>" + $('select[name=serviceSelector]').val();
                     }else if (!serviceSelector && collectionSelector){
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?' ?>" + "collection=" + $('select[name=collectionSelector]').val();
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' . '?lang=' . $self->context->dictionary->language . '&collection=' ?>" + $('select[name=collectionSelector]').val();
                     }else{
-                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history?service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
+                        window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '/history' . '?lang=' . $self->context->dictionary->language . '&service=' ?>" + $('select[name=serviceSelector]').val() + "&collection=" + $('select[name=collectionSelector]').val();
                     }
                 }
                 
@@ -145,13 +145,18 @@
                     
                     var color = 'style="padding-left: 0.3em;"';
                     var collection = '';
+                    var collection_title = '';
                     var content = '';
                     
                     $.each(data, function(key, value){
+                        color = 'style="padding-left: 0.3em;"';
+                        
                         if (value['collection'] === '*'){
-                            collection = 'All';
+                            collection = '';
+                            collection_title = 'All';
                         }else{
                             collection = value['collection'];
+                            collection_title = collection;
                         }
                         if (value['service'] === 'download'){
                             color = 'style="padding-left: 0.3em; background-color: <?php echo $color_download; ?>"';
@@ -167,13 +172,14 @@
                         
                         content = '<li><div class="panel" '
                                 + color
-                                + '><h2><a href="<?php echo $self->context->baseUrl . 'collections/'?>' 
-                                + value['collection']
+                                + '><h2><a href="<?php echo $self->context->baseUrl . '/api/collections/' ?>' 
+                                + collection_title
+                                + '<?php echo '/search.html?lang=' . $self->context->dictionary->language; ?>'
                                 + '">'
                                 + collection
                                 + '</a></h2>' 
                                 + '<p>'
-                                + '<a href="<?php echo $self->context->baseUrl . 'administration/users/'; ?>' + value['userid'] + '">'
+                                + '<a href="<?php echo $self->context->baseUrl . 'administration/users/'; ?>' + value['userid'] + '<?php echo '?lang=' . $self->context->dictionary->language; ?>' + '">'
                                 + '<?php echo $self->context->dictionary->translate('_a_userid') . ' : '; ?>' + value['userid'] + '</a><br/>'
                                 + '<?php echo $self->context->dictionary->translate('_a_service') . ' : ';?>' + value['service'] + '<br/>'
                                 + value['querytime']

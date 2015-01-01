@@ -104,7 +104,7 @@
                             Resto.Util.dialog('error : ' + e['responseJSON']['ErrorMessage']);
                         },
                         success: function() {
-                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' ?>";
+                            window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . '?lang=' . $self->context->dictionary->language; ?>";
                         }
                     });
                 }

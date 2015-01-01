@@ -25,11 +25,6 @@
                     </label>
                 </fieldset>
                 <fieldset>
-                    <legend><?php echo $self->context->dictionary->translate('_a_search'); ?></legend>
-                    <input type="radio" name="search" value="true" id="search"><label for="search"><?php echo $self->context->dictionary->translate('_true'); ?></label>
-                    <input type="radio" name="nosearch" value="false" id="nosearch"><label for="nosearch"><?php echo $self->context->dictionary->translate('_false'); ?></label>
-                </fieldset>
-                <fieldset>
                     <legend><?php echo $self->context->dictionary->translate('_a_visualize'); ?></legend>
                     <input type="radio" name="visualize" value="true" id="visualize"><label for="visualize"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="novisualize" value="false" id="novisualize"><label for="novisualize"><?php echo $self->context->dictionary->translate('_false'); ?></label>
@@ -39,17 +34,22 @@
                     <input type="radio" name="download" value="true" id="download"><label for="download"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="nodownload" value="false" id="nodownload"><label for="nodownload"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
-                <fieldset>
+                <fieldset class="advanced-right">
+                    <legend><?php echo $self->context->dictionary->translate('_a_search'); ?></legend>
+                    <input type="radio" name="search" value="true" id="search"><label for="search"><?php echo $self->context->dictionary->translate('_true'); ?></label>
+                    <input type="radio" name="nosearch" value="false" id="nosearch"><label for="nosearch"><?php echo $self->context->dictionary->translate('_false'); ?></label>
+                </fieldset>
+                <fieldset class="advanced-right">
                     <legend><?php echo $self->context->dictionary->translate('_a_can_post'); ?></legend>
                     <input type="radio" name="canpost" value="true" id="canpost"><label for="canpost"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="cantpost" value="false" id="cantpost"><label for="cantpost"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
-                <fieldset>
+                <fieldset class="advanced-right">
                     <legend><?php echo $self->context->dictionary->translate('_a_can_put'); ?></legend>
                     <input type="radio" name="canput" value="true" id="canput"><label for="canput"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="cantput" value="false" id="cantput"><label for="cantput"><?php echo $self->context->dictionary->translate('_false'); ?></label>
                 </fieldset>
-                <fieldset>
+                <fieldset class="advanced-right">
                     <legend><?php echo $self->context->dictionary->translate('_a_can_delete'); ?></legend>
                     <input type="radio" name="candelete" value="true" id="candelete"><label for="candelete"><?php echo $self->context->dictionary->translate('_true'); ?></label>
                     <input type="radio" name="cantdelete" value="false" id="cantdelete"><label for="cantdelete"><?php echo $self->context->dictionary->translate('_false'); ?></label>
@@ -57,7 +57,9 @@
 
             </form>
 
-            <a id="_save" href="#" class="button expand"><?php echo $self->context->dictionary->translate('_a_save_right'); ?></a>
+            <a id="_show_advanced_rights" class="button expand tiny"><?php echo $self->context->dictionary->translate('_a_show_advanced_rights'); ?></a>
+            <a id="_hide_advanced_rights" class="button expand tiny"><?php echo $self->context->dictionary->translate('_a_hide_advanced_rights'); ?></a>
+            <a id="_save" class="button expand"><?php echo $self->context->dictionary->translate('_a_save_right'); ?></a>
         </div>
         <!-- Footer -->
         <?php include realpath(dirname(__FILE__)) . '/../../../templates/' . '_footer.php' ?>
@@ -72,11 +74,9 @@
 
                 function initialize() {
                     $('input:radio[name=nodownload]').attr('checked', true);
-                    $('input:radio[name=nosearch]').attr('checked', true);
                     $('input:radio[name=novisualize]').attr('checked', true);
-                    $('input:radio[name=cantpost]').attr('checked', true);
-                    $('input:radio[name=cantput]').attr('checked', true);
-                    $('input:radio[name=cantdelete]').attr('checked', true);
+                    $('.advanced-right').hide();
+                    $('#_hide_advanced_rights').hide();
                 }
 
                 this.addRight = function() {
@@ -103,7 +103,7 @@
                                 filters: 'null'
                             },
                             success: function() {
-                                window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] ?>";
+                                window.location = "<?php echo $self->context->baseUrl . 'administration/users/' . $self->segments[1] . '?lang=' . $self->context->dictionary->language ?>";
                             },
                             error: function(e) {
                                 Resto.Util.hideMask();
@@ -115,6 +115,18 @@
                 
                 $("#_save").on('click', function() {
                     self.addRight();
+                });
+                
+                $("#_hide_advanced_rights").on('click', function() {
+                    $('#_show_advanced_rights').show();
+                    $('#_hide_advanced_rights').hide();
+                    $('.advanced-right').hide();
+                });
+                
+                $("#_show_advanced_rights").on('click', function() {
+                    $('#_hide_advanced_rights').show();
+                    $('#_show_advanced_rights').hide();
+                    $('.advanced-right').show();
                 });
 
                 $("#download").on('click', function() {

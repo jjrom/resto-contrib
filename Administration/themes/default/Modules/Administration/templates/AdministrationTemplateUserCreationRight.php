@@ -93,7 +93,7 @@
                             data: {
                                 emailorgroup: '<?php echo $self->userProfile['email'] ?>',
                                 collection: '<?php echo $self->collectionRight; ?>',
-                                featureid: $("#featureid").val(),
+                                featureid: Resto.Util.sanitizeValue($("#featureid").val()),
                                 search: $('input[name=search]:checked').val(),
                                 visualize: $('input[name=visualize]:checked').val(),
                                 download: $('input[name=download]:checked').val(),

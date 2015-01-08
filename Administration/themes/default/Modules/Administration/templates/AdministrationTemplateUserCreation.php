@@ -91,13 +91,13 @@
                         url: "<?php echo $self->context->baseUrl . 'administration/users' ?>",
                         dataType: "json",
                         data: {
-                            email: $("#email").val(),
-                            groupname: $('select[name=groupname]').val(),
-                            password: $("#password").val(),
-                            username: $("#username").val(),
-                            givenname: $('#givenname').val(),
-                            lastname: $('#lastname').val(),
-                            activated: $('input[name=activated]:checked').val()
+                            email: Resto.Util.sanitizeValue($("#email").val()),
+                            groupname: Resto.Util.sanitizeValue($('select[name=groupname]').val()),
+                            password: Resto.Util.sanitizeValue($("#password").val(),
+                            username: Resto.Util.sanitizeValue($("#username").val()),
+                            givenname: Resto.Util.sanitizeValue($('#givenname').val()),
+                            lastname: Resto.Util.sanitizeValue($('#lastname').val()),
+                            activated: Resto.Util.sanitizeValue($('input[name=activated]:checked').val())
                         },
                         error: function(e) {
                             Resto.Util.hideMask();

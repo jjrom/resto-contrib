@@ -440,22 +440,22 @@ class Administration extends RestoModule {
                 $orderBy = null;
                 $ascordesc = null;
                 if (filter_input(INPUT_GET, 'startIndex')) {
-                    $this->startIndex = filter_input(INPUT_GET, 'startIndex');
+                    $this->startIndex = htmlspecialchars(filter_input(INPUT_GET, 'startIndex'), ENT_QUOTES);
                 }
                 if (filter_input(INPUT_GET, 'numberOfResults')) {
-                    $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
+                    $this->numberOfResults = htmlspecialchars(filter_input(INPUT_GET, 'numberOfResults'), ENT_QUOTES);
                 }
                 if (filter_input(INPUT_GET, 'collection')) {
-                    $this->collectionFilter = filter_input(INPUT_GET, 'collection');
+                    $this->collectionFilter = htmlspecialchars(filter_input(INPUT_GET, 'collection'), ENT_QUOTES);
                 }
                 if (filter_input(INPUT_GET, 'service')) {
-                    $this->service = filter_input(INPUT_GET, 'service');
+                    $this->service = htmlspecialchars(filter_input(INPUT_GET, 'service'), ENT_QUOTES);
                 }
                 if (filter_input(INPUT_GET, 'orderBy')) {
-                    $orderBy = filter_input(INPUT_GET, 'orderBy');
+                    $orderBy = htmlspecialchars(filter_input(INPUT_GET, 'orderBy'), ENT_QUOTES);
                 }
                 if (filter_input(INPUT_GET, 'ascordesc')) {
-                    $ascordesc = filter_input(INPUT_GET, 'ascordesc');
+                    $ascordesc = htmlspecialchars(filter_input(INPUT_GET, 'ascordesc'), ENT_QUOTES);
                 }
 
                 $options = array(
@@ -481,14 +481,14 @@ class Administration extends RestoModule {
             $this->number = 50;
             $this->keyword = null;
             if (filter_input(INPUT_GET, 'min')) {
-                $this->min = filter_input(INPUT_GET, 'min');
+                $this->min = htmlspecialchars(filter_input(INPUT_GET, 'min'), ENT_QUOTES);
             }
             if (filter_input(INPUT_GET, 'number')) {
-                $this->number = filter_input(INPUT_GET, 'number');
+                $this->number = htmlspecialchars(filter_input(INPUT_GET, 'number'), ENT_QUOTES);
             }
             if (filter_input(INPUT_GET, 'keyword')) {
-                $this->keyword = filter_input(INPUT_GET, 'keyword');
-                $this->global_search_val = filter_input(INPUT_GET, 'keyword');
+                $this->keyword = htmlspecialchars(filter_input(INPUT_GET, 'keyword'), ENT_QUOTES);
+                $this->global_search_val = htmlspecialchars(filter_input(INPUT_GET, 'keyword'), ENT_QUOTES);
             } else {
                 $this->keyword = null;
                 $this->global_search_val = $this->context->dictionary->translate('_menu_globalsearch');
@@ -587,10 +587,10 @@ class Administration extends RestoModule {
             $this->startIndex = 0;
             $this->numberOfResults = 12;
             if (filter_input(INPUT_GET, 'startIndex')) {
-                $this->startIndex = filter_input(INPUT_GET, 'startIndex');
+                $this->startIndex = htmlspecialchars(filter_input(INPUT_GET, 'startIndex'), ENT_QUOTES);
             }
             if (filter_input(INPUT_GET, 'numberOfResults')) {
-                $this->numberOfResults = filter_input(INPUT_GET, 'numberOfResults');
+                $this->numberOfResults = htmlspecialchars(filter_input(INPUT_GET, 'numberOfResults'), ENT_QUOTES);
             }
             
             $this->collectionFilter = null;
@@ -598,19 +598,19 @@ class Administration extends RestoModule {
             $orderBy = null;
             $ascordesc = null;
             if (filter_input(INPUT_GET, 'collection')) {
-                $this->collectionFilter = filter_input(INPUT_GET, 'collection');
+                $this->collectionFilter = htmlspecialchars(filter_input(INPUT_GET, 'collection'), ENT_QUOTES);
             }
             if (filter_input(INPUT_GET, 'service')) {
-                $this->service = filter_input(INPUT_GET, 'service');
+                $this->service = htmlspecialchars(filter_input(INPUT_GET, 'service'), ENT_QUOTES);
             }
             if (filter_input(INPUT_GET, 'orderBy')) {
-                $orderBy = filter_input(INPUT_GET, 'orderBy');
+                $orderBy = htmlspecialchars(filter_input(INPUT_GET, 'orderBy'), ENT_QUOTES);
             }
             if (filter_input(INPUT_GET, 'ascordesc')) {
-                $ascordesc = filter_input(INPUT_GET, 'ascordesc');
+                $ascordesc = htmlspecialchars(filter_input(INPUT_GET, 'ascordesc'), ENT_QUOTES);
             }
             if (filter_input(INPUT_GET, 'limit')) {
-                $limit = filter_input(INPUT_GET, 'limit');
+                $limit = htmlspecialchars(filter_input(INPUT_GET, 'limit'), ENT_QUOTES);
             }
 
             $options = array(
@@ -628,7 +628,7 @@ class Administration extends RestoModule {
         } else if ($this->segments[2] == 'rights') {
             
             if (filter_input(INPUT_GET, 'collection')) {
-                $collection = filter_input(INPUT_GET, 'collection');
+                $collection = htmlspecialchars(filter_input(INPUT_GET, 'collection'), ENT_QUOTES);
             }else{
                 throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Not Found', 404);
             }
@@ -732,10 +732,10 @@ class Administration extends RestoModule {
              * Get posted data
              */
             $postedData = array();
-            $postedData['emailorgroup'] = filter_input(INPUT_POST, 'emailorgroup');
-            $postedData['collection'] = filter_input(INPUT_POST, 'collection');
-            $postedData['field'] = filter_input(INPUT_POST, 'field');
-            $postedData['value'] = filter_input(INPUT_POST, 'value');
+            $postedData['emailorgroup'] = htmlspecialchars(filter_input(INPUT_POST, 'emailorgroup'), ENT_QUOTES);
+            $postedData['collection'] = htmlspecialchars(filter_input(INPUT_POST, 'collection'), ENT_QUOTES);
+            $postedData['field'] = htmlspecialchars(filter_input(INPUT_POST, 'field'), ENT_QUOTES);
+            $postedData['value'] = htmlspecialchars(filter_input(INPUT_POST, 'value'), ENT_QUOTES);
 
             $emailorgroup = $postedData['emailorgroup'];
             $collectionName = ($postedData['collection'] === '') ? null : $postedData['collection'];
@@ -784,16 +784,16 @@ class Administration extends RestoModule {
              * Get posted data
              */
             $postedData = array();
-            $postedData['emailorgroup'] = filter_input(INPUT_POST, 'emailorgroup');
-            $postedData['collection'] = filter_input(INPUT_POST, 'collection');
-            $postedData['featureid'] = filter_input(INPUT_POST, 'featureid');
-            $postedData['search'] = filter_input(INPUT_POST, 'search');
-            $postedData['visualize'] = filter_input(INPUT_POST, 'visualize');
-            $postedData['download'] = filter_input(INPUT_POST, 'download');
-            $postedData['canput'] = filter_input(INPUT_POST, 'canput');
-            $postedData['canpost'] = filter_input(INPUT_POST, 'canpost');
-            $postedData['candelete'] = filter_input(INPUT_POST, 'candelete');
-            $postedData['filters'] = filter_input(INPUT_POST, 'filters') === 'null' ? null : filter_input(INPUT_POST, 'filters');
+            $postedData['emailorgroup'] = htmlspecialchars(filter_input(INPUT_POST, 'emailorgroup'), ENT_QUOTES);
+            $postedData['collection'] = htmlspecialchars(filter_input(INPUT_POST, 'collection'), ENT_QUOTES);
+            $postedData['featureid'] = htmlspecialchars(filter_input(INPUT_POST, 'featureid'), ENT_QUOTES);
+            $postedData['search'] = htmlspecialchars(filter_input(INPUT_POST, 'search'), ENT_QUOTES);
+            $postedData['visualize'] = htmlspecialchars(filter_input(INPUT_POST, 'visualize'), ENT_QUOTES);
+            $postedData['download'] = htmlspecialchars(filter_input(INPUT_POST, 'download'), ENT_QUOTES);
+            $postedData['canput'] = htmlspecialchars(filter_input(INPUT_POST, 'canput'), ENT_QUOTES);
+            $postedData['canpost'] = htmlspecialchars(filter_input(INPUT_POST, 'canpost'), ENT_QUOTES);
+            $postedData['candelete'] = htmlspecialchars(filter_input(INPUT_POST, 'candelete'), ENT_QUOTES);
+            $postedData['filters'] = filter_input(INPUT_POST, 'filters') === 'null' ? null : htmlspecialchars(filter_input(INPUT_POST, 'filters'), ENT_QUOTES);
             
             if(!$this->context->dbDriver->featureExists($postedData['featureid'])){
                 throw new Exception(($this->context->debug ? __METHOD__ . ' - ' : '') . 'Feature does not exists', 500);
@@ -831,9 +831,9 @@ class Administration extends RestoModule {
     private function deleteRights() {
         try {
             $rights = array();
-            $rights['emailorgroup'] = filter_input(INPUT_POST, 'emailorgroup');
-            $rights['collection'] = filter_input(INPUT_POST, 'collection');
-            $rights['featureid'] = filter_input(INPUT_POST, 'featureid');
+            $rights['emailorgroup'] = htmlspecialchars(filter_input(INPUT_POST, 'emailorgroup'), ENT_QUOTES);
+            $rights['collection'] = htmlspecialchars(filter_input(INPUT_POST, 'collection'), ENT_QUOTES);
+            $rights['featureid'] = htmlspecialchars(filter_input(INPUT_POST, 'featureid'), ENT_QUOTES);
             
             if ($rights) {
                 $this->context->dbDriver->deleteRights($rights['emailorgroup'], ($rights['collection'] === '' ? null : $rights['collection']), ($rights['featureid'] === '' ? null : $rights['featureid']));
@@ -1016,7 +1016,7 @@ class Administration extends RestoModule {
         if ($this->context->method === 'GET' && $this->context->outputFormat === 'json' && isset($data)) {
             $pretty = false;
             if (filter_input(INPUT_GET, '_pretty')) {
-                $pretty = filter_input(INPUT_GET, '_pretty');
+                $pretty = htmlspecialchars(filter_input(INPUT_GET, '_pretty'), ENT_QUOTES);
             }
             $this->data = $data;
             return $this->toJSON($pretty);

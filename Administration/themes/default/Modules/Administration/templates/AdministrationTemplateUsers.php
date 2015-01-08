@@ -60,7 +60,7 @@
                 $keyword = "<?php echo $self->keyword; ?>";
 
                 global_search_val = "<?php echo $self->global_search_val; ?>";
-                $("#search").attr("text", global_search_val);
+                $("#search").attr("text", global_search_val);   
                 $("#search").show();
                         
                 function initialize() {
@@ -69,7 +69,7 @@
                 }
 
                 $("#search").change(function() {
-                    url = "<?php echo $self->context->baseUrl . 'administration/users'; ?>" + "?keyword=" + $("#search").val();
+                    url = "<?php echo $self->context->baseUrl . 'administration/users'; ?>" + "?keyword=" + Resto.Util.sanitizeValue($("#search").val());
                     window.location = url;
                 });
 

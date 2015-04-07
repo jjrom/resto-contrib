@@ -1,0 +1,26 @@
+<div class="main">
+    <div class="show-for-large-up large-2 columns">
+
+    </div>
+    <div class="small-12 large-10 columns">
+
+        <div ng-show='busy'>{{'loading_data'| translate}}</div>
+
+        <div class="row" ng-controller="StatsController" >
+            <ul class="small-block-grid-1 large-block-grid-1">
+                <li ng-repeat="(name, stat) in stats">
+                    <div class="stats">
+                        <h1 style="text-align: center;">{{name}}</h1>
+                        <ul class="small-block-grid-2 medium-block-grid-3 large-block-grid-7">
+                            <li ng-repeat="(id, data) in stat"><div>{{id}}<br/>{{data.count}}</div></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+
+

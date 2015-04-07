@@ -1,0 +1,35 @@
+<div class="history tableContainer" 
+     ng-show="showHistory" 
+     infinite-scroll="loadMore()" 
+     infinite-scroll-disabled='busy'
+     infinite-scroll-distance="1">
+    
+    <div ng-show='busy'>{{'loading_data'| translate}}</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="show-for-medium-up clickable" ng-click="setHistory('userid')">userid <i class="fi-arrow-up" ng-show="orderBy === 'userid'" ng-class="{true:'fi - arrow - up', false:'fi - arrow - down'}[ascOrDesc === 'DESC']"></i></th>
+                <th class="show-for-medium-up clickable" ng-click="setHistory('method')">method <i class="fi-arrow-up" ng-show="orderBy === 'method'" ng-class="{true:'fi - arrow - up', false:'fi - arrow - down'}[ascOrDesc === 'DESC']"></i></th>
+                <th class="clickable" ng-click="setHistory('service')">service <i class="fi-arrow-up" ng-show="orderBy === 'service'" ng-class="{true:'fi - arrow - up', false:'fi - arrow - down'}[ascOrDesc === 'DESC']"></i></th>
+                <th class="clickable" ng-click="setHistory('collection')">collection <i class="fi-arrow-up" ng-show="orderBy === 'collection'" ng-class="{true:'fi - arrow - up', false:'fi - arrow - down'}[ascOrDesc === 'DESC']"></i></th>
+                <th class="show-for-medium-up clickable" ng-click="setHistory('resourceid')">resourceid <i class="fi-arrow-up" ng-show="orderBy === 'resourceid'" ng-class="{true:'fi - arrow - up', false:'fi - arrow - down'}[ascOrDesc === 'DESC']"></i></th>
+                <th class="show-for-medium-up clickable" ng-click="setHistory('query')">query <i class="fi-arrow-up" ng-show="orderBy === 'query'" ng-class="{true:'fi - arrow - up', false:'fi - arrow - down'}[ascOrDesc === 'DESC']"></i></th>
+                <th class="show-for-medium-up clickable" ng-click="setHistory('querytime')">querytime <i class="fi-arrow-up" ng-show="orderBy === 'querytime'" ng-class="{true:'fi - arrow - up', false:'fi - arrow - down'}[ascOrDesc === 'DESC']"></i></th>
+                <th class="show-for-medium-up">ip</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in history">
+                <td class="show-for-medium-up">{{ x.userid}}</td>
+                <td class="show-for-medium-up">{{ x.method}}</td>
+                <td>{{ x.service}}</td>
+                <td>{{ x.collection}}</td>
+                <td class="show-for-medium-up">{{ x.resourceid}}</td>
+                <td class="show-for-medium-up">{{ x.query}}</td>
+                <td class="show-for-medium-up">{{ x.querytime}}</td>
+                <td class="show-for-medium-up">{{ x.ip}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

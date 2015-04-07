@@ -8,8 +8,9 @@ Installation
 
 We suppose that $RESTO2_TARGET is the RESTo v2 installation directory
 
-        cp Modules/Administration.php $RESTO2_TARGET/include/resto/Modules
-        cp -R themes/default/Modules/Administration $RESTO2_TARGET/themes/default/Modules
+        cp Administration.php $RESTO2_TARGET/include/resto/Modules
+
+The client doesn't need installation.
 
 Configuration
 -------------
@@ -22,8 +23,6 @@ Edit $RESTO2_TARGET/include/config.php and add the following within 'modules' se
          'Administration' => array(
                 'activate' => true,
                 'route' => 'administration',
-                'options' => array(
-                    'templatesRoot' => '/Modules/Administration/templates/'
-                )
+                'options' => array()
          )
 

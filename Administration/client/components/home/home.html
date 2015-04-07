@@ -1,0 +1,60 @@
+<div class="main">
+    <div class="show-for-large-up large-2 columns">
+
+    </div>
+    <div class="small-12 large-10 columns">
+
+        <div ng-controller="HomeController"  class="row" style="text-align: center; padding-top: 25px">
+            <ul class="small-block-grid-1 large-block-grid-2" >
+                <li>
+                    <h1>{{'administration'| translate}}</h1>
+                    <p>
+                        {{'administration_home_text'| translate}}
+                    </p>
+                </li>
+                <li>
+                    <ul class="small-block-grid-1 large-block-grid-1">
+                        <li>
+                            <a href="#users" class="button expand">{{'users_management'| translate}}</a>
+                        </li>
+                        <li>
+                            <a href="#collections" class="button expand">{{'collections_management'| translate}}</a>
+                        </li>
+                        <li>
+                            <a href="#history" class="button expand">{{'history'| translate}}</a>
+                        </li>
+                        <li>
+                            <a href="#stats" class="button expand">{{'stats'| translate}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="small-block-grid-1 large-block-grid-3" >
+                <li>
+                    <div class='panel'>
+                        <h1>{{'users'| translate}}</h1>
+                        <h1>{{nb_users}}</h1>
+                    </div>
+                </li>
+                <li>
+                    <div class='panel'>
+                        <h1>{{'downloads'| translate}}</h1>
+                        <h1>{{nb_downloads}}</h1>
+                    </div>
+                </li>
+                <li>
+                    <div class='panel'>
+                        <h1>{{'searchs'| translate}}</h1>
+                        <h1>{{nb_search}}</h1>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+

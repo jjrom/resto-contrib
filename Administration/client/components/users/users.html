@@ -1,0 +1,43 @@
+<div class="main">
+    <div class="show-for-large-up large-2 columns">
+
+    </div>
+    <div class="small-12 large-10 columns">
+
+        <div ng-show='busy'>Loading data...</div>
+
+        <div class="users tableContainer" 
+             ng-controller="UsersController" 
+             ng-show="showUsers" 
+             infinite-scroll="loadMore()" 
+             infinite-scroll-disabled='busy'
+             infinite-scroll-distance="1">
+
+            <div class="search">
+                {{'search'| translate}} : <input type="text" ng-change="getUsers(false)" ng-model="keyword"/>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="show-for-medium-up">{{'userid'| translate}}</th>
+                        <th>{{'email'| translate}}</th>
+                        <th class="show-for-medium-up">{{'groupname'| translate}} </th>
+                        <th class="show-for-medium-up">{{'username'| translate}}</th>
+                        <th class="show-for-medium-up">{{'activated'| translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="x in users" ng-click="selectUser(x)" class="clickable">
+                        <td class="show-for-medium-up">{{ x.userid}}</td>
+                        <td>{{ x.email}}</td>
+                        <td class="show-for-medium-up">{{ x.groupname}}</td>
+                        <td class="show-for-medium-up">{{ x.username}}</td>
+                        <td class="show-for-medium-up">{{ x.activated}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+

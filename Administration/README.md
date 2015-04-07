@@ -1,19 +1,18 @@
-RESTov2 - Administration module
-===============================
+# resto administration module
 
 The Administration module has been founded by the [French Space Agency](http://cnes.fr)
 
-Installation
-------------
+## Prerequisites
 
-We suppose that $RESTO2_TARGET is the RESTo v2 installation directory
+Needs at least a running instance of resto >= 2.0RC1 (http://github.com/jjrom/resto2)
 
-        cp Administration.php $RESTO2_TARGET/include/resto/Modules
+## Installation
 
-The client doesn't need installation.
+### Server side module installation
 
-Configuration
--------------
+We suppose that $RESTO_TARGET is the resto installation directory
+
+        cp Administration.php $RESTO_TARGET/include/resto/Modules
 
 Edit $RESTO2_TARGET/include/config.php and add the following within 'modules' section
 
@@ -25,4 +24,13 @@ Edit $RESTO2_TARGET/include/config.php and add the following within 'modules' se
                 'route' => 'administration',
                 'options' => array()
          )
+
+### Client installation
+
+Copy the client directory under an accessible Web server directory
+
+Set the resto server endpoint within client/js/configuration.js file
+
+
+
 

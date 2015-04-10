@@ -46,5 +46,10 @@
     "feature_id": "Feature id",
     "true": "True",
     "false": "False",
-    "unloggedText": "Please login to acces RESTo Administration..."
+    "unloggedText": "Please login to acces RESTo Administration...",
+    
+    "signin.title" : "SignIn",
+    "signin.email" : "email",
+    "signin.password" : "password", 
+    "signin.submit" : "submit"    
 }

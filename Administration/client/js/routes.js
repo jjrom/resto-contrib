@@ -32,6 +32,10 @@ angular.module('administration').config(['$routeProvider',
                     templateUrl: 'components/user/user.html',
                     controller: 'UserController'
                 })
+                .when('/userCreation', {
+                    templateUrl: 'components/userCreation/userCreation.html',
+                    controller: 'UserCreationController'
+                })
                 .otherwise({
                     redirectTo: '/home'
                 });

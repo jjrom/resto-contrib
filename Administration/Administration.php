@@ -105,7 +105,6 @@ class Administration extends RestoModule {
      * @throws Exception
      */
     public function run($segments) {
-
         if ($this->user->profile['groupname'] !== 'admin') {
             /*
              * Only administrators can access to administration
@@ -439,7 +438,7 @@ class Administration extends RestoModule {
             /*
              * Insert user
              */
-            return $this->insertUser();
+            return $this->createUser();
         }
     }
 
@@ -507,6 +506,31 @@ class Administration extends RestoModule {
     }
 
     /**
+     * Create new user
+     * 
+     * @return type
+     */
+    private function createUser() {
+        $userParam = array_merge($_POST);
+        if ($userParam) {
+            try {
+                $profile = $this->context->dbDriver->get(RestoDatabaseDriver::USER_PROFILE, array('userid' => $this->segments[1]));
+
+                if ($profile){
+                    RestoLogUtil::httpError(3000);
+                }
+
+                $this->context->dbDriver->store(RestoDatabaseDriver::USER_PROFILE, array('profile' => $userParam));
+                return array('status' => 'success', 'message' => 'success');
+            } catch (Exception $e) {
+                RestoLogUtil::httpError($e->getCode(), $e->getMessage());
+            }
+        } else {
+            RestoLogUtil::httpError(404);
+        }
+    }
+
+    /**
      * updateUser - update new user in database
      * 
      * @throws Exception
@@ -556,17 +580,16 @@ class Administration extends RestoModule {
             $params = array();
             $params['emailOrGroup'] = $emailorgroup;
             $params['collectionName'] = $collectionName;
+            $params['featureIdentifier'] = null;
+            $params['rights'] = $rights;
 
             $right = $this->context->dbDriver->get(RestoDatabaseDriver::RIGHTS, $params);
+
             if (!$right) {
 
                 /*
                  * Store rights
                  */
-                $params = array();
-                $params['emailOrGroup'] = $emailorgroup;
-                $params['collectionName'] = $collectionName;
-                $params['rights'] = $rights;
                 $this->context->dbDriver->store(RestoDatabaseDriver::RIGHTS, $params);
 
                 /*
@@ -577,10 +600,6 @@ class Administration extends RestoModule {
                 /*
                  * Upsate rights
                  */
-                $params = array();
-                $params['emailOrGroup'] = $emailorgroup;
-                $params['collectionName'] = $collectionName;
-                $params['rights'] = $rights;
                 $this->context->dbDriver->update(RestoDatabaseDriver::RIGHTS, $params);
 
 

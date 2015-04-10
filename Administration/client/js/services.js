@@ -4,18 +4,18 @@
 
 var services = angular.module('services', []);
 
-services.factory('initialization', 
-    function(){
-        var initialization = {};
-        
-        initialization.ok = false;
-        
-        initialization.isOK = function(){
-            initialization.ok = true;
-        };
-        
-        return initialization;
-});
+services.factory('initialization',
+        function() {
+            var initialization = {};
+
+            initialization.ok = false;
+
+            initialization.isOK = function() {
+                initialization.ok = true;
+            };
+
+            return initialization;
+        });
 
 services.factory('userActivation', ['$http', 'CONFIG',
     function($http, CONFIG) {
@@ -234,6 +234,33 @@ services.factory('_USERS', ['$http', 'CONFIG',
                         .error(function() {
                             alert('error - get stats');
                         });
+            },
+            add: function(options, callback, error) {
+                $http({
+                    method: 'POST',
+                    url: CONFIG.restoURL + CONFIG.administrationEndpoint + '/users',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    transformRequest: function(obj) {
+                        var str = [];
+                        for (var p in obj)
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        return str.join("&");
+                    },
+                    data: {
+                        password: options['password'],
+                        username: options['username'],
+                        givename: options['givename'],
+                        lastname: options['lastname']
+                    }
+                }).success(function(data) {
+                    if (data.ErrorMessage) {
+                        error(data);
+                    } else {
+                        callback(data);
+                    }
+                }).error(function() {
+                    alert('error - user creation');
+                });
             }
         };
     }]);

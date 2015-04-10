@@ -61,8 +61,8 @@ angular.module('administration')
 /* Controllers */
 
 angular.module('administration')
-        .controller('main', ['$scope', 'profile', 'initialization',
-            function($scope, profile, initialization) {
+        .controller('main', ['$scope', 'profile', 'initialization', 'CONFIG', '$location',
+            function($scope, profile, initialization, CONFIG, $location) {
 
                 $scope.$on('showUser', function() {
                     $scope.init();
@@ -107,6 +107,8 @@ angular.module('administration')
                                 $scope.profile = profile;
                                 if (profile.groupname !== 'admin') {
                                     $scope.profile = null;
+                                    alert('Sorry... You are not an administrator');
+                                    $location.path(CONFIG.restoURL, true);
                                 } else {
                                     initialization.isOK();
                                 }
@@ -121,6 +123,8 @@ angular.module('administration')
                         $scope.profile = profile;
                         if (profile.groupname !== 'admin') {
                             $scope.profile = null;
+                            alert('Sorry... You are not an administrator');
+                            $location.path(CONFIG.restoURL, true);
                         } else {
                             initialization.isOK();
                         }

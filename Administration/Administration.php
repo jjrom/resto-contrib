@@ -14,7 +14,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
 /**
  * resto administration module
  * 
@@ -83,7 +82,6 @@ class Administration extends RestoModule {
      * @throws Exception
      */
     public function run($segments) {
-
         if ($this->user->profile['groupname'] !== 'admin') {
             /*
              * Only administrators can access to administration
@@ -417,7 +415,7 @@ class Administration extends RestoModule {
             /*
              * Insert user
              */
-            return $this->insertUser();
+            return $this->createUser();
         }
     }
 
@@ -485,6 +483,43 @@ class Administration extends RestoModule {
     }
 
     /**
+     * Create new user
+     * 
+     * @return type
+     */
+    private function createUser() {
+        $data = array_merge($_POST);
+        
+        error_log(print_r($data, true));
+        
+        if ($data) {
+            if (!isset($data['email'])) {
+                RestoLogUtil::httpError(400, 'Email is not set');
+            }
+
+            if ($this->context->dbDriver->check(RestoDatabaseDriver::USER, array('email' => $data['email']))) {
+                RestoLogUtil::httpError(3000);
+            }
+            $userInfo = $this->context->dbDriver->store(RestoDatabaseDriver::USER_PROFILE, array(
+                'profile' => array(
+                    'email' => $data['email'],
+                    'password' => isset($data['password']) ? $data['password'] : null,
+                    'username' => isset($data['username']) ? $data['username'] : null,
+                    'givenname' => isset($data['givenname']) ? $data['givenname'] : null,
+                    'lastname' => isset($data['lastname']) ? $data['lastname'] : null,
+                    'activated' => 0
+                ))
+            );
+            if (!isset($userInfo)) {
+                RestoLogUtil::httpError(500, 'Database connection error');
+            }
+            return RestoLogUtil::success('User ' . $data['email'] . ' created');
+        } else {
+            RestoLogUtil::httpError(404);
+        }
+    }
+
+    /**
      * updateUser - update new user in database
      * 
      * @throws Exception
@@ -534,17 +569,16 @@ class Administration extends RestoModule {
             $params = array();
             $params['emailOrGroup'] = $emailorgroup;
             $params['collectionName'] = $collectionName;
+            $params['featureIdentifier'] = null;
+            $params['rights'] = $rights;
 
             $right = $this->context->dbDriver->get(RestoDatabaseDriver::RIGHTS, $params);
+
             if (!$right) {
 
                 /*
                  * Store rights
                  */
-                $params = array();
-                $params['emailOrGroup'] = $emailorgroup;
-                $params['collectionName'] = $collectionName;
-                $params['rights'] = $rights;
                 $this->context->dbDriver->store(RestoDatabaseDriver::RIGHTS, $params);
 
                 /*
@@ -555,10 +589,6 @@ class Administration extends RestoModule {
                 /*
                  * Upsate rights
                  */
-                $params = array();
-                $params['emailOrGroup'] = $emailorgroup;
-                $params['collectionName'] = $collectionName;
-                $params['rights'] = $rights;
                 $this->context->dbDriver->update(RestoDatabaseDriver::RIGHTS, $params);
 
 

@@ -102,13 +102,13 @@ angular.module('administration')
 
                 $scope.login = function(email, password) {
                     profile.login(email, password,
-                            function(profile) {
-                                $scope.profile = profile;
-                                $scope.profile = profile;
-                                if (profile.groupname !== 'admin') {
+                            function(data) {
+                                $scope.profile = data;
+                                if ($scope.profile.groupname !== 'admin') {
                                     $scope.profile = null;
                                     alert('Sorry... You are not an administrator');
-                                    $location.path(CONFIG.restoURL, true);
+                                    profile.logout();
+                                    return;
                                 } else {
                                     initialization.isOK();
                                 }
@@ -119,12 +119,13 @@ angular.module('administration')
                 };
 
                 $scope.checkCookies = function() {
-                    profile.checkCookies(function(profile) {
-                        $scope.profile = profile;
-                        if (profile.groupname !== 'admin') {
+                    profile.checkCookies(function(data) {
+                        $scope.profile = data;
+                        if ($scope.profile.groupname && $scope.profile.groupname !== 'admin') {
                             $scope.profile = null;
-                            alert('Sorry... You are not an administrator');
-                            $location.path(CONFIG.restoURL, true);
+                            alert('Sorry... You are not an administrator.');
+                            profile.logout();
+                            return;
                         } else {
                             initialization.isOK();
                         }

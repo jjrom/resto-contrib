@@ -8,6 +8,12 @@ angular.module('administration').controller('UserCreationController', ['$scope',
             $scope.profile = [];
 
             $scope.createUser = function() {
+                
+                if ($scope.profile.email === undefined || $scope.profile.password === undefined){
+                    alert('please set email and password');
+                    return;
+                }
+                
                 var options = [];
                 options['email'] = $scope.profile.email;
                 options['password'] = $scope.profile.password;
@@ -17,8 +23,8 @@ angular.module('administration').controller('UserCreationController', ['$scope',
 
                 _USERS.add(options, function() {
                     alert('created');
-                }, function() {
-                    alert('error');
+                }, function(e) {
+                    alert('error : ' + e.ErrorMessage);
                 });
             };
 

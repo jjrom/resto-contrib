@@ -9,11 +9,11 @@
                     var profile = {};
                     
                     profile.checkCookies = function(callback){
-                        if ($cookies.take5){
+                        if ($cookies.aa_cco){
                             /*
                              * TODO : interroger serveur pour savoir si token toujours valide
                              */
-                            var token = jwt_decode($cookies.take5);
+                            var token = jwt_decode($cookies.aa_cco);
                             callback(token.data);
                         }
                     };
@@ -24,7 +24,7 @@
                                     /*
                                      * Decode token
                                      */
-                                    $cookies.take5 = results.data.token;
+                                    $cookies.aa_cco = results.data.token;
                                     var token = jwt_decode(results.data.token);
                                     callback(token.data);
                                 })
@@ -48,7 +48,7 @@
                     };
                     
                     profile.logout = function(){
-                        delete $cookies.take5;
+                        delete $cookies.aa_cco;
                     };
 
                     return profile;

@@ -247,6 +247,7 @@ services.factory('_USERS', ['$http', 'CONFIG',
                         return str.join("&");
                     },
                     data: {
+                        email: options['email'],
                         password: options['password'],
                         username: options['username'],
                         givename: options['givename'],
@@ -258,8 +259,8 @@ services.factory('_USERS', ['$http', 'CONFIG',
                     } else {
                         callback(data);
                     }
-                }).error(function() {
-                    alert('error - user creation');
+                }).error(function(e) {
+                    callback(e);
                 });
             }
         };

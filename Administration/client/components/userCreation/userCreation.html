@@ -1,0 +1,19 @@
+<div class="content">
+    <div class="row">
+        <h1>{{'create user' | translate}}</h1> 
+        <label class="small fat text-light">{{'email'| translate}}</label>
+        <input type="text" ng-model="profile.email" class="form-control" required autofocus/>
+        <label class="small fat text-light">{{'password'| translate}}</label>
+        <input type="password" ng-model="profile.password" class="form-control" required autofocus/>
+        <label class="small fat text-light">{{'username'| translate}}</label>
+        <input type="text" ng-model="profile.username" class="form-control" required/>
+        <label class="small fat text-light">{{'givename'| translate}}</label>
+        <input type="text" ng-model="profile.givename" class="form-control" required/>
+        <label class="small fat text-light">{{'lastname'| translate}}</label>
+        <input type="text" ng-model="profile.lastname" class="form-control" required/>
+
+        <div class="padded-top padded-left padded-right center">
+            <button type="submit" class="button radius" ng-click="createUser()">{{'create user'| translate}}</button>
+        </div>
+    </div>
+</div>

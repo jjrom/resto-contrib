@@ -20,16 +20,13 @@
     angular.module('profile', []);
 
     angular.module('profile')
-            .factory('profile', ['$auth', '$cookies',
-                function($auth, $cookies) {
+            .factory('profile', ['$auth',
+                function($auth) {
                     var profile = {};
                     
                     profile.checkCookies = function(callback){
-                        if ($cookies.aa_cco){
-                            /*
-                             * TODO : interroger serveur pour savoir si token toujours valide
-                             */
-                            var token = jwt_decode($cookies.aa_cco);
+                        if ($auth.isAuthenticated()){
+                            var token = jwt_decode($auth.getToken());
                             callback(token.data);
                         }
                     };
@@ -40,7 +37,6 @@
                                     /*
                                      * Decode token
                                      */
-                                    $cookies.aa_cco = results.data.token;
                                     var token = jwt_decode(results.data.token);
                                     callback(token.data);
                                 })
@@ -64,7 +60,7 @@
                     };
                     
                     profile.logout = function(){
-                        delete $cookies.aa_cco;
+                        $auth.logout();
                     };
 
                     return profile;

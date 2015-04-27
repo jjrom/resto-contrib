@@ -1,4 +1,3 @@
-resto2-contrib
-==============
+# resto-contrib
 
-Modules for RESTo v2 (https://github.com/jjrom/resto2)
+Modules for resto (https://github.com/jjrom/resto)

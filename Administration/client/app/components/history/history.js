@@ -1,48 +1,52 @@
-'use strict';
+(function() {
 
-/*
- * Copyright 2014 Jérôme Gasperi
- *
- * Licensed under the Apache License, version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
+    'use strict';
 
-/* Controller Users */
+    /*
+     * Copyright 2014 Jérôme Gasperi
+     *
+     * Licensed under the Apache License, version 2.0 (the "License");
+     * You may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at:
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+     * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+     * License for the specific language governing permissions and limitations
+     * under the License.
+     */
 
-/*
- * 
- * history :
- * 
- * [
- {
- "gid": "3417",
- "userid": "2",
- "method": "GET",
- "service": "search",
- "collection": "SpotWorldHeritage",
- "resourceid": null,
- "query": "{\"lang\":\"en\",\"_view\":\"panel-list\",\"_\":\"1424249607459\"}",
- "querytime": "2015-02-18 09:53:31.010211",
- "url": "http:\/\/localhost\/PEPS\/api\/collections\/SpotWorldHeritage\/search.json?lang=en&_view=panel-list&_=1424249607459",
- "ip": "127.0.0.1"
- },
- ...
- ]
- */
+    /* Controller Users */
 
-angular.module('administration').controller('HistoryController', ['$scope', '_HISTORY', '_COLLECTIONS', 'initialization', 'CONFIG',
-    function($scope, _HISTORY, _COLLECTIONS, initialization, CONFIG) {
+    /*
+     * 
+     * history :
+     * 
+     * [
+     {
+     "gid": "3417",
+     "userid": "2",
+     "method": "GET",
+     "service": "search",
+     "collection": "SpotWorldHeritage",
+     "resourceid": null,
+     "query": "{\"lang\":\"en\",\"_view\":\"panel-list\",\"_\":\"1424249607459\"}",
+     "querytime": "2015-02-18 09:53:31.010211",
+     "url": "http:\/\/localhost\/PEPS\/api\/collections\/SpotWorldHeritage\/search.json?lang=en&_view=panel-list&_=1424249607459",
+     "ip": "127.0.0.1"
+     },
+     ...
+     ]
+     */
 
-        if (initialization.ok) {
+    angular.module('administration').controller('HistoryController', ['$scope', 'administrationServices', 'administrationAPI', 'CONFIG', historyController]);
+
+    function historyController($scope, administrationServices, administrationAPI, CONFIG) {
+
+        if (administrationServices.isUserAnAdministrator()) {
+
 
             $scope.methods = ['POST', 'GET', 'PUT', 'DELETE'];
             $scope.services = ['search', 'visualize', 'create', 'insert'];
@@ -91,7 +95,7 @@ angular.module('administration').controller('HistoryController', ['$scope', '_HI
                 options['maxDate'] = $scope.maxDate;
                 options['minDate'] = $scope.minDate;
 
-                _HISTORY.get(options, function(data) {
+                administrationAPI.getHistory(options, function(data) {
                     $scope.startIndex = $scope.startIndex + $scope.offset;
                     if (concatData === false) {
                         $scope.history = data;
@@ -107,6 +111,8 @@ angular.module('administration').controller('HistoryController', ['$scope', '_HI
                         $scope.startIndex = $scope.startIndex - $scope.offset;
                     }
                     $scope.busy = false;
+                }, function() {
+                    alert($filter('translate')('error.getHistory'));
                 });
             };
 
@@ -117,16 +123,16 @@ angular.module('administration').controller('HistoryController', ['$scope', '_HI
                 if ($scope.busy)
                     return;
                 $scope.busy = true;
-                $scope.getHistory();
+                $scope.getHistory(true);
             };
 
             $scope.getCollections = function() {
-                _COLLECTIONS.get(function(data) {
+                administrationAPI.getCollections(function(data) {
                     for (var c in data) {
                         $scope.collections.push(c);
                     }
                 }, function() {
-                    alert('error');
+                    alert($filter('translate')('error.setCollections'));
                 });
             };
 
@@ -177,4 +183,6 @@ angular.module('administration').controller('HistoryController', ['$scope', '_HI
             $scope.getCollections();
             $scope.$emit('showHistory');
         }
-    }]);
+    }
+    ;
+})();

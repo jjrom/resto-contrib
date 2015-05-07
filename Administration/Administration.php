@@ -179,7 +179,7 @@ class Administration extends RestoModule {
         } else {
             $rights = array();
             $this->groups = $this->context->dbDriver->get(RestoDatabaseDriver::GROUPS);
-            $this->collections = $this->context->dbDriver->get(RestoDatabaseDriver::COLLECTIONS);
+            $this->collections = $this->context->dbDriver->get(RestoDatabaseDriver::COLLECTIONS_DESCRIPTIONS);
             foreach ($this->collections as $collection) {
 
                 $group = 'default';

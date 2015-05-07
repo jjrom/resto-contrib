@@ -1,58 +1,60 @@
-'use strict';
+(function() {
 
-/*
- * Copyright 2014 Jérôme Gasperi
- *
- * Licensed under the Apache License, version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
+    'use strict';
 
-/* Controller Collections */
+    /*
+     * Copyright 2014 Jérôme Gasperi
+     *
+     * Licensed under the Apache License, version 2.0 (the "License");
+     * You may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at:
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+     * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+     * License for the specific language governing permissions and limitations
+     * under the License.
+     */
 
-/*
- * 
- * Rights : 
- * 
- * {
- "Landsat": {
- "name": "Landsat",
- "group": "default",
- "rights": {
- "search": true,
- "download": false,
- "visualize": true,
- "post": false,
- "put": false,
- "delete": false,
- "filters": null
- }
- },
- ...
- }
- */
+    /* Controller Collections */
+
+    /*
+     * 
+     * Rights : 
+     * 
+     * {
+     "Landsat": {
+     "name": "Landsat",
+     "group": "default",
+     "rights": {
+     "search": true,
+     "download": false,
+     "visualize": true,
+     "post": false,
+     "put": false,
+     "delete": false,
+     "filters": null
+     }
+     },
+     ...
+     }
+     */
 
 
-angular.module('administration').controller('CollectionsController', ['$scope', '_COLLECTIONS', 'initialization',
-    function($scope, _COLLECTIONS, initialization) {
+    angular.module('administration').controller('CollectionsController', ['$scope', '$filter', 'administrationServices', 'administrationAPI', collectionsController]);
 
-        if (initialization.ok) {
+    function collectionsController($scope, $filter, administrationServices, administrationAPI) {
 
+        if (administrationServices.isUserAnAdministrator()) {
             $scope.rights = [];
 
             /*
              * Get rights for each collection
              */
             $scope.getRights = function() {
-                _COLLECTIONS.get(function(data) {
+                administrationAPI.getCollections(function(data) {
                     $scope.rights = data;
                     $scope.busy = false;
                 });
@@ -72,7 +74,7 @@ angular.module('administration').controller('CollectionsController', ['$scope', 
                 } else if (value === 0) {
                     value = 1;
                 } else {
-                    alert('error - setRight');
+                    alert($filter('translate')('error.setRight'));
                     return;
                 }
 
@@ -82,7 +84,7 @@ angular.module('administration').controller('CollectionsController', ['$scope', 
                 options['field'] = right;
                 options['value'] = Number(value);
 
-                _COLLECTIONS.setRight(options, function() {
+                administrationAPI.setCollectionRight(options, function() {
                     $scope.getRights();
                 });
             };
@@ -97,7 +99,7 @@ angular.module('administration').controller('CollectionsController', ['$scope', 
             };
 
             $scope.init();
-
         }
-
-    }]);
+    }
+    ;
+})();

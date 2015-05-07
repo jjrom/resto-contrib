@@ -23,6 +23,7 @@
     "administration": "Administration",
     "administration_home_text": "Welcome to the administration module",
     "users_management": "Users Management",
+    "user_creation": "Create User",   
     "collections_management": "Collections Management",
     "history": "History",
     "users": "Users",
@@ -47,6 +48,20 @@
     "true": "True",
     "false": "False",
     "unloggedText": "Please login to acces RESTo Administration...",
+    
+    "alert.disconnect": "Disconneted",
+    
+    "user.please set email and password": "please set email and password",
+    "user.user created": "User created",
+    "user.error": "Error : ",
+    
+    "Sorry... You are not an administrator": "Sorry... You are not an administrator",
+    
+    "error.login": "Error login : ",
+    "error.getCollections": "Error : get colletions",
+    "error.getHistory": "Error : get history",
+    "error.setRight": "Error : set right",
+    "error.getStats": "Error : get statisctics",
     
     "signin.title" : "SignIn",
     "signin.email" : "email",

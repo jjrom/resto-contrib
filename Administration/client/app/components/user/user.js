@@ -1,85 +1,89 @@
-'use strict';
+(function() {
 
-/*
- * Copyright 2014 Jérôme Gasperi
- *
- * Licensed under the Apache License, version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
+    'use strict';
 
-/* Controller Users */
+    /*
+     * Copyright 2014 Jérôme Gasperi
+     *
+     * Licensed under the Apache License, version 2.0 (the "License");
+     * You may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at:
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+     * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+     * License for the specific language governing permissions and limitations
+     * under the License.
+     */
 
-/*
- * profile :
- * 
- * {
- "userid": "2",
- "email": "toto",
- "groupname": "default",
- "username": "toto",
- "givenname": "toto",
- "lastname": "toto",
- "registrationdate": "2014-11-20T11:13:07Z",
- "activated": true,
- "lastsessionid": "vdqd28q0mv1pla7fdahkd40o07",
- "userhash": "f71dbe52628a3f83a77ab494817525c6"
- }
- */
+    /* Controller Users */
 
-/*
- * rights :
- * 
- *  {
- "status": "success",
- "message": "Rights for 2",
- "userid": "2",
- "groupname": "default",
- "rights": {
- "*": {
- "search": true,
- "visualize": false,
- "download": false,
- "post": false,
- "put": false,
- "delete": false
- },
- "Spirit": {
- "features": {
- "68468087-b3d4-505e-bcc0-805f275795e8": {
- "delete": null,
- "put": null,
- "post": null,
- "visualize": null,
- "download": null,
- "search": null
- }
- },
- "delete": true,
- "put": true,
- "post": null,
- "visualize": true,
- "download": null,
- "search": null
- },
- ...
- }
- }
- *  
- */
+    /*
+     * profile :
+     * 
+     * {
+     "userid": "2",
+     "email": "toto",
+     "groupname": "default",
+     "username": "toto",
+     "givenname": "toto",
+     "lastname": "toto",
+     "registrationdate": "2014-11-20T11:13:07Z",
+     "activated": true,
+     "lastsessionid": "vdqd28q0mv1pla7fdahkd40o07",
+     "userhash": "f71dbe52628a3f83a77ab494817525c6"
+     }
+     */
 
-angular.module('administration').controller('UserController', ['$scope', '$location', '$routeParams', '_HISTORY', '_USER', '_RIGHTS', '_COLLECTIONS', 'initialization', 'CONFIG',
-    function($scope, $location, $routeParams, _HISTORY, _USER, _RIGHTS, _COLLECTIONS, initialization, CONFIG) {
+    /*
+     * rights :
+     * 
+     *  {
+     "status": "success",
+     "message": "Rights for 2",
+     "userid": "2",
+     "groupname": "default",
+     "rights": {
+     "*": {
+     "search": true,
+     "visualize": false,
+     "download": false,
+     "post": false,
+     "put": false,
+     "delete": false
+     },
+     "Spirit": {
+     "features": {
+     "68468087-b3d4-505e-bcc0-805f275795e8": {
+     "delete": null,
+     "put": null,
+     "post": null,
+     "visualize": null,
+     "download": null,
+     "search": null
+     }
+     },
+     "delete": true,
+     "put": true,
+     "post": null,
+     "visualize": true,
+     "download": null,
+     "search": null
+     },
+     ...
+     }
+     }
+     *  
+     */
 
-        if (initialization.ok) {
+    angular.module('administration').controller('UserController', ['$scope', 'administrationServices', '$location', '$routeParams', 'administrationAPI', 'CONFIG', userController]);
+
+    function userController($scope, administrationServices, $location, $routeParams, administrationAPI, CONFIG) {
+
+        if (administrationServices.isUserAndAdministrator()) {
+
             $scope.templates =
                     {
                         'history': 'app/components/user/templates/history.html',
@@ -125,12 +129,12 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
              */
             $scope.activation = function() {
                 if ($scope.selectedUser.activated === 1) {
-                    _USER.deactivate($scope.selectedUser.userid, function() {
+                    administrationAPI.deactivateUser($scope.selectedUser.userid, function() {
                         $scope.getUser();
                         $scope.getRights();
                     });
                 } else if ($scope.selectedUser.activated === 0) {
-                    _USER.activate($scope.selectedUser.userid, function() {
+                    administrationAPI.activateUser($scope.selectedUser.userid, function() {
                         $scope.getUser();
                         $scope.getRights();
                     });
@@ -177,7 +181,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
                 options['field'] = right;
                 options['value'] = value;
 
-                _RIGHTS.set(options, function() {
+                administrationAPI.setRight(options, function() {
                     $scope.getRights();
                 });
             };
@@ -195,7 +199,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
                 options['email'] = $scope.selectedUser.email;
                 options['groupname'] = groupname;
 
-                _USER.setGroup(options, function() {
+                administrationAPI.setUserGroup(options, function() {
                     $scope.getUser();
                     $scope.getRights();
                 });
@@ -317,7 +321,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
                 options['candelete'] = Number($scope.feature.candelete);
                 options['filters'] = $scope.feature.filters;
 
-                _RIGHTS.setAdvancedRight(options, function() {
+                administrationAPI.setAdvancedRight(options, function() {
                     $scope.displayProfile();
                     $scope.showAdvancedRights = true;
                 }, function(data) {
@@ -354,7 +358,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
                 options['userid'] = $scope.selectedUser.userid;
                 options['email'] = $scope.selectedUser.email;
 
-                _RIGHTS.delete(options, function() {
+                administrationAPI.deleteRight(options, function() {
                     $scope.getRights();
                 });
             };
@@ -372,7 +376,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
                 options['userid'] = $scope.selectedUser.userid;
                 options['email'] = $scope.selectedUser.email;
 
-                _RIGHTS.delete(options, function() {
+                administrationAPI.deleteRight(options, function() {
                     $scope.getRights();
                 }, function(data) {
                     $scope.alert('error - ' + data);
@@ -399,7 +403,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
              * Get user
              */
             $scope.getUser = function() {
-                _USER.get($routeParams.userid, function(data) {
+                administrationAPI.getUser($routeParams.userid, function(data) {
                     $scope.selectedUser = data;
                 });
             };
@@ -408,7 +412,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
              * Get rights
              */
             $scope.getRights = function() {
-                _RIGHTS.get($routeParams.userid, function(data) {
+                administrationAPI.getRight($routeParams.userid, function(data) {
                     $scope.rights = data;
                 });
             };
@@ -417,7 +421,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
              * Get signatures
              */
             $scope.getSignatures = function() {
-                _USER.getSignatures($routeParams.userid, function(data) {
+                administrationAPI.getSignatures($routeParams.userid, function(data) {
                     $scope.signatures = data;
                 });
             };
@@ -462,7 +466,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
                 options['orderby'] = $scope.orderBy;
                 options['userid'] = $routeParams.userid;
 
-                _HISTORY.get(options, function(data) {
+                administrationAPI.getHistory(options, function(data) {
                     $scope.startIndex = $scope.startIndex + $scope.offset;
                     if (concatData === false) {
                         $scope.history = data;
@@ -495,7 +499,7 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
              * Get collections
              */
             $scope.getCollections = function() {
-                _COLLECTIONS.get(function(data) {
+                administrationAPI.getCollections(function(data) {
                     $scope.collections = data;
                     $scope.busy = false;
                 });
@@ -512,11 +516,13 @@ angular.module('administration').controller('UserController', ['$scope', '$locat
             if ($routeParams.section === 'history') {
                 $scope.displayHistory();
             } else if ($routeParams.section === 'signatures') {
-                $scope.displaySignatures()
+                $scope.displaySignatures();
             } else if ($routeParams.section === 'rights') {
                 $scope.displayCreateAdvancedRights();
             }
 
         }
-    }]);
+    }
+    ;
+})();
 

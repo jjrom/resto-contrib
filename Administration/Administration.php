@@ -180,16 +180,16 @@ class Administration extends RestoModule {
             $rights = array();
             $this->groups = $this->context->dbDriver->get(RestoDatabaseDriver::GROUPS);
             $this->collections = $this->context->dbDriver->get(RestoDatabaseDriver::COLLECTIONS_DESCRIPTIONS);
-            foreach ($this->collections as $collection) {
+            foreach ($this->collections as $collection => $description) {
 
                 $group = 'default';
                 $item = array();
-                $item['name'] = $collection['collection'];
+                $item['name'] = $collection;
                 $item['group'] = $group;
 
                 $restoRights = new RestoRights($group, $group, $this->context);
-                $item['rights'] = $restoRights->getRights($collection['collection']);
-                $rights[$collection['collection']] = $item;
+                $item['rights'] = $restoRights->getRights($collection);
+                $rights[$collection] = $item;
             }
 
             return $this->to($rights);

@@ -82,7 +82,7 @@
 
     function userController($scope, administrationServices, $location, $routeParams, administrationAPI, CONFIG) {
 
-        if (administrationServices.isUserAndAdministrator()) {
+        if (administrationServices.isUserAnAdministrator()) {
 
             $scope.templates =
                     {

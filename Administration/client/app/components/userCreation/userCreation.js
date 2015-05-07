@@ -39,6 +39,7 @@
                 options['lastname'] = $scope.profile.lastname;
                 administrationAPI.addUser(options, function() {
                     alert($filter('translate')('user.user created'));
+                    $scope.profile = [];
                 }, function(e) {
                     alert($filter('translate')('user.error') + e.ErrorMessage);
                 });

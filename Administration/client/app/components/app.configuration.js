@@ -23,9 +23,9 @@
      */
 
     angular.module('administration')
-            .config(['$translateProvider', '$authProvider', 'CONFIG', configuration]);
+            .config(['$translateProvider', '$authProvider', '$httpProvider', 'CONFIG', configuration]);
 
-    function configuration($translateProvider, $authProvider, CONFIG) {
+    function configuration($translateProvider, $authProvider, $httpProvider, CONFIG) {
 
         /*
          * Authentication configuration
@@ -34,7 +34,7 @@
         $authProvider.loginUrl = CONFIG.restoServerUrl + '/api/users/connect';
         $authProvider.signupUrl = CONFIG.restoServerUrl + '/users';
         $authProvider.loginRedirect = '/ok';
-        
+
         var redirectUri = window.location.href.split('#')[0];
         var key = 'oauth2';
         /*
@@ -61,8 +61,44 @@
 
         $translateProvider.preferredLanguage('en');
 
+        /*
+         * Display a spinner when http request is in process
+         */
+        $httpProvider.interceptors.push('myHttpInterceptor');
+
     }
     ;
+
+    /*
+     * Http interceptor to display spinner
+     */
+    angular.module('administration')
+            .factory('myHttpInterceptor', function($q, $window) {
+                return {
+                    // optional method
+                    'request': function(config) {
+                        $("#spinner").show();
+                        return config;
+                    },
+                    // optional method
+                    'requestError': function(rejection) {
+                        $("#spinner").hide();
+
+                        return $q.reject(rejection);
+                    },
+                    // optional method
+                    'response': function(response) {
+                        $("#spinner").hide();
+                        return response;
+                    },
+                    // optional method
+                    'responseError': function(rejection) {
+                        $("#spinner").hide();
+
+                        return $q.reject(rejection);
+                    }
+                };
+            });
 
     /**
      * Change $location.path action.

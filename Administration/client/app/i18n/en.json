@@ -23,6 +23,7 @@
     "administration": "Administration",
     "administration_home_text": "Welcome to the administration module",
     "users_management": "Users Management",
+    "user_creation": "Create User",   
     "collections_management": "Collections Management",
     "history": "History",
     "users": "Users",

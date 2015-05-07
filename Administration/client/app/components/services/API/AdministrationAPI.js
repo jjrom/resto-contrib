@@ -350,7 +350,7 @@
         function activateUser(userid, callback, error) {
             $http({
                 method: 'POST',
-                url: config.restoServerUrl + config.administrationEndpoint + "users/" + userid + "/activate"
+                url: config.restoServerUrl + config.administrationEndpoint + "/users/" + userid + "/activate"
             }).success(function(data) {
                 if (data.ErrorMessage) {
                     error(data);
@@ -374,7 +374,7 @@
         function deactivateUser(userid, callback, error) {
             $http({
                 method: 'POST',
-                url: config.restoServerUrl + config.administrationEndpoint + "users/" + userid + "/deactivate"
+                url: config.restoServerUrl + config.administrationEndpoint + "/users/" + userid + "/deactivate"
             }).success(function(data) {
                 if (data.ErrorMessage) {
                     error(data);
@@ -403,7 +403,7 @@
 
             $http({
                 method: 'POST',
-                url: config.restoServerUrl + config.administrationEndpoint + 'users/' + userid,
+                url: config.restoServerUrl + config.administrationEndpoint + '/users/' + userid,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transformRequest: function(obj) {
                     var str = [];
@@ -482,7 +482,7 @@
 
             $http({
                 method: 'POST',
-                url: config.restoServerUrl + config.administrationEndpoint + 'users/' + params['userid'] + "/rights/delete",
+                url: config.restoServerUrl + config.administrationEndpoint + '/users/' + params['userid'] + "/rights/delete",
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 transformRequest: function(obj) {
                     var str = [];

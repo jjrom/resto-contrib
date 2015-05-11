@@ -289,13 +289,11 @@ class Administration extends RestoModule {
             $user = new RestoUser($this->context->dbDriver->get(RestoDatabaseDriver::USER_PROFILE, array('userid' => $this->segments[1])), $this->context);
 
             $rights = array();
-            $collections = $this->context->dbDriver->get(RestoDatabaseDriver::COLLECTIONS);
+            $collections = $this->context->dbDriver->get(RestoDatabaseDriver::COLLECTIONS_DESCRIPTIONS);
 
             $fullRights = $user->getFullRights();
 
-            foreach ($collections as $collection) {
-
-                $collectionName = $collection['collection'];
+            foreach ($collections as $collectionName => $description) {
 
                 $rights[$collectionName] = $user->getRights($collectionName);
                 if (isset($fullRights[$collectionName])) {
@@ -489,8 +487,6 @@ class Administration extends RestoModule {
      */
     private function createUser() {
         $data = array_merge($_POST);
-        
-        error_log(print_r($data, true));
         
         if ($data) {
             if (!isset($data['email'])) {
@@ -798,17 +794,17 @@ class Administration extends RestoModule {
          * Statistics for each collections
          */
         $statistics = array();
-        $collections = $this->context->dbDriver->get(RestoDatabaseDriver::COLLECTIONS);
-        foreach ($collections as $collection) {
+        $collections = $this->context->dbDriver->get(RestoDatabaseDriver::COLLECTIONS_DESCRIPTIONS);
+        foreach ($collections as $collection => $description) {
             $collection_statistics = array();
-            $collection_statistics['download'] = $this->countService('download', $collection['collection'], $userid);
-            $collection_statistics['search'] = $this->countService('search', $collection['collection'], $userid);
-            $collection_statistics['visualize'] = $this->countService('resource', $collection['collection'], $userid);
-            $collection_statistics['insert'] = $this->countService('insert', $collection['collection'], $userid);
-            $collection_statistics['create'] = $this->countService('create', $collection['collection'], $userid);
-            $collection_statistics['update'] = $this->countService('update', $collection['collection'], $userid);
-            $collection_statistics['remove'] = $this->countService('remove', $collection['collection'], $userid);
-            $statistics[$collection['collection']] = $collection_statistics;
+            $collection_statistics['download'] = $this->countService('download', $collection, $userid);
+            $collection_statistics['search'] = $this->countService('search', $collection, $userid);
+            $collection_statistics['visualize'] = $this->countService('resource', $collection, $userid);
+            $collection_statistics['insert'] = $this->countService('insert', $collection, $userid);
+            $collection_statistics['create'] = $this->countService('create', $collection, $userid);
+            $collection_statistics['update'] = $this->countService('update', $collection, $userid);
+            $collection_statistics['remove'] = $this->countService('remove', $collection, $userid);
+            $statistics[$collection] = $collection_statistics;
         }
         return $statistics;
     }
@@ -854,7 +850,7 @@ class Administration extends RestoModule {
 
 
         try {
-            $results = pg_query($this->context->dbDriver->dbh, 'SELECT userid, email, groupname, username, givenname, lastname, registrationdate, activated, connected FROM usermanagement.users ' . (isset($keyword) ? 'WHERE email LIKE \'%' . $keyword . '%\' OR username LIKE \'%' . $keyword . '%\' OR groupname LIKE \'%' . $keyword . '%\' OR givenname LIKE \'%' . $keyword . '%\' OR lastname LIKE \'%' . $keyword . '%\'' : '') . ' LIMIT ' . $number . ' OFFSET ' . $min);
+            $results = pg_query($this->context->dbDriver->dbh, 'SELECT userid, email, groupname, username, givenname, lastname, registrationdate, activated FROM usermanagement.users ' . (isset($keyword) ? 'WHERE email LIKE \'%' . $keyword . '%\' OR username LIKE \'%' . $keyword . '%\' OR groupname LIKE \'%' . $keyword . '%\' OR givenname LIKE \'%' . $keyword . '%\' OR lastname LIKE \'%' . $keyword . '%\'' : '') . ' LIMIT ' . $number . ' OFFSET ' . $min);
             if (!$results) {
                 throw new Exception();
             }

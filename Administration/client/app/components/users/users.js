@@ -109,6 +109,8 @@
                     }
 
 
+                }, function(){
+                    alert("error : cannot get users");
                 });
             };
 

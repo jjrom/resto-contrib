@@ -22,10 +22,11 @@
 
         
 
-        <div class="history tableContainer" 
+       <!-- <div class="history tableContainer" 
              infinite-scroll="loadMore()" 
              infinite-scroll-disabled='busy'
-             infinite-scroll-distance="1">
+             infinite-scroll-distance="1"> -->
+       <div class="history tableContainer" >
 
             
             <div>
@@ -100,6 +101,8 @@
                     </tr>
                 </tbody>
             </table>
+           
+            <a class="button expand tiny" ng-click="loadMore()">{{'load_more'| translate}}</a>
         </div>
 
     </div>

@@ -48,6 +48,8 @@
     "true": "True",
     "false": "False",
     "unloggedText": "Please login to acces RESTo Administration...",
+    "hasNotToSign": "has not to sign",
+    "hasToSign": "has to sign",
     
     "alert.disconnect": "Disconneted",
     

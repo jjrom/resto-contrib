@@ -29,10 +29,14 @@
                 'administrationEndpoint': '/administration',
                 'offset': 55,
                 'version': 0.1,
-                'oauth2': {
+                'theia': {
                     'name': 'theia',
-                    'authorizeUrl': 'iiii',
-                    'clientId': 'ttttttt'
+                    'signUpUrl': 'https://sso.theia-land.fr/theia/app/register/register.xhtml',
+                    'authorizeUrl': 'https://sso.theia-land.fr/oauth2/authorize',
+                    'clientId': '<your client id>',
+                    "requiredUrlParams": [
+                        "scope"
+                    ]
                 }
             });
 

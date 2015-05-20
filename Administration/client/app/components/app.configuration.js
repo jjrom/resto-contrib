@@ -35,19 +35,26 @@
         $authProvider.signupUrl = CONFIG.restoServerUrl + '/users';
         $authProvider.loginRedirect = '/ok';
 
+        var key = 'theia';
         var redirectUri = window.location.href.split('#')[0];
-        var key = 'oauth2';
+        var requiredUrlParams = CONFIG[key]['requiredUrlParams'] ? CONFIG[key]['requiredUrlParams'] : [];
+        var token = function() {
+            return Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2);
+        };
+        
         /*
          * Authentication providers
          */
         $authProvider.oauth2({
-            name: CONFIG[key]['name'],
-            url: CONFIG['restoServerUrl'] + '/api/auth/' + name,
+            name: key,
+            url: CONFIG['restoServerUrl'] + '/api/auth/' + key,
             redirectUri: redirectUri,
             clientId: CONFIG[key]['clientId'],
             authorizationEndpoint: CONFIG[key]['authorizeUrl'],
             scope: CONFIG[key]['scope'] || null,
-            requiredUrlParams: ['state']
+            requiredUrlParams: requiredUrlParams,
+            state: token()
+
         });
 
         /*

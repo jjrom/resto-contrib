@@ -22,10 +22,7 @@
         <a href="#userCreation" class="button expand">{{'user_creation'| translate}}</a>
 
         <div class="users tableContainer" 
-             ng-show="showUsers" 
-             infinite-scroll="loadMore()" 
-             infinite-scroll-disabled='busy'
-             infinite-scroll-distance="1">
+             ng-show="showUsers">
 
             <div class="search">
                 {{'search'| translate}} : <input type="text" ng-change="getUsers(false)" ng-model="keyword"/>
@@ -50,6 +47,7 @@
                     </tr>
                 </tbody>
             </table>
+            <a class="button expand tiny" ng-click="loadMore()">{{'load more'| translate}}</a>
         </div>
 
     </div>

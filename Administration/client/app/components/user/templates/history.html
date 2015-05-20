@@ -15,10 +15,7 @@
 -->
 
 <div class="history tableContainer" 
-     ng-show="showHistory" 
-     infinite-scroll="loadMore()" 
-     infinite-scroll-disabled='busy'
-     infinite-scroll-distance="1">
+     ng-show="showHistory" >
     
     <div ng-show='busy'>{{'loading_data'| translate}}</div>
 
@@ -48,4 +45,5 @@
             </tr>
         </tbody>
     </table>
+    <a class="button expand tiny" ng-click="loadMore()">{{'load more'| translate}}</a>
 </div>

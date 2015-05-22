@@ -23,15 +23,15 @@
 
             <div class="profile">
                 <h3 class="title">
-                    {{selectedUser.userid}} - {{selectedUser.username}} {{selectedUser.lastname}}
+                    {{selectedUser.userid}} - {{selectedUser.username}}
                 </h3>
                 <p>
+                    {{'user.name'| translate}} : {{selectedUser.givenname}} {{selectedUser.lastname}} <br/>
                     <b>{{selectedUser.email}}</b> <br/>
-                    {{selectedUser.groupname}} <br/>
-                    {{selectedUser.eusernamemail}} <br/>
-                    {{selectedUser.lastname}} <br/>
-                    {{selectedUser.givenname}} <br/>
-                    {{selectedUser.registrationdate}} <br/>
+                    {{'user.groupname'| translate}} : {{selectedUser.groupname}} <br/>
+                    {{'user.country'| translate}} : {{selectedUser.country}} <br/>
+                    {{'user.organization'| translate}} : {{selectedUser.organization}} <br/>
+                    {{'user.topics'| translate}} : {{selectedUser.topics}} <br/>
                 </p>    
                 <ul class="small-block-grid-2 large-block-grid-2">
                     <li><a class="button expand [tiny small large]" ng-class="{ success : selectedUser.activated === 1, alert : selectedUser.activated === 0}" ng-click="activation()">{{selectedUser.activated === 1 ? 'deactivate' : 'activate'| translate}}</a></li>

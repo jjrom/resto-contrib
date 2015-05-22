@@ -68,5 +68,14 @@
     "signin.title" : "SignIn",
     "signin.email" : "email",
     "signin.password" : "password", 
-    "signin.submit" : "submit"    
+    "signin.submit" : "submit",
+    
+    "user.givenname": "givenname",
+    "user.lastname": "givenname",
+    "user.username": "givenname",
+    "user.name": "name",
+    "user.groupname": "group",
+    "user.country": "country",
+    "user.topics": "topics",
+    "user.organization": "organization"
 }

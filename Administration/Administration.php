@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright 2014 Jérôme Gasperi
  *
@@ -14,6 +15,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 /**
  * resto administration module
  * 
@@ -487,7 +489,7 @@ class Administration extends RestoModule {
      */
     private function createUser() {
         $data = array_merge($_POST);
-        
+
         if ($data) {
             if (!isset($data['email'])) {
                 RestoLogUtil::httpError(400, 'Email is not set');
@@ -623,14 +625,38 @@ class Administration extends RestoModule {
             $postedData['candelete'] = htmlspecialchars(filter_input(INPUT_POST, 'candelete'), ENT_QUOTES);
             $postedData['filters'] = filter_input(INPUT_POST, 'filters') === 'null' ? null : htmlspecialchars(filter_input(INPUT_POST, 'filters'), ENT_QUOTES);
 
+            /*
+             * Is posted data identificated by uuid ?
+             */
             if (!$this->context->dbDriver->check(RestoDatabaseDriver::FEATURE, $postedData)) {
-                throw new Exception('Feature does not exists', 4004);
+
+                $query = 'SELECT identifier FROM ' . (isset($postedData['collection']) ? '_' . strtolower($postedData['collection']) : 'resto') . '.features WHERE productidentifier=\'' . pg_escape_string($postedData['featureIdentifier']) . '\'';
+
+                $results = $this->context->dbDriver->fetch($this->context->dbDriver->query(($query)));
+
+                /*
+                 * Is posted data identificated by productIdentifier ?
+                 */
+                if (empty($results)) {
+                    throw new Exception('Feature does not exists', 4004);
+                } else {
+                    $postedData['productIdentifier'] = $postedData['featureIdentifier'];
+                    $postedData['featureIdentifier'] = $results[0]['identifier'];
+                }
+            } else {
+                /*
+                 * Get productIdentifier corresponding to identifier uuid
+                 */
+                $query = 'SELECT productidentifier FROM ' . (isset($postedData['collection']) ? '_' . strtolower($postedData['collection']) : 'resto') . '.features WHERE identifier=\'' . pg_escape_string($postedData['featureIdentifier']) . '\'';
+
+                $results = $this->context->dbDriver->fetch($this->context->dbDriver->query(($query)));
+
+                if (empty($results)) {
+                    throw new Exception('Feature does not exists', 4004);
+                } else {
+                    $postedData['productIdentifier'] = $results[0]['productidentifier'];
+                }
             }
-
-
-            $emailorgroup = $postedData['emailorgroup'];
-            $collectionName = ($postedData['collection'] === '') ? null : $postedData['collection'];
-            $featureIdentifier = ($postedData['featureIdentifier'] === '') ? null : $postedData['featureIdentifier'];
 
             /*
              * Posted rights
@@ -641,15 +667,22 @@ class Administration extends RestoModule {
              * Store rights
              */
             $params = array();
-            $params['emailOrGroup'] = $emailorgroup;
-            $params['collectionName'] = $collectionName;
-            $params['featureIdentifier'] = $featureIdentifier;
+            $params['emailOrGroup'] = $postedData['emailorgroup'];
+            $params['collectionName'] = ($postedData['collection'] === '') ? null : $postedData['collection'];
+            $params['featureIdentifier'] = ($postedData['featureIdentifier'] === '') ? null : $postedData['featureIdentifier'];
+            $params['productIdentifier'] = ($postedData['productIdentifier'] === '') ? null : $postedData['productIdentifier'];
             $params['rights'] = $rights;
 
+            /*
+             * Is right already exists ?
+             */
             if ($this->context->dbDriver->get(RestoDatabaseDriver::RIGHTS, $params) !== null) {
                 throw new Exception('Right already exists for this feature', 4004);
             }
 
+            /*
+             * Store right
+             */
             $this->context->dbDriver->store(RestoDatabaseDriver::RIGHTS, $params);
 
             /*

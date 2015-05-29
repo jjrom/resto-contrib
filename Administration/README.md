@@ -2,10 +2,6 @@
 
 The Administration module has been founded by the [French Space Agency](http://cnes.fr)
 
-## Prerequisites
-
-Needs at least a running instance of resto >= 2.0RC1 (http://github.com/jjrom/resto2)
-
 ## Installation
 
 ### Server side module installation

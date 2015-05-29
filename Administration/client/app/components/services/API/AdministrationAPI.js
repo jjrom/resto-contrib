@@ -581,8 +581,12 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - set advanced right');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    alert('error - set advanced right');
+                } 
             });
         }
         ;

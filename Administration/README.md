@@ -25,4 +25,4 @@ Edit $RESTO2_TARGET/include/config.php and add the following within 'modules' se
 
 Copy the client directory under an accessible Web server directory
 
-Set the resto server endpoint within app/app.constant.js file
+Set the resto server endpoint within app/components/app.constant.js file

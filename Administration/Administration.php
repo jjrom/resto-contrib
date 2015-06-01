@@ -895,7 +895,7 @@ class Administration extends RestoModule {
             if (!$user) {
                 return $usersProfile;
             }
-            $user['activated'] = $user['activated'] === 't' ? true : false;
+            $user['activated'] = $user['activated'] === '1' ? true : false;
             $user['registrationdate'] = substr(str_replace(' ', 'T', $user['registrationdate']), 0, 19) . 'Z';
 
             $usersProfile[] = $user;

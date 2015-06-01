@@ -43,6 +43,11 @@
                 }, function(e) {
                     alert($filter('translate')('user.error') + e.ErrorMessage);
                 });
+                $scope.profile.email = null;
+                $scope.profile.password = null;
+                $scope.profile.username = null;
+                $scope.profile.givename = null;
+                $scope.profile.lastname = null;
             };
         }
     }

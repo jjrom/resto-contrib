@@ -173,6 +173,9 @@
                  */
                 alert(($filter('translate')('error.login')) + response.data);
             });
+            
+            email = null;
+            password = null;
         };
 
         $scope.authenticate = function(provider) {

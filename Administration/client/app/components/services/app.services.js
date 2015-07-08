@@ -53,7 +53,7 @@
                             callback(data);
                         }
                     }).error(function() {
-                        alert('error - user activation');
+                        error('error - user activation');
                     });
                 }
             };

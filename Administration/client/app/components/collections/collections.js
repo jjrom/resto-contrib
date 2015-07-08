@@ -17,6 +17,9 @@
      * License for the specific language governing permissions and limitations
      * under the License.
      */
+    /* 
+     Author     : remi.mourembles@capgemini.com
+     */
 
     /* Controller Collections */
 

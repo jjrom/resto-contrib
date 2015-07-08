@@ -23,9 +23,9 @@
      */
 
     angular.module('administration')
-            .controller('mainController', ['$scope', '$auth', '$filter', 'administrationServices', 'restoUsersAPI', mainController]);
+            .controller('mainController', ['$scope', 'CONFIG', '$auth', '$filter', 'administrationServices', 'restoUsersAPI', mainController]);
 
-    function mainController($scope, $auth, $filter, administrationServices, restoUsersAPI) {
+    function mainController($scope, CONFIG, $auth, $filter, administrationServices, restoUsersAPI) {
         
         $scope.profile = null;
 
@@ -121,6 +121,10 @@
             $scope.init();
             $scope.showStats = true;
         });
+        $scope.$on('showProducts', function() {
+            $scope.init();
+            $scope.showProducts = true;
+        });
 
         /*
          * Initialize the context
@@ -134,6 +138,9 @@
             $scope.showStats = false;
             $scope.selectedUser = null;
             $scope.showLeftMenu = false;
+            $scope.showProducts = false;
+            
+            $scope.displayLocalAuth = CONFIG.displayLocalAuth;
         };
 
         /**

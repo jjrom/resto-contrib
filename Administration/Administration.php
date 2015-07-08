@@ -110,6 +110,8 @@ class Administration extends RestoModule {
                 return $this->processGET();
             case 'POST':
                 return $this->processPOST();
+            case 'PUT':
+                return $this->processPUT();
             default:
                 RestoLogUtil::httpError(404);
         }
@@ -161,6 +163,81 @@ class Administration extends RestoModule {
                 return $this->processStatistics();
             default:
                 RestoLogUtil::httpError(404);
+        }
+    }
+
+    /**
+     * Process on HTTP method PUT on /administration
+     * @return type
+     */
+    private function processPUT() {
+
+        switch ($this->segments[0]) {
+            case 'collections':
+                return $this->processPutCollections();
+            default:
+                RestoLogUtil::httpError(404);
+        }
+    }
+
+    /**
+     * Process HTTP PUT on /administraion/collections
+     * @return type
+     */
+    private function processPutCollections() {
+
+        /*
+         * Is collectionName and feartureId defined ?
+         */
+        if (isset($this->segments[2])) {
+            $collection = new RestoCollection($this->segments[1], $this->context, $this->user, array('autoload' => true));
+
+            /*
+             * If collection exists
+             */
+            if ($collection) {
+                return $this->processPutFeature($collection);
+            } else {
+                RestoLogUtil::httpError(404);
+            }
+        } else {
+            RestoLogUtil::httpError(404);
+        }
+    }
+
+    /**
+     * Process HTTP PUT on /administration/collections/{collectionName}/{feature}
+     */
+    private function processPutFeature($collection) {
+
+        /*
+         * {collection} and {featureid} are mandatory
+         */
+        if (!isset($this->segments[4]) || isset($this->segments[5])) {
+            RestoLogUtil::httpError(404);
+        }
+
+        $feature = new RestoFeature($this->context, $this->user, array(
+            'featureIdentifier' => $this->segments[2],
+            'collection' => $collection
+        ));
+        if (!$feature->isValid()) {
+            RestoLogUtil::httpError(404);
+        } else {
+            switch ($this->segments[3]) {
+                case 'visibility':
+
+                    $query = 'UPDATE ' . (isset($data['collection']) ? '_' . strtolower($collection) : 'resto') . '.features SET visibility=\'' . pg_escape_string($this->segments[4]) . '\' WHERE identifier=\'' . pg_escape_string($this->segments[2]) . '\'';
+
+                    $results = $this->context->dbDriver->fetch($this->context->dbDriver->query(($query)));
+
+                    return RestoLogUtil::success('Granted visibility updated', array(
+                                'identifier' => pg_escape_string($this->segments[2])
+                    ));
+
+                default:
+                    RestoLogUtil::httpError(404);
+            }
         }
     }
 
@@ -883,7 +960,7 @@ class Administration extends RestoModule {
 
 
         try {
-            $results = pg_query($this->context->dbDriver->dbh, 'SELECT userid, email, groupname, username, givenname, lastname, registrationdate, activated FROM usermanagement.users ' . (isset($keyword) ? 'WHERE email LIKE \'%' . $keyword . '%\' OR username LIKE \'%' . $keyword . '%\' OR groupname LIKE \'%' . $keyword . '%\' OR givenname LIKE \'%' . $keyword . '%\' OR lastname LIKE \'%' . $keyword . '%\'' : '') . ' LIMIT ' . $number . ' OFFSET ' . $min);
+            $results = pg_query($this->context->dbDriver->dbh, 'SELECT userid, email, groupname, username, givenname, lastname, registrationdate, grantedvisibility, activated FROM usermanagement.users ' . (isset($keyword) ? 'WHERE email LIKE \'%' . $keyword . '%\' OR username LIKE \'%' . $keyword . '%\' OR groupname LIKE \'%' . $keyword . '%\' OR givenname LIKE \'%' . $keyword . '%\' OR lastname LIKE \'%' . $keyword . '%\' OR grantedvisibility LIKE \'%' . $keyword . '%\'' : '') . ' LIMIT ' . $number . ' OFFSET ' . $min);
             if (!$results) {
                 throw new Exception();
             }

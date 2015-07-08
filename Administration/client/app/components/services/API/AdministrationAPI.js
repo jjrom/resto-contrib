@@ -29,16 +29,21 @@
         var api = {
             activateUser: activateUser,
             addUser: addUser,
+            deleteGrantedVisibility: deleteGrantedVisibility,
             deactivateUser: deactivateUser,
             deleteRight: deleteRight,
             getCollections: getCollections,
             getCollectionsStats: getCollectionsStats,
             getHistory: getHistory,
+            getGrantedVisibility: getGrantedVisibility,
             getRight: getRight,
             getSignatures: getSignatures,
             getUser: getUser,
             getUsers: getUsers,
             getUsersStats: getUsersStats,
+            postGrantedVisibility: postGrantedVisibility,
+            putGrantedVisibility: putGrantedVisibility,
+            searchProducts: searchProducts,
             setAdvancedRight: setAdvancedRight,
             setCollectionRight: setCollectionRight,
             setRight: setRight,
@@ -107,8 +112,12 @@
                             callback(data);
                         }
                     })
-                    .error(function() {
-                        alert('error - get history');
+                    .error(function(data) {
+                        if (data.ErrorMessage) {
+                            error(data);
+                        } else {
+                            error('error - get history');
+                        }
                     });
         }
         ;
@@ -132,8 +141,12 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - get collections failed');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - get collections failed');
+                }
             });
         }
         ;
@@ -176,8 +189,12 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - set collection right');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - set collection right');
+                }
             });
         }
         ;
@@ -203,8 +220,12 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - get stats failed');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - get stats failed');
+                }
             });
         }
         ;
@@ -239,9 +260,9 @@
                 }
             }).error(function(data) {
                 if (data.ErrorMessage) {
-                    error(data.ErrorMessage);
-                } else {
                     error(data);
+                } else {
+                    error('error - get users');
                 }
             });
 
@@ -269,8 +290,12 @@
                                     callback(data);
                                 }
                             })
-                    .error(function() {
-                        alert('error - get stats');
+                    .error(function(data) {
+                        if (data.ErrorMessage) {
+                            error(data);
+                        } else {
+                            error('error - get stats');
+                        }
                     });
         }
         ;
@@ -308,8 +333,8 @@
                 } else {
                     callback(data);
                 }
-            }).error(function(e) {
-                callback(e);
+            }).error(function(data) {
+                error(data);
             });
         }
         ;
@@ -333,8 +358,12 @@
                                     callback(data.profile);
                                 }
                             })
-                    .error(function() {
-                        alert('error - get user');
+                    .error(function(data) {
+                        if (data.ErrorMessage) {
+                            error(data);
+                        } else {
+                            error('error - get user');
+                        }
                     });
         }
         ;
@@ -357,8 +386,12 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - activate user');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - activate user');
+                }
             });
         }
         ;
@@ -381,8 +414,12 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - deactivate user');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - deactivate user');
+                }
             });
         }
         ;
@@ -421,8 +458,12 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - set group');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - set group');
+                }
             });
         }
         ;
@@ -445,13 +486,24 @@
                                     callback(data.signatures);
                                 }
                             })
-                    .error(function() {
-                        alert('error - get signatures');
+                    .error(function(data) {
+                        if (data.ErrorMessage) {
+                            error(data);
+                        } else {
+                            error('error - get signatures');
+                        }
                     });
         }
         ;
 
-
+        /**
+         * Get rights
+         * 
+         * @param {string} userid
+         * @param {function} callback
+         * @param {function} error
+         * @returns {undefined}
+         */
         function getRight(userid, callback, error) {
             $http.get(config.restoServerUrl + config.administrationEndpoint + '/users/' + userid + '/rights.json')
                     .success(
@@ -462,14 +514,25 @@
                                     callback(data.rights);
                                 }
                             })
-                    .error(function() {
-                        alert('error - get rights');
+                    .error(function(data) {
+                        if (data.ErrorMessage) {
+                            error(data);
+                        } else {
+                            error('error - get rights');
+                        }
                     });
         }
         ;
 
+        /**
+         * Delete right
+         * 
+         * @param {array} options
+         * @param {function} callback
+         * @param {function} error
+         * @returns {undefined}
+         */
         function deleteRight(options, callback, error) {
-
 
             var params = [];
 
@@ -497,12 +560,24 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - delete right');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - delete right');
+                }
             });
         }
         ;
 
+        /**
+         * Set right
+         * 
+         * @param {array} options
+         * @param {function} callback
+         * @param {function} error
+         * @returns {undefined}
+         */
         function setRight(options, callback, error) {
 
             var userid = options['userid'];
@@ -533,12 +608,24 @@
                 } else {
                     callback(data);
                 }
-            }).error(function() {
-                alert('error - set right');
+            }).error(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    error('error - set right');
+                }
             });
         }
         ;
 
+        /**
+         * Set advanced right
+         * 
+         * @param {array} options
+         * @param {function} callback
+         * @param {function} error
+         * @returns {undefined}
+         */
         function setAdvancedRight(options, callback, error) {
 
             var userid = options['userid'];
@@ -585,11 +672,165 @@
                 if (data.ErrorMessage) {
                     error(data);
                 } else {
-                    alert('error - set advanced right');
-                } 
+                    error('error - set advanced right');
+                }
             });
         }
         ;
+
+
+        /**
+         * Remove {visibility} to {userid} granted visibilities
+         * 
+         * @param {array} options  : must contains userid and visibility identifier
+         * @param {function} callback : called in case of success
+         * @param {function} error : called in case of error
+         * @returns {undefined}
+         */
+        function deleteGrantedVisibility(options, callback, error) {
+            $http({
+                method: 'DELETE',
+                url: config.restoServerUrl + '/users/' + options.userid + '/grantedvisibility/' + options.visibility,
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).success(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    callback(data);
+                }
+            }).error(function(data) {
+                error(data);
+            });
+        }
+        ;
+
+        /**
+         * Show {userid} granted visibility
+         * 
+         * @param {array} options : must contains userid
+         * @param {function} callback : called in case of success
+         * @param {function} error : called in case of error
+         * @returns {undefined}
+         */
+        function getGrantedVisibility(options, callback, error) {
+            $http({
+                method: 'GET',
+                url: config.restoServerUrl + '/users/' + options.userid + '/grantedvisibility',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).success(function(data) {
+                if (data.ErrorMessage) {
+                    error(data);
+                } else {
+                    callback(data);
+                }
+            }).error(function(data) {
+                error(data);
+            });
+        }
+        ;
+
+        /**
+         * Add visibility to {userid} granted visibilities
+         * 
+         * @param {array} options : must contains userid and visibility
+         * @param {function} callback : called in case of success
+         * @param {function} error : called in case of error
+         * @returns {undefined}
+         */
+        function postGrantedVisibility(options, callback, error) {
+
+            if (!options.visibility) {
+                error('visibility is missing');
+            } else {
+                $http({
+                    method: 'POST',
+                    url: config.restoServerUrl + '/users/' + options.userid + '/grantedvisibility',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    data: {
+                        visibility: options.visibility
+                    }
+
+                }).success(function(data) {
+                    if (data.ErrorMessage) {
+                        error(data);
+                    } else {
+                        callback(data);
+                    }
+                }).error(function(data) {
+                    error(data);
+                });
+            }
+
+        }
+        ;
+
+        /**
+         * Modify all {userid} granted visibilities
+         * 
+         * @param {array} options : must contains userid and visibility
+         * @param {function} callback : called in case of success
+         * @param {function} error : called in case of error
+         * @returns {undefined}
+         */
+        function putGrantedVisibility(options, callback, error) {
+            if (!options.visibility) {
+                error('visibility is missing');
+            } else {
+                $http({
+                    method: 'PUT',
+                    url: config.restoServerUrl + config.administrationEndpoint + '/collections/' + options.collection + '/' + options.featureid + '/visibility/' + options.visibility
+                }).success(function(data) {
+                    if (data.ErrorMessage) {
+                        error(data);
+                    } else {
+                        callback(data);
+                    }
+                }).error(function(data) {
+                    error(data);
+                });
+            }
+        }
+        ;
+
+
+        /**
+         * 
+         * Search in all collections
+         * 
+         * GET /api/collections/search
+         * 
+         * @param {array} params
+         * @param {function} callback
+         * @param {function} error
+         * @returns {undefined}
+         */
+        function searchProducts(params, callback, error) {
+
+            /*
+             * Clean params
+             */
+            var searchParams = {
+                q: params['q'] || '',
+                page: params['page'] || 1,
+                lang: 'en'
+            };
+            for (var key in params) {
+                if (key !== 'view' && key !== 'collection' && typeof params[key] !== 'undefined') {
+                    searchParams[key] = params[key];
+                }
+            }
+            $http({
+                url: config.restoServerUrl + '/api/collections' + (params['collection'] ? '/' + params['collection'] : '') + '/search.json',
+                method: 'GET',
+                params: searchParams
+            }).
+                    success(function(result) {
+                        callback(result);
+                    }).
+                    error(function(result) {
+                        error(result);
+                    });
+        }
     }
     ;
 })();

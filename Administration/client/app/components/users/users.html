@@ -25,7 +25,14 @@
              ng-show="showUsers">
 
             <div class="search">
-                {{'search'| translate}} : <input type="text" ng-change="getUsers(false)" ng-model="keyword"/>
+                <ul class="small-block-grid-3 large-block-grid-3">
+                    <li>
+                        <input type="text" ng-model="keyword"/>
+                    </li>
+                    <li>
+                        <a class="button tiny" ng-click="getUsers(false)" >{{'search'| translate}}</a>
+                    </li>
+                </ul>
             </div>
             <table>
                 <thead>
@@ -34,6 +41,7 @@
                         <th>{{'email'| translate}}</th>
                         <th class="show-for-medium-up">{{'groupname'| translate}} </th>
                         <th class="show-for-medium-up">{{'username'| translate}}</th>
+                        <th class="show-for-medium-up">{{'grantedvisibility'| translate}}</th>
                         <th class="show-for-medium-up">{{'activated'| translate}}</th>
                     </tr>
                 </thead>
@@ -43,6 +51,7 @@
                         <td>{{ x.email}}</td>
                         <td class="show-for-medium-up">{{ x.groupname}}</td>
                         <td class="show-for-medium-up">{{ x.username}}</td>
+                        <td class="show-for-medium-up">{{ x.grantedvisibility}}</td>
                         <td class="show-for-medium-up">{{ x.activated}}</td>
                     </tr>
                 </tbody>

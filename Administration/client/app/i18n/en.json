@@ -25,6 +25,7 @@
     "users_management": "Users Management",
     "user_creation": "Create User",   
     "collections_management": "Collections Management",
+    "products_management": "Products Management",
     "history": "History",
     "users": "Users",
     "signed": "Signed",
@@ -50,6 +51,7 @@
     "unloggedText": "Please login to acces RESTo Administration...",
     "hasNotToSign": "has not to sign",
     "hasToSign": "has to sign",
+    "load_more": "Load more",
     
     "alert.disconnect": "Disconneted",
     
@@ -64,6 +66,17 @@
     "error.getHistory": "Error : get history",
     "error.setRight": "Error : set right",
     "error.getStats": "Error : get statisctics",
+    "error.activation": "Error : selectedUser.activated is not set",
+    "error.setRight": "Error : error while setting right",
+    "error.addAdvancedRight.missingAttributes" : "Error : cannot create rights - missing attributes",
+    "error.setAdvancedRight" : "Error : error while setting advanced right",
+    "error.deleteRight": "Error : error while deleting right",
+    "error.getGrantedVisibility": "Error : error while getting granted visibility",
+    "error.putGrantedVisibility": "Error : error while updating granted visibility",
+    "error.addGrantedVisibility": "Error : error while adding granted visibility",
+    "error.deleteGrantedVisibility": "Error : error while deleting granted visibility",
+    
+    "menu.title": "RESTo",
     
     "signin.title" : "SignIn",
     "signin.email" : "email",
@@ -77,5 +90,15 @@
     "user.groupname": "group",
     "user.country": "country",
     "user.topics": "topics",
-    "user.organization": "organization"
+    "user.organization": "organization",
+    
+    "products.search.id": "Search by identifier",
+    "products.collection": "collection",
+    "products.productIdentifier": "productIdentifier",
+    "products.id": "identifier",
+    "products.visibility": "visibility",
+    "products.update.visibility": "Update visibility",
+    
+    "visibility.add": "Add visibility",
+    "visibility.delete": "Delete this visibility"
 }

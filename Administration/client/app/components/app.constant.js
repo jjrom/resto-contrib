@@ -25,10 +25,10 @@
     angular.module('administration')
             .constant('CONFIG', {
                 //'restoServerUrl': 'http://resto.mapshup.com/2.0/',
-                'restoServerUrl': 'http://localhost/resto',
+                'restoServerUrl': 'http://localhost/resto/',
                 'administrationEndpoint': '/administration',
                 'offset': 55,
-                'version': 0.1,
+                'displayLocalAuth': true,
                 'theia': {
                     'name': 'theia',
                     'signUpUrl': 'https://sso.theia-land.fr/theia/app/register/register.xhtml',
@@ -37,6 +37,10 @@
                     "requiredUrlParams": [
                         "scope"
                     ]
+                },
+                'filters': {
+                    'methods' : ['POST', 'GET', 'PUT', 'DELETE'],
+                    'services' : ['download', 'create', 'insert', 'search', 'visualize']
                 }
             });
 

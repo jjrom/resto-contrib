@@ -17,6 +17,9 @@
      * License for the specific language governing permissions and limitations
      * under the License.
      */
+    /* 
+     Author     : remi.mourembles@capgemini.com
+     */
 
     /* Controller Users */
 
@@ -78,18 +81,34 @@
      *  
      */
 
-    angular.module('administration').controller('UserController', ['$scope', 'administrationServices', '$location', '$routeParams', 'administrationAPI', 'CONFIG', userController]);
+    /*
+     * User controller
+     */
 
-    function userController($scope, administrationServices, $location, $routeParams, administrationAPI, CONFIG) {
+    angular.module('administration').controller('UserController', ['$scope', '$filter', 'administrationServices', '$location', '$routeParams', 'administrationAPI', 'CONFIG', userController]);
+
+    function userController($scope, $filter, administrationServices, $location, $routeParams, administrationAPI, CONFIG) {
 
         if (administrationServices.isUserAnAdministrator()) {
 
+
+            /*
+             * Get filters from configuration
+             */
+            $scope.methods = CONFIG.filters.methods;
+            $scope.services = CONFIG.filters.services;
+            $scope.collections = [];
+
+            /*
+             * List of templates path
+             */
             $scope.templates =
                     {
                         'history': 'app/components/user/templates/history.html',
                         'profile': 'app/components/user/templates/profile.html',
                         'rightCreation': 'app/components/user/templates/rightCreation.html',
-                        'signatures': 'app/components/user/templates/signatures.html'
+                        'signatures': 'app/components/user/templates/signatures.html',
+                        'visibility': 'app/components/user/templates/visibility.html'
                     };
 
             /*
@@ -101,6 +120,7 @@
                 $scope.showCreation = false;
                 $scope.showAdvancedRights = false;
                 $scope.showSignatures = false;
+                $scope.showVisibility = false;
 
                 $scope.history = [];
                 $scope.feature = [];
@@ -121,8 +141,17 @@
                 $scope.template = null;
             };
 
+            $scope.initFilters = function() {
+                $scope.selectedService = null;
+                $scope.selectedCollection = null;
+                $scope.selectedMethod = null;
+                $scope.method = null;
+                $scope.service = null;
+                $scope.collection = null;
+            };
+
             /*
-             * Set activation
+             * Set activation - depending on user activation state
              * 
              * If user isn't activated, this method activate user. Else, this method
              * deactivate user
@@ -139,12 +168,12 @@
                         $scope.getRights();
                     });
                 } else {
-                    $scope.alert('error : activation - selectedUser.activated is not set');
+                    $scope.alert($filter('translate')('error.activation'));
                 }
             };
 
             /*
-             * Switch between default and admin group
+             * Set user group - Switch between default and admin group
              */
             $scope.changeGroup = function() {
                 if ($scope.selectedUser.groupname === 'default') {
@@ -156,7 +185,7 @@
 
 
             /*
-             * Set right
+             * Set right - Switch between 1 and 0
              * 
              * @param {String} collection
              * @param {String} right
@@ -170,7 +199,7 @@
                 } else if (value === 0) {
                     value = 1;
                 } else {
-                    $scope.alert('error - setRight');
+                    $scope.alert($filter('translate')('error.setRight'));
                     return;
                 }
 
@@ -181,6 +210,9 @@
                 options['field'] = right;
                 options['value'] = value;
 
+                /*
+                 * Set the new right
+                 */
                 administrationAPI.setRight(options, function() {
                     $scope.getRights();
                 });
@@ -199,6 +231,9 @@
                 options['email'] = $scope.selectedUser.email;
                 options['groupname'] = groupname;
 
+                /*
+                 * Set the new group
+                 */
                 administrationAPI.setUserGroup(options, function() {
                     $scope.getUser();
                     $scope.getRights();
@@ -237,9 +272,21 @@
             };
 
             /*
+             * Display visibility
+             */
+            $scope.displayVisibility = function() {
+                $scope.init();
+                $scope.getVisibility();
+                $scope.template = $scope.templates.visibility;
+                $scope.newVisibility = '';
+                $scope.showVisibility = true;
+            };
+
+            /*
              * Display advanced rights
              */
             $scope.displayAdvancedRights = function() {
+                $scope.getCollectionsRights();
                 $scope.showAdvancedRights = !$scope.showAdvancedRights;
             };
 
@@ -271,6 +318,15 @@
             };
 
             /*
+             * go to visibility
+             */
+            $scope.goToVisibility = function() {
+                var path = '/users/' + $scope.selectedUser.userid + '/visibility';
+                $location.path(path, false);
+                $scope.displayVisibility();
+            };
+
+            /*
              * go to advanced rights
              */
             $scope.goToAdvancedRights = function() {
@@ -294,7 +350,6 @@
              */
             $scope.displayCreateAdvancedRights = function() {
                 $scope.init();
-                $scope.getCollections();
                 $scope.template = $scope.templates.rightCreation;
                 $scope.showCreation = true;
             };
@@ -305,7 +360,7 @@
             $scope.addAdvancedRight = function() {
 
                 if (!$scope.feature.collection || !$scope.feature.id) {
-                    $scope.alert('error - can t create rights - missing attributes');
+                    $scope.alert($filter('translate')('error.addAdvancedRight.missingAttributes'));
                 }
 
                 var options = [];
@@ -325,7 +380,7 @@
                     $scope.displayProfile();
                     $scope.showAdvancedRights = true;
                 }, function(data) {
-                    $scope.alert('error - ' + data.ErrorMessage);
+                    $scope.alert($filter('translate')('error.setAdvancedRight'), data);
                 });
             };
 
@@ -379,7 +434,7 @@
                 administrationAPI.deleteRight(options, function() {
                     $scope.getRights();
                 }, function(data) {
-                    $scope.alert('error - ' + data);
+                    $scope.alert($filter('translate')('error.deleteRight'), data);
                 });
             };
 
@@ -465,6 +520,9 @@
                 options['ascordesc'] = $scope.ascOrDesc;
                 options['orderby'] = $scope.orderBy;
                 options['userid'] = $routeParams.userid;
+                options['collection'] = $scope.collection;
+                options['method'] = $scope.method;
+                options['service'] = $scope.service;
 
                 administrationAPI.getHistory(options, function(data) {
                     $scope.startIndex = $scope.startIndex + $scope.offset;
@@ -483,6 +541,26 @@
                 });
             };
 
+            $scope.setParam = function(type, value) {
+                //$scope.init();
+
+                if (type === 'method') {
+                    $scope.method = value;
+                } else if (type === 'service') {
+                    $scope.service = value;
+                } else if (type === 'collection') {
+                    $scope.collection = value;
+                }
+
+                $scope.getHistory(false);
+            };
+
+            $scope.resetFilters = function() {
+               // $scope.init();
+                $scope.initFilters();
+                $scope.getHistory(false);
+            };
+
             /*
              * Call by infinite scroll
              */
@@ -498,27 +576,148 @@
             /*
              * Get collections
              */
-            $scope.getCollections = function() {
+            $scope.getCollectionsRights = function() {
                 administrationAPI.getCollections(function(data) {
                     $scope.collections = data;
                     $scope.busy = false;
                 });
             };
 
-            $scope.alert = function(message) {
-                alert(message);
+            $scope.getCollections = function() {
+                administrationAPI.getCollections(function(data) {
+                    for (var c in data) {
+                        $scope.collections.push(c);
+                    }
+                }, function() {
+                    alert($filter('translate')('error.setCollections'));
+                });
             };
 
+            /**
+             * Get visibility
+             */
+            $scope.getVisibility = function() {
+
+                var options = [];
+                options['userid'] = $routeParams.userid;
+
+                administrationAPI.getGrantedVisibility(options, function(data) {
+                    $scope.setVisibility(data);
+                    return true;
+                }, function(data) {
+                    $scope.alert($filter('translate')('error.getGrantedVisibility'), data);
+                    return false;
+                });
+            };
+
+            /**
+             * Add a visibility for this user. The visibility is a string
+             * 
+             * @param {string} visibility
+             */
+            $scope.addVisibility = function(visibility) {
+
+                var options = [];
+                options['visibility'] = visibility;
+                options['userid'] = $routeParams.userid;
+
+                administrationAPI.postGrantedVisibility(options, function(data) {
+                    $scope.setVisibility(data);
+                    $scope.newVisibility = '';
+                }, function(data) {
+                    $scope.alert($filter('translate')('error.addGrantedVisibility'), data);
+                });
+            };
+
+            /**
+             * Update visibilities for this user.
+             * 
+             * WARNING : this function will overwrite all visibilities.
+             * 
+             * @param {string} visibility
+             */
+            $scope.updateVisibility = function(visibility) {
+
+                var options = [];
+                options['visibility'] = visibility;
+                options['userid'] = $routeParams.userid;
+
+                administrationAPI.putGrantedVisibility(options, function(data) {
+
+                }, function(data) {
+                    $scope.alert($filter('translate')('error.putGrantedVisibility'), data);
+                });
+            };
+
+            /**
+             * Delete a visibility
+             * 
+             * @param {string} visibility
+             * @returns {boolean}
+             */
+            $scope.deleteVisibility = function(visibility) {
+
+                var options = [];
+                options['visibility'] = visibility;
+                options['userid'] = $routeParams.userid;
+
+                administrationAPI.deleteGrantedVisibility(options, function(data) {
+                    $scope.setVisibility(data);
+                    $scope.newVisibility;
+                    return true;
+                }, function(data) {
+                    $scope.alert($filter('translate')('error.deleteGrantedVisibility'), data);
+                    return false;
+                });
+            };
+
+            /*
+             * Set scope visibility.
+             * 
+             * RESTo returns visibility in a string formated. This function
+             * creates an array from this string.
+             */
+            $scope.setVisibility = function(data) {
+                if (data.grantedvisibility && data.grantedvisibility !== '') {
+                    var visibility = data.grantedvisibility;
+                    $scope.visibility = visibility.split(',');
+                }
+            };
+
+            /**
+             * Alert - display error/warning message
+             * 
+             * @param {string} message
+             * @param {string} data
+             */
+            $scope.alert = function(message, data) {
+                var printed_message = message + ((typeof data === 'undefined') ? '' : ' - details : ' + (data.ErrorMessage ? data.ErrorMessage : data));
+                alert(printed_message);
+            };
+
+            /*
+             * Inform mainController that we are in user part
+             */
             $scope.$emit('showUser');
             $scope.init();
+            $scope.getCollections();
+
+            /*
+             * By default, display profile section
+             */
             $scope.displayProfile();
 
+            /*
+             * Set section by watching route params
+             */
             if ($routeParams.section === 'history') {
                 $scope.displayHistory();
             } else if ($routeParams.section === 'signatures') {
                 $scope.displaySignatures();
             } else if ($routeParams.section === 'rights') {
                 $scope.displayCreateAdvancedRights();
+            } else if ($routeParams.section === 'visibility') {
+                $scope.displayVisibility();
             }
 
         }

@@ -227,6 +227,14 @@
         ;
 
 
+        /**
+         * Signup : add user to resto database
+         * 
+         * @param {array} options
+         * @param {function} callback
+         * @param {function} error
+         * @returns {undefined}
+         */
         function signup(options, callback, error) {
             $http({
                 method: 'POST',
@@ -250,7 +258,6 @@
             });
         }
         ;
-
 
     }
     ;

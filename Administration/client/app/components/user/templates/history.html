@@ -13,11 +13,60 @@
  License for the specific language governing permissions and limitations
  under the License.
 -->
+<!--
+    Author     : remi.mourembles@capgemini.com
+-->
 
 <div class="history tableContainer" 
      ng-show="showHistory" >
-    
+
     <div ng-show='busy'>{{'loading_data'| translate}}</div>
+
+    <div>
+        <div class="small-12 large-4 columns">
+            <div class="row">
+                <div class="small-3 columns">
+                    <label for="right-label" class="right">Collection</label>
+                </div>
+                <div class="small-9 columns">
+                    <select class="form-control"
+                            ng-model="selectedCollection"
+                            ng-options="_collection for _collection in collections" 
+                            ng-change="setParam('collection', selectedCollection)"></select>
+                </div>
+            </div>
+        </div>
+        <div class="small-12 large-4 columns">
+            <div class="row">
+                <div class="small-3 columns">
+                    <label for="right-label" class="right">Service</label>
+                </div>
+                <div class="small-9 columns">
+                    <select class="form-control" 
+                            ng-model="selectedService" 
+                            ng-options="_service for _service in services" 
+                            ng-change="setParam('service', selectedService)"></select>
+                </div>
+            </div>
+        </div>
+        <div class="small-12 large-4 columns">
+            <div class="row">
+                <div class="small-3 columns">
+                    <label for="right-label" class="right">Method</label>
+                </div>
+                <div class="small-9 columns">
+                    <select class="form-control"
+                            ng-model="selectedMethod" 
+                            ng-options="_method for _method in methods" 
+                            ng-change="setParam('method', selectedMethod)"></select>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div>
+        <a href="" class="button hide" ng-click="resetFilters()" style="margin-top: 15px;">{{'reset filters'| translate }}</a>
+    </div>
 
     <table>
         <thead>
@@ -45,5 +94,5 @@
             </tr>
         </tbody>
     </table>
-    <a class="button expand tiny" ng-click="loadMore()">{{'load more'| translate}}</a>
+    <a class="button expand tiny" ng-click="loadMore()">{{'load_more'| translate}}</a>
 </div>

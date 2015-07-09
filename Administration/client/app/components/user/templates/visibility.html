@@ -23,17 +23,22 @@
             <input type="text" ng-model="newVisibility"/> <a class="button small" ng-click="addVisibility(newVisibility)" >{{'visibility.add'| translate}}</a>
         </div>
     </li>
+
     <li>
-        <ul class="small-block-grid-3 large-block-grid-3">
-            <li ng-repeat="visibilityUnit in visibility">
-                <fieldset>
-                    <legend>{{visibilityUnit}}</legend>
-                    <ul class="small-block-grid-1 medium-block-grid-1 large-block-grid-1">
-                        <li><a class="button small alert" ng-click="deleteVisibility(visibilityUnit)">{{('visibility.delete' | translate)}}</a></li>
-                    </ul>
-                </fieldset>
-            </li>
-        </ul>
+        <table>
+            <thead>
+                <tr>
+                    <th>{{('visibility.name'| translate)}}</th>
+                    <th class="text__center">{{('visibility.action'| translate)}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="visibilityUnit in visibility">
+                    <td>{{visibilityUnit}}</td>
+                    <td class="text__center"><a class="button small alert" ng-click="deleteVisibility(visibilityUnit)">{{('visibility.delete'| translate)}}</a></td>
+                </tr>
+            </tbody>
+        </table>
     </li>
 
 </ul>

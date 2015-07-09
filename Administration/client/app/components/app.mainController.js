@@ -140,7 +140,7 @@
             $scope.showLeftMenu = false;
             $scope.showProducts = false;
             
-            $scope.displayLocalAuth = CONFIG.displayLocalAuth;
+            $scope.displayLocalAuth = CONFIG.auth.displayLocalAuth;
         };
 
         /**

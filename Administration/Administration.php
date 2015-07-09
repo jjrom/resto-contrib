@@ -949,9 +949,9 @@ class Administration extends RestoModule {
     /**
      * Get users profile
      * 
-     * @param type $keyword
-     * @param type $min
-     * @param type $number
+     * @param string $keyword
+     * @param int $min
+     * @param int $number
      * @return array
      * @throws Exception
      */
@@ -1075,5 +1075,8 @@ class Administration extends RestoModule {
         }
         return $result;
     }
+    
+    
+    
 
 }

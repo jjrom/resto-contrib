@@ -556,7 +556,7 @@
             };
 
             $scope.resetFilters = function() {
-               // $scope.init();
+                // $scope.init();
                 $scope.initFilters();
                 $scope.getHistory(false);
             };
@@ -603,10 +603,8 @@
 
                 administrationAPI.getGrantedVisibility(options, function(data) {
                     $scope.setVisibility(data);
-                    return true;
                 }, function(data) {
                     $scope.alert($filter('translate')('error.getGrantedVisibility'), data);
-                    return false;
                 });
             };
 
@@ -657,18 +655,18 @@
              */
             $scope.deleteVisibility = function(visibility) {
 
-                var options = [];
-                options['visibility'] = visibility;
-                options['userid'] = $routeParams.userid;
+                var x = confirm($filter('translate')('visibility.confirm.delete'));
+                if (x) {
+                    var options = [];
+                    options['visibility'] = visibility;
+                    options['userid'] = $routeParams.userid;
 
-                administrationAPI.deleteGrantedVisibility(options, function(data) {
-                    $scope.setVisibility(data);
-                    $scope.newVisibility;
-                    return true;
-                }, function(data) {
-                    $scope.alert($filter('translate')('error.deleteGrantedVisibility'), data);
-                    return false;
-                });
+                    administrationAPI.deleteGrantedVisibility(options, function(data) {
+                        $scope.setVisibility(data);
+                    }, function(data) {
+                        $scope.alert($filter('translate')('error.deleteGrantedVisibility'), data);
+                    });
+                }
             };
 
             /*
@@ -681,6 +679,8 @@
                 if (data.grantedvisibility && data.grantedvisibility !== '') {
                     var visibility = data.grantedvisibility;
                     $scope.visibility = visibility.split(',');
+                } else {
+                    $scope.visibility = null;
                 }
             };
 

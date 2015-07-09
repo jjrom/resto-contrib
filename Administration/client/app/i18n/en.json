@@ -83,15 +83,21 @@
     "signin.password" : "password", 
     "signin.submit" : "submit",
     
-    "user.givenname": "givenname",
-    "user.lastname": "givenname",
-    "user.username": "givenname",
+    "user.givenname": "given name",
+    "user.lastname": "last name",
+    "user.username": "user name",
     "user.name": "name",
     "user.groupname": "group",
     "user.country": "country",
     "user.topics": "topics",
     "user.organization": "organization",
+    "user.rights": "Rights",
+    "user.history": "History",
+    "user.visibility": "Visibilities",
+    "user.signatures": "Signatures",
+    "user.create_right": "Right creation",
     
+    "products": "Products",
     "products.search.id": "Search by identifier",
     "products.collection": "collection",
     "products.productIdentifier": "productIdentifier",
@@ -99,6 +105,9 @@
     "products.visibility": "visibility",
     "products.update.visibility": "Update visibility",
     
-    "visibility.add": "Add visibility",
-    "visibility.delete": "Delete this visibility"
+    "visibility.add": "Add user to this visibility",
+    "visibility.name": "Visibility name",
+    "visibility.action": "Action",
+    "visibility.confirm.delete": "Remove user from this visibility ?",
+    "visibility.delete": "Remove user from this visibility"
 }

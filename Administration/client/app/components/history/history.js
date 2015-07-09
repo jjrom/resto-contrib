@@ -17,6 +17,9 @@
      * License for the specific language governing permissions and limitations
      * under the License.
      */
+    /* 
+     Author     : remi.mourembles@capgemini.com
+     */
 
     /* Controller Users */
 
@@ -47,9 +50,11 @@
 
         if (administrationServices.isUserAnAdministrator()) {
 
-
-            $scope.methods = ['POST', 'GET', 'PUT', 'DELETE'];
-            $scope.services = ['download', 'create', 'insert', 'search', 'visualize'];
+            /*
+             * Get filters from configuration
+             */
+            $scope.methods = CONFIG.filters.methods;
+            $scope.services = CONFIG.filters.services;
             $scope.collections = [];
 
             /**
@@ -116,8 +121,10 @@
                 });
             };
 
-            /*
-             * Call by infinite scroll
+            /**
+             * Call to load more data
+             * 
+             * @returns {undefined}
              */
             $scope.loadMore = function() {
                 if ($scope.busy)
@@ -126,6 +133,11 @@
                 $scope.getHistory(true);
             };
 
+            /**
+             * Get collections list
+             * 
+             * @returns {undefined}
+             */
             $scope.getCollections = function() {
                 administrationAPI.getCollections(function(data) {
                     for (var c in data) {
@@ -136,6 +148,13 @@
                 });
             };
 
+            /**
+             * Set param by passing his name and his value
+             * 
+             * @param {string} type - name of the param
+             * @param {string} value - value of the param
+             * @returns {undefined}
+             */
             $scope.setParam = function(type, value) {
                 $scope.init();
 
@@ -146,18 +165,28 @@
                 } else if (type === 'collection') {
                     $scope.collection = value;
                 }
-
+                
+                /*
+                 * Once params are set, reload history
+                 */
                 $scope.getHistory(false);
             };
 
+            /**
+             * Reset filters by calling init functions - then reload history
+             * 
+             * @returns {undefined}
+             */
             $scope.resetFilters = function() {
                 $scope.init();
                 $scope.initFilters();
                 $scope.getHistory(false);
             };
 
-            /*
-             * Init the context
+            /**
+             * Init context
+             * 
+             * @returns {undefined}
              */
             $scope.init = function() {
                 $scope.ascOrDesc = 'DESC';
@@ -169,6 +198,11 @@
                 $scope.showHistory = false;
             };
 
+            /**
+             * Init filters
+             * 
+             * @returns {undefined}
+             */
             $scope.initFilters = function() {
                 $scope.selectedService = null;
                 $scope.selectedCollection = null;
@@ -181,6 +215,10 @@
             $scope.init();
             $scope.getHistory();
             $scope.getCollections();
+            
+            /*
+             * Inform mainController that we are loading history section
+             */
             $scope.$emit('showHistory');
         }
     }

@@ -50,7 +50,7 @@
              */
             $http({
                 method: 'GET',
-                url: config.restoServerUrl + 'api/users/connect'
+                url: config.restoServerUrl + '/api/users/connect'
             }).success(function(data) {
                 if (data.token) {
                     callback(data.token);
@@ -120,7 +120,7 @@
 
             $http({
                 method: 'POST',
-                url: config.restoServerUrl + 'api/users/' + options.userid + '/signLicense',
+                url: config.restoServerUrl + '/api/users/' + options.userid + '/signLicense',
                 dataType: "json",
                 data: {
                     collection: options.collection
@@ -158,7 +158,7 @@
              */
             $http({
                 method: 'GET',
-                url: config.restoServerUrl + 'users/' + options.userid + '/orders/' + options.orderid + '.meta4',
+                url: config.restoServerUrl + '/users/' + options.userid + '/orders/' + options.orderid + '.meta4',
                 dataType: "json",
                 contentType: 'application/json'
             }).success(function(data) {
@@ -191,7 +191,7 @@
              */
             $http({
                 method: 'POST',
-                url: config.restoServerUrl + 'users/' + options.userid + '/orders',
+                url: config.restoServerUrl + '/users/' + options.userid + '/orders',
                 dataType: "json",
                 data: options.features,
                 contentType: 'application/json'
@@ -217,7 +217,7 @@
              */
             $http({
                 method: 'GET',
-                url: config.restoServerUrl + 'users/' + options.userid + '/orders'
+                url: config.restoServerUrl + '/users/' + options.userid + '/orders'
             }).success(function(data) {
                 success(data.orders);
             }).error(function(data) {
@@ -227,6 +227,14 @@
         ;
 
 
+        /**
+         * Signup : add user to resto database
+         * 
+         * @param {array} options
+         * @param {function} callback
+         * @param {function} error
+         * @returns {undefined}
+         */
         function signup(options, callback, error) {
             $http({
                 method: 'POST',
@@ -250,7 +258,6 @@
             });
         }
         ;
-
 
     }
     ;

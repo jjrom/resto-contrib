@@ -17,8 +17,11 @@
      * License for the specific language governing permissions and limitations
      * under the License.
      */
+    /* 
+     Author     : remi.mourembles@capgemini.com
+     */
 
-    /* Controller Users */
+    /* Home Controller */
 
     angular.module('administration').controller('HomeController', ['$scope', '$filter', 'administrationServices', 'administrationAPI', homeController]);
 
@@ -29,6 +32,10 @@
              * Init the context
              */
             $scope.init = function() {
+                
+                /*
+                 * Get stats to display it on home page
+                 */
                 administrationAPI.getUsersStats(function(data) {
                     $scope.nb_users = data.users.count;
                     $scope.nb_downloads = data.download.count;

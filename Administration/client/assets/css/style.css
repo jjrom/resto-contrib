@@ -18,21 +18,10 @@
     Author     : remi.mourembles@capgemini.com
 */
 
-tr.clickable:hover  {
-    cursor: pointer;
-    border:1px solid black;
-}
+
 
 div.content {
     margin: 10px;
-}
-
-th.clickable:hover {
-    cursor: pointer;
-}
-
-th.clicked {
-    border:1px solid black;
 }
 
 a.clicked {
@@ -58,15 +47,6 @@ div.stats ul {
 div.stats ul li div{
     margin: 5px;
     background-color: #E6E6E6;
-}
-
-div.tableContainer {
-    padding-left: 25px;
-    padding-right: 25px;
-}
-
-div.tableContainer table {
-    width: 100%;
 }
 
 div.topMenu {
@@ -146,6 +126,43 @@ h3.title {
 
 div.history {
     margin-top: 25px;
+}
+
+/*------------------------------------*\
+    GLOBAL
+\*------------------------------------*/
+.text__center {
+    text-align: center;
+}
+
+/*------------------------------------*\
+    TABLES
+\*------------------------------------*/
+
+tr.clickable:hover  {
+    cursor: pointer;
+    border:1px solid black;
+}
+
+th.clickable:hover {
+    cursor: pointer;
+}
+
+th.clicked {
+    border:1px solid black;
+}
+
+div.tableContainer {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+div.tableContainer table {
+    width: 100%;
+}
+
+table {
+    width: 100%;
 }
 
 /*------------------------------------*\

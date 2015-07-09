@@ -24,19 +24,47 @@
 
     angular.module('administration')
             .constant('CONFIG', {
-                //'restoServerUrl': 'http://resto.mapshup.com/2.0/',
+                /*
+                 * RESTo server is accessible from this URL
+                 */
                 'restoServerUrl': 'http://localhost/resto',
+                /*
+                 * Administration end point - accessible from :
+                 *      restoServerUrl + adminstrationEndPoint
+                 */
                 'administrationEndpoint': '/administration',
+                /*
+                 * Auth methods
+                 */
+                'auth': {
+                    /*
+                     * Set displayLocalAuth true if you want to use local
+                     * authentification
+                     */
+                    'displayLocalAuth': true,
+                    /*
+                     * Configuration parameters to use an oauth2 authentication
+                     */
+                    'oauth2': {
+                        'name': 'theia',
+                        'signUpUrl': 'https://sso.theia-land.fr/theia/app/register/register.xhtml',
+                        'authorizeUrl': 'https://sso.theia-land.fr/oauth2/authorize',
+                        'clientId': '<your client id>',
+                        "requiredUrlParams": [
+                            "scope"
+                        ]
+                    }
+                },
+                /*
+                 * Number of results loaded per request
+                 */
                 'offset': 55,
-                'version': 0.1,
-                'theia': {
-                    'name': 'theia',
-                    'signUpUrl': 'https://sso.theia-land.fr/theia/app/register/register.xhtml',
-                    'authorizeUrl': 'https://sso.theia-land.fr/oauth2/authorize',
-                    'clientId': '<your client id>',
-                    "requiredUrlParams": [
-                        "scope"
-                    ]
+                /*
+                 * Defined filters for history items
+                 */
+                'filters': {
+                    'methods': ['POST', 'GET', 'PUT', 'DELETE'],
+                    'services': ['download', 'create', 'insert', 'search', 'visualize']
                 }
             });
 

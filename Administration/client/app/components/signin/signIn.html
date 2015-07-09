@@ -17,7 +17,7 @@
 <div class="content">
     <a class="close" ng-click="closeSignIn()">X</a>
     <ul class="small-block-grid-1 medium-block-grid-1 large-block-grid-1">
-        <li class="fields">
+        <li class="fields" ng-show="displayLocalAuth">
             <form method="get" ng-submit="login(email, password)" name="loginForm">
                 <div class="large-12 columns">
                     <div class="padded-top center">
@@ -33,10 +33,7 @@
                 </div>
             </form>
         </li>
-        <li>
-            or
-        </li>
-        <li>
+        <li ng-show="!displayLocalAuth">
             <ul class="small-block-grid-1 medium-block-grid-1 large-block-grid-1">
                <li><a href="#" class="button" ng-click="authenticate('theia')"><i class="size-48 fi-social-yahoo"></i><br/>Sign in with Theia</a></li>
             </ul>

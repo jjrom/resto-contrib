@@ -13,9 +13,12 @@
  License for the specific language governing permissions and limitations
  under the License.
 -->
+<!--
+    Author     : remi.mourembles@capgemini.com
+-->
 
 <div ng-show="showLeftMenu" class="ng-hide leftMenu smallMenu">
-    <h3 style="color: white;">RESTo</h3>
+    <h3 style="color: white;">{{'menu.title'| translate}}</h3>
     <div ng-show="profile" class="ng-hide">
         <a ng-class="{true:'clickedRight', false:''}[showHome === true]" href="#home" class="button">{{'home'| translate}}</a>
         <a ng-class="{true:'clickedRight', false:''}[showCollections === true]" href="#collections" class="button">{{'collections'| translate}}</a>

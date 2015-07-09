@@ -38,6 +38,10 @@
                         templateUrl: "app/components/collections/collections.html",
                         controller: "CollectionsController"
                     })
+                    .when('/products', {
+                        templateUrl: "app/components/products/products.html",
+                        controller: "ProductsController"
+                    })
                     .when('/history', {
                         templateUrl: "app/components/history/history.html",
                         controller: "HistoryController"
